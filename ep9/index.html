@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACR Reset Card Builder — The Quiet Edge EP9</title>
+  <style>
+    /* ── Variables ── */
+    :root {
+      --dark:       #0d0d0d;
+      --mid:        #181818;
+      --surface:    #1f1f1f;
+      --gold:       #c8972e;
+      --gold-light: #e0ac40;
+      --white:      #ede9df;
+      --muted:      #888;
+      --border:     #2c2c2c;
+      --radius:     9px;
+      --sans:       -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      --serif:      Georgia, 'Times New Roman', serif;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Body ── */
+    body {
+      background: var(--dark);
+      color: var(--white);
+      font-family: var(--sans);
+      padding: 48px 20px 80px;
+      line-height: 1.5;
+    }
+
+    /* ── Page container ── */
+    .page { max-width: 680px; margin: 0 auto; }
+
+    /* ── Header ── */
+    .brand-tag {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-family: var(--serif);
+      font-size: 30px;
+      font-weight: normal;
+      text-align: center;
+      margin-bottom: 10px;
+      line-height: 1.25;
+    }
+    .intro {
+      text-align: center;
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 48px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.65;
+    }
+
+    /* ── Form sections ── */
+    .fs {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 16px;
+      background: var(--mid);
+    }
+    .fs-tag {
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .fs-title {
+      font-size: 19px;
+      font-family: var(--serif);
+      font-weight: normal;
+      margin-bottom: 6px;
+    }
+    .fs-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 20px;
+      line-height: 1.65;
+    }
+
+    /* ── Fields ── */
+    .field { margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      letter-spacing: 0.4px;
+    }
+    input[type="text"] {
+      width: 100%;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 5px;
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 14px;
+      padding: 10px 13px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    input[type="text"]:focus { border-color: var(--gold); }
+    input[type="text"]::placeholder { color: #3a3a3a; }
+
+    /* ── Grid helpers ── */
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+    /* ── ACR step row ── */
+    .acr-row {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+    .acr-badge {
+      width: 44px;
+      height: 44px;
+      background: var(--gold);
+      color: var(--dark);
+      font-weight: 800;
+      font-size: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      letter-spacing: -1px;
+    }
+
+    /* ── Card preview section ── */
+    .preview-section { margin-top: 40px; margin-bottom: 8px; }
+    .preview-label {
+      text-align: center;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    /* ── The actual reset card ── */
+    .reset-card {
+      background: #fff;
+      color: #1a1a1a;
+      border-radius: 10px;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 28px 32px 22px;
+      box-shadow: 0 16px 56px rgba(0,0,0,0.75);
+      font-family: var(--sans);
+    }
+
+    /* Card top bar */
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 12px;
+      border-bottom: 2.5px solid #1a1a1a;
+      margin-bottom: 12px;
+      gap: 12px;
+    }
+    .card-title {
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: bold;
+      color: #111;
+      line-height: 1.2;
+      flex-shrink: 0;
+    }
+    .card-athlete {
+      text-align: right;
+      font-size: 11px;
+      color: #888;
+      line-height: 1.5;
+      min-width: 0;
+    }
+
+    /* Card tagline */
+    .card-tagline {
+      font-size: 9.5px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #c8972e;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    /* ACR steps */
+    .card-acr { margin-bottom: 14px; }
+    .card-step {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+      align-items: baseline;
+    }
+    .card-step:last-child { margin-bottom: 0; }
+    .card-step-letter {
+      width: 28px;
+      height: 28px;
+      background: #1a1a1a;
+      color: #fff;
+      font-weight: 800;
+      font-size: 13px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .card-step-label {
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #aaa;
+      font-weight: 600;
+      margin-bottom: 1px;
+    }
+    .card-step-text {
+      font-size: 13.5px;
+      color: #222;
+      line-height: 1.4;
+    }
+
+    /* Breath & Release card section */
+    .card-breath {
+      background: #f8f4ec;
+      border-radius: 7px;
+      padding: 11px 14px;
+      margin-bottom: 12px;
+    }
+    .card-breath-label {
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #c8972e;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+    .card-breath-step {
+      font-size: 12.5px;
+      color: #333;
+      margin-bottom: 4px;
+      line-height: 1.5;
+    }
+    .card-breath-step:last-child { margin-bottom: 0; }
+
+    /* Card footer */
+    .card-footer {
+      text-align: center;
+      font-size: 8.5px;
+      color: #ccc;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding-top: 9px;
+      border-top: 1px solid #e8e8e8;
+    }
+
+    /* ── Print button ── */
+    .btn-wrap {
+      text-align: center;
+      margin-top: 26px;
+    }
+    .btn-print {
+      background: var(--gold);
+      color: var(--dark);
+      border: none;
+      border-radius: var(--radius);
+      padding: 14px 44px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn-print:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-print:active { transform: none; }
+    .btn-hint {
+      margin-top: 9px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── Print styles ── */
+    @media print {
+      @page { size: letter; margin: 1in; }
+
+      /* Hide everything except the card */
+      body { background: #fff; padding: 0; color: #000; }
+      .brand-tag,
+      h1,
+      .intro,
+      .fs,
+      .preview-label,
+      .btn-wrap { display: none !important; }
+
+      /* Card takes full print area */
+      .preview-section { margin: 0; }
+      .reset-card {
+        box-shadow: none;
+        border: 1.5px solid #bbb;
+        border-radius: 8px;
+        max-width: 5in;
+        margin: 0 auto;
+        padding: 32px 36px 26px;
+        page-break-inside: avoid;
+      }
+      .card-title { font-size: 21px; }
+      .card-tagline { font-size: 11px; letter-spacing: 2.5px; }
+      .card-step-text { font-size: 15px; }
+      .card-step-label { font-size: 10px; }
+      .card-breath-step { font-size: 14px; }
+      .card-footer { font-size: 9.5px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="brand-tag">The Quiet Edge &middot; Episode 9</div>
+  <h1>ACR Reset Card Builder</h1>
+  <p class="intro">Fill in your personal reset sequence below. The card preview updates live as you type. When you're ready, click <strong style="color:var(--gold)">Print My Reset Card</strong> — then laminate it and keep it in your bag.</p>
+
+  <!-- ── OPTIONAL INFO ── -->
+  <div class="fs">
+    <div class="fs-tag">Optional</div>
+    <div class="fs-title">Your Info</div>
+    <div class="fs-desc">Appears in the top corner of your card. Leave blank for a generic card.</div>
+    <div class="row-2">
+      <div class="field">
+        <label>Your name</label>
+        <input type="text" id="in-name" placeholder="e.g. Jordan" maxlength="30" oninput="updateCard()">
+      </div>
+      <div class="field">
+        <label>Sport / position</label>
+        <input type="text" id="in-sport" placeholder="e.g. Point Guard · Basketball" maxlength="40" oninput="updateCard()">
+      </div>
+    </div>
+  </div>
+
+  <!-- ── A: ACKNOWLEDGE ── -->
+  <div class="fs">
+    <div class="fs-tag">Step A &middot; 1–2 seconds</div>
+    <div class="fs-title">Acknowledge</div>
+    <div class="fs-desc">One honest, non-critical statement. Not "that was terrible." Not "it's fine." Just honest registration — so your brain stops replaying it and lets you move.</div>
+    <div class="acr-row">
+      <div class="acr-badge">A</div>
+      <div class="field" style="margin:0">
+        <label>Your acknowledge phrase</label>
+        <input type="text" id="in-ack" placeholder='e.g. "That happened. I see it."' maxlength="80" oninput="updateCard()">
+      </div>
+    </div>
+  </div>
+
+  <!-- ── C: CORRECT ── -->
+  <div class="fs">
+    <div class="fs-tag">Step C &middot; 2–3 seconds</div>
+    <div class="fs-title">Correct</div>
+    <div class="fs-desc">One technical cue — not a lecture. The single most important fix. For mental errors, your cue is your process focus for the next play. One word or short phrase only.</div>
+    <div class="acr-row">
+      <div class="acr-badge">C</div>
+      <div class="field" style="margin:0">
+        <label>Your correction cue</label>
+        <input type="text" id="in-correct" placeholder='e.g. "Hands up." or "Eyes first." or "Stay low."' maxlength="60" oninput="updateCard()">
+      </div>
+    </div>
+  </div>
+
+  <!-- ── R: REFOCUS ── -->
+  <div class="fs">
+    <div class="fs-tag">Step R &middot; 2 seconds</div>
+    <div class="fs-title">Refocus</div>
+    <div class="fs-desc">Your anchor phrase. The signal that the last play is completely gone and you are locked into the next one. Short, physical to say, and yours alone.</div>
+    <div class="acr-row">
+      <div class="acr-badge">R</div>
+      <div class="field" style="margin:0">
+        <label>Your anchor phrase</label>
+        <input type="text" id="in-refocus" placeholder='e.g. "Next play." or "Right here." or "Let&apos;s go."' maxlength="40" oninput="updateCard()">
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BREATH & RELEASE ── -->
+  <div class="fs">
+    <div class="fs-tag">Physical Anchor</div>
+    <div class="fs-title">Breath &amp; Release</div>
+    <div class="fs-desc">The physical layer signals your nervous system to shift state — a controlled exhale activates the parasympathetic response, lowering the cortisol spike that follows a high-stakes mistake. Choose one move, one breath pattern, one phrase.</div>
+    <div class="field">
+      <label>Physical release move</label>
+      <input type="text" id="in-move" placeholder='e.g. "Shake hands out" or "Roll shoulders back" or "One sharp clap"' maxlength="60" oninput="updateCard()">
+    </div>
+    <div class="row-3">
+      <div class="field">
+        <label>Exhale count</label>
+        <input type="text" id="in-exhale" placeholder="4" maxlength="10" oninput="updateCard()">
+      </div>
+      <div class="field">
+        <label>Inhale count</label>
+        <input type="text" id="in-inhale" placeholder="4" maxlength="10" oninput="updateCard()">
+      </div>
+      <div class="field">
+        <label>Spoken phrase</label>
+        <input type="text" id="in-spoken" placeholder='e.g. "Next play."' maxlength="40" oninput="updateCard()">
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CARD PREVIEW ── -->
+  <div class="preview-section">
+    <div class="preview-label">&mdash; Your Reset Card &mdash;</div>
+
+    <div class="reset-card" id="reset-card">
+
+      <!-- Top bar -->
+      <div class="card-top">
+        <div class="card-title">My ACR Reset Card</div>
+        <div class="card-athlete" id="card-athlete" style="display:none">
+          <div id="card-name-out"></div>
+          <div id="card-sport-out"></div>
+        </div>
+      </div>
+
+      <div class="card-tagline">7-Second Reset &nbsp;&middot;&nbsp; Acknowledge &nbsp;&middot;&nbsp; Correct &nbsp;&middot;&nbsp; Refocus</div>
+
+      <!-- ACR steps -->
+      <div class="card-acr">
+        <div class="card-step">
+          <div class="card-step-letter">A</div>
+          <div>
+            <div class="card-step-label">Acknowledge</div>
+            <div class="card-step-text" id="card-ack-out">&mdash;</div>
+          </div>
+        </div>
+        <div class="card-step">
+          <div class="card-step-letter">C</div>
+          <div>
+            <div class="card-step-label">Correct</div>
+            <div class="card-step-text" id="card-correct-out">&mdash;</div>
+          </div>
+        </div>
+        <div class="card-step">
+          <div class="card-step-letter">R</div>
+          <div>
+            <div class="card-step-label">Refocus</div>
+            <div class="card-step-text" id="card-refocus-out">&mdash;</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Breath & Release -->
+      <div class="card-breath">
+        <div class="card-breath-label">Breath &amp; Release</div>
+        <div class="card-breath-step">1. <span id="card-move-out">&mdash;</span></div>
+        <div class="card-breath-step">2. Exhale <span id="card-exhale-out">4</span> &rarr; Inhale <span id="card-inhale-out">4</span></div>
+        <div class="card-breath-step">3. Say: &#8220;<span id="card-spoken-out">&mdash;</span>&#8221;</div>
+      </div>
+
+      <div class="card-footer">The Quiet Edge &nbsp;&middot;&nbsp; EP9 &nbsp;&middot;&nbsp; tinyurl.com/54tzjeku</div>
+    </div>
+  </div>
+
+  <!-- ── PRINT BUTTON ── -->
+  <div class="btn-wrap">
+    <button class="btn-print" onclick="window.print()">Print My Reset Card</button>
+    <div class="btn-hint">Prints only the card above &mdash; laminate it and keep it in your bag.</div>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+  function get(id) {
+    return document.getElementById(id);
+  }
+
+  function val(id, fallback) {
+    const v = get(id).value.trim();
+    return v || fallback;
+  }
+
+  function setText(id, text) {
+    const el = get(id);
+    if (el) el.textContent = text;
+  }
+
+  function setHTML(id, html) {
+    const el = get(id);
+    if (el) el.innerHTML = html;
+  }
+
+  function updateCard() {
+    // ── Athlete info ──
+    const name  = get('in-name').value.trim();
+    const sport = get('in-sport').value.trim();
+    const athleteDiv = get('card-athlete');
+
+    if (name || sport) {
+      athleteDiv.style.display = '';
+      setText('card-name-out',  name);
+      setText('card-sport-out', sport);
+    } else {
+      athleteDiv.style.display = 'none';
+    }
+
+    // ── ACR ──
+    setText('card-ack-out',     val('in-ack',     '\u2014'));
+    setText('card-correct-out', val('in-correct',  '\u2014'));
+    setText('card-refocus-out', val('in-refocus',  '\u2014'));
+
+    // ── Breath & Release ──
+    setText('card-move-out',    val('in-move',    '\u2014'));
+    setText('card-exhale-out',  val('in-exhale',  '4'));
+    setText('card-inhale-out',  val('in-inhale',  '4'));
+    setText('card-spoken-out',  val('in-spoken',  '\u2014'));
+  }
+
+  // Run on load to set defaults
+  updateCard();
+</script>
+</body>
+</html>
