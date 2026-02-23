@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Voice in Their Head — Parent Self-Talk Audit | The Quiet Edge</title>
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #1a1a2e;
+      background: #eef4f3;
+    }
+
+    /* ─── Screen Chrome ─────────────────────────────────────── */
+    .screen-chrome {
+      background: #1a1a2e;
+      padding: 20px 24px;
+      text-align: center;
+    }
+
+    .screen-chrome h2 {
+      color: #5fb3ac;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .screen-chrome p {
+      color: rgba(255,255,255,0.65);
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+
+    .print-btn {
+      background: #5fb3ac;
+      color: white;
+      border: none;
+      padding: 11px 36px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: background 0.2s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .print-btn:hover { background: #4a9990; transform: translateY(-1px); }
+    .print-btn:active { transform: translateY(0); }
+
+    .print-hint {
+      color: rgba(255,255,255,0.4);
+      font-size: 11.5px;
+      margin-top: 8px;
+    }
+
+    /* ─── Page ──────────────────────────────────────────────── */
+    .page {
+      max-width: 8.5in;
+      margin: 24px auto;
+      background: white;
+      padding: 0.65in 0.75in 0.8in;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      border-radius: 4px;
+    }
+
+    /* ─── Brand Header ──────────────────────────────────────── */
+    .brand-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 3px solid #5fb3ac;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+
+    .brand-name {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #5fb3ac;
+    }
+
+    .brand-badge {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: white;
+      background: #5fb3ac;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* ─── Document Title ────────────────────────────────────── */
+    .doc-title h1 {
+      font-size: 24px;
+      font-weight: 900;
+      color: #1a1a2e;
+      line-height: 1.2;
+      margin-bottom: 5px;
+    }
+
+    .doc-title h1 span { color: #5fb3ac; }
+
+    .doc-subtitle {
+      font-size: 12.5px;
+      color: #888;
+      margin-bottom: 18px;
+    }
+
+    /* ─── Intro Box ─────────────────────────────────────────── */
+    .intro-box {
+      background: linear-gradient(135deg, #e8f7f6 0%, #fef9ee 100%);
+      border-left: 4px solid #5fb3ac;
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin-bottom: 26px;
+      font-size: 13px;
+      color: #333;
+    }
+
+    .intro-box strong {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #2d7a70;
+      margin-bottom: 5px;
+    }
+
+    /* ─── Section Headers ───────────────────────────────────── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin: 26px 0 14px;
+    }
+
+    .section-number {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #5fb3ac;
+      color: white;
+      font-size: 14px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .section-header h2 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #1a1a2e;
+    }
+
+    .section-meta {
+      font-size: 12px;
+      color: #999;
+      font-weight: 400;
+      margin-left: 2px;
+    }
+
+    /* ─── Section Divider ───────────────────────────────────── */
+    hr.divider {
+      border: none;
+      border-top: 1px solid #e8e8e8;
+      margin: 22px 0;
+    }
+
+    /* ─── Audit Section ─────────────────────────────────────── */
+    .audit-intro {
+      font-size: 13px;
+      color: #444;
+      margin-bottom: 12px;
+    }
+
+    .col-headers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .col-hdr {
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .col-hdr.actual { background: #ffe8d6; color: #a0522d; }
+    .col-hdr.ideal  { background: #d4ede8; color: #2d7a70; }
+
+    .scenario-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #666;
+      margin: 10px 0 5px;
+    }
+
+    .audit-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .audit-cell {
+      border-radius: 6px;
+      border: 1.5px solid #e0e0e0;
+      overflow: hidden;
+      background: #fafafa;
+    }
+
+    .audit-cell.actual { border-color: #f5cba7; }
+    .audit-cell.ideal  { border-color: #a2d9d1; }
+
+    .audit-cell textarea {
+      width: 100%;
+      min-height: 68px;
+      padding: 9px 11px;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 13px;
+      color: #1a1a2e;
+      resize: vertical;
+      outline: none;
+    }
+
+    .audit-cell textarea::placeholder { color: #c0c0c0; font-style: italic; }
+
+    /* ─── Gap Assessment ────────────────────────────────────── */
+    .gap-box {
+      background: #fff8ee;
+      border: 1.5px solid #f5cba7;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-top: 12px;
+    }
+
+    .gap-box p {
+      font-size: 13px;
+      font-weight: 600;
+      color: #7a4f1e;
+      margin-bottom: 10px;
+    }
+
+    .gap-options { display: flex; flex-direction: column; gap: 7px; }
+
+    .gap-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      font-size: 13px;
+      color: #444;
+      cursor: pointer;
+    }
+
+    .gap-option input[type="radio"] { margin-top: 3px; accent-color: #5fb3ac; }
+
+    /* ─── Framework Card ────────────────────────────────────── */
+    .framework-card {
+      background: linear-gradient(135deg, #1a1a2e 0%, #1e3a5f 100%);
+      border-radius: 10px;
+      padding: 20px 22px;
+      color: white;
+    }
+
+    .framework-card > p {
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #5fb3ac;
+      margin-bottom: 14px;
+    }
+
+    .framework-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .fw-step {
+      background: rgba(255,255,255,0.07);
+      border-radius: 8px;
+      padding: 13px 15px;
+      border-left: 3px solid #5fb3ac;
+    }
+
+    .fw-step .fw-num {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #5fb3ac;
+      margin-bottom: 3px;
+    }
+
+    .fw-step .fw-name {
+      font-size: 14px;
+      font-weight: 900;
+      color: white;
+      margin-bottom: 5px;
+    }
+
+    .fw-step .fw-desc {
+      font-size: 12px;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.45;
+    }
+
+    /* ─── Script Builder ────────────────────────────────────── */
+    .context-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .field-group { display: flex; flex-direction: column; gap: 4px; }
+
+    .field-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #999;
+    }
+
+    .text-input {
+      border: 1.5px solid #ddd;
+      border-radius: 6px;
+      padding: 8px 11px;
+      font-family: inherit;
+      font-size: 13px;
+      color: #1a1a2e;
+      background: #fafafa;
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+      width: 100%;
+    }
+
+    .text-input:focus { border-color: #5fb3ac; background: white; }
+
+    .phrase-cards { display: flex; flex-direction: column; gap: 12px; }
+
+    .phrase-card {
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fafafa;
+    }
+
+    .phrase-card-head {
+      background: #5fb3ac;
+      color: white;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      padding: 7px 15px;
+    }
+
+    .phrase-purpose {
+      font-size: 12px;
+      color: #777;
+      font-style: italic;
+      padding: 8px 15px 3px;
+    }
+
+    .phrase-input {
+      width: 100%;
+      min-height: 52px;
+      padding: 8px 15px 10px;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 13px;
+      color: #1a1a2e;
+      resize: vertical;
+      outline: none;
+    }
+
+    .phrase-example {
+      font-size: 11.5px;
+      color: #bbb;
+      padding: 0 15px 10px;
+      font-style: italic;
+    }
+
+    /* ─── Reflection ────────────────────────────────────────── */
+    .reflect-block {
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 11px;
+    }
+
+    .reflect-q {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1a1a2e;
+      background: #f7f7f7;
+      padding: 10px 15px 8px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .reflect-input {
+      width: 100%;
+      min-height: 58px;
+      padding: 10px 15px;
+      border: none;
+      background: white;
+      font-family: inherit;
+      font-size: 13px;
+      color: #1a1a2e;
+      resize: vertical;
+      outline: none;
+    }
+
+    .reflect-input::placeholder { color: #ccc; font-style: italic; }
+
+    /* ─── Footer ────────────────────────────────────────────── */
+    .doc-footer {
+      margin-top: 28px;
+      padding-top: 14px;
+      border-top: 2px solid #5fb3ac;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #bbb;
+    }
+
+    .footer-brand { font-weight: 800; color: #5fb3ac; }
+
+    /* ─── Print Styles ──────────────────────────────────────── */
+    @media print {
+      body { background: white; font-size: 12.5px; }
+
+      .screen-chrome { display: none !important; }
+
+      .page {
+        margin: 0;
+        padding: 0.45in 0.55in 0.55in;
+        max-width: 100%;
+        box-shadow: none;
+        border-radius: 0;
+      }
+
+      textarea, input[type="text"] {
+        border: 1px solid #ccc !important;
+        background: transparent !important;
+      }
+
+      .framework-card,
+      .phrase-card-head,
+      .brand-badge,
+      .col-hdr,
+      .gap-box {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
+      }
+
+      @page { margin: 0.45in; size: letter; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── Screen Chrome ─────────────────────────────────── -->
+  <div class="screen-chrome">
+    <h2>The Quiet Edge — Parent Self-Talk Audit</h2>
+    <p>Fill out the tool below, then download it as a PDF to keep.</p>
+    <button class="print-btn" onclick="window.print()">
+      &#8659; Download as PDF
+    </button>
+    <p class="print-hint">In the print dialog, choose "Save as PDF" as the destination</p>
+  </div>
+
+  <!-- ─── Page ──────────────────────────────────────────── -->
+  <div class="page">
+
+    <!-- Brand Header -->
+    <div class="brand-header">
+      <div class="brand-name">The Quiet Edge</div>
+      <div class="brand-badge">For Parents</div>
+    </div>
+
+    <!-- Document Title -->
+    <div class="doc-title">
+      <h1>The Voice <span>in Their Head</span></h1>
+      <div class="doc-subtitle">Parent Self-Talk Modeling Audit + Pre-Competition Script Builder &nbsp;&middot;&nbsp; Stage 2, Episode 2 (Parent Edition)</div>
+    </div>
+
+    <!-- Intro Box -->
+    <div class="intro-box">
+      <strong>How to use this tool</strong>
+      Research shows children learn self-talk patterns primarily through <em>observation</em> — not instruction. The most powerful self-talk lesson your athlete will ever receive is watching how <em>you</em> respond when you make a mistake. This tool has three parts: an audit of your own self-talk patterns, a framework reference card, and a pre-competition script builder. Fill it out honestly — this is for your eyes only.
+    </div>
+
+    <!-- ══════════════════════════════════════════════════ -->
+    <!--  PART 1 — THE MODELING MIRROR                      -->
+    <!-- ══════════════════════════════════════════════════ -->
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <h2>The Modeling Mirror <span class="section-meta">— Parent Self-Talk Audit</span></h2>
+    </div>
+
+    <p class="audit-intro">
+      For each scenario, write what you <strong>actually say or do</strong> in that moment — then what you <strong>want your athlete to say</strong> in a similar situation. The gap between columns is your coaching opportunity.
+    </p>
+
+    <!-- Column Headers -->
+    <div class="col-headers">
+      <div class="col-hdr actual">What I ACTUALLY say / do</div>
+      <div class="col-hdr ideal">What I WANT my athlete to say</div>
+    </div>
+
+    <!-- Scenario 1 -->
+    <p class="scenario-label">When I make a mistake in front of others</p>
+    <div class="audit-row">
+      <div class="audit-cell actual">
+        <textarea placeholder="e.g. &quot;Ugh, I'm so stupid. I can never get this right.&quot;"></textarea>
+      </div>
+      <div class="audit-cell ideal">
+        <textarea placeholder="e.g. &quot;That didn't work. What can I do differently?&quot;"></textarea>
+      </div>
+    </div>
+
+    <!-- Scenario 2 -->
+    <p class="scenario-label">When I'm frustrated and something goes wrong</p>
+    <div class="audit-row">
+      <div class="audit-cell actual">
+        <textarea placeholder="e.g. &quot;This always happens. I can never catch a break.&quot;"></textarea>
+      </div>
+      <div class="audit-cell ideal">
+        <textarea placeholder="e.g. &quot;This is frustrating. I'll take a breath and try again.&quot;"></textarea>
+      </div>
+    </div>
+
+    <!-- Scenario 3 -->
+    <p class="scenario-label">When I fail at something I care about</p>
+    <div class="audit-row">
+      <div class="audit-cell actual">
+        <textarea placeholder="e.g. &quot;I should have known better. I'm such an idiot.&quot;"></textarea>
+      </div>
+      <div class="audit-cell ideal">
+        <textarea placeholder="e.g. &quot;That hurt, but it's information. What can I learn from this?&quot;"></textarea>
+      </div>
+    </div>
+
+    <!-- Scenario 4 -->
+    <p class="scenario-label">When I'm watching my athlete compete and something goes wrong</p>
+    <div class="audit-row">
+      <div class="audit-cell actual">
+        <textarea placeholder="What do you say under your breath — or what does your body language show?"></textarea>
+      </div>
+      <div class="audit-cell ideal">
+        <textarea placeholder="e.g. &quot;Keep going. Reset. Trust yourself.&quot;"></textarea>
+      </div>
+    </div>
+
+    <!-- Gap Assessment -->
+    <div class="gap-box">
+      <p>After completing the audit above, where would you honestly place yourself?</p>
+      <div class="gap-options">
+        <label class="gap-option">
+          <input type="radio" name="gap" value="aligned">
+          <span><strong>Aligned</strong> — what I model mostly matches what I want my athlete to develop</span>
+        </label>
+        <label class="gap-option">
+          <input type="radio" name="gap" value="partial">
+          <span><strong>Partially aligned</strong> — some moments yes, some no — depends on my stress level</span>
+        </label>
+        <label class="gap-option">
+          <input type="radio" name="gap" value="gap">
+          <span><strong>Real gap</strong> — there is a meaningful difference between what I model and what I hope for them</span>
+        </label>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- ══════════════════════════════════════════════════ -->
+    <!--  PART 2 — FRAMEWORK REFERENCE CARD                 -->
+    <!-- ══════════════════════════════════════════════════ -->
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <h2>The 4-Step Framework <span class="section-meta">— When You Overhear Harsh Self-Talk</span></h2>
+    </div>
+
+    <div class="framework-card">
+      <p>Catch &amp; Redirect Framework — Parent Reference Card</p>
+      <div class="framework-grid">
+        <div class="fw-step">
+          <div class="fw-num">Step 1</div>
+          <div class="fw-name">Catch &amp; Redirect</div>
+          <div class="fw-desc">Gently interrupt without dismissing. "Hey — let's pause on that." Then reframe identity from behavior: "You made a mistake. That's not the same as being stupid."</div>
+        </div>
+        <div class="fw-step">
+          <div class="fw-num">Step 2</div>
+          <div class="fw-name">Teach the Replacement</div>
+          <div class="fw-desc">Offer the instructional script: "I'm still learning this. What can I do differently?" Give them specific language — not just "be positive."</div>
+        </div>
+        <div class="fw-step">
+          <div class="fw-num">Step 3</div>
+          <div class="fw-name">Teammate Standard</div>
+          <div class="fw-desc">"Would you say that to your best teammate?" Activates empathy and helps them step outside the inner critic to examine it objectively.</div>
+        </div>
+        <div class="fw-step">
+          <div class="fw-num">Step 4</div>
+          <div class="fw-name">Pre-Script Pressure Moments</div>
+          <div class="fw-desc">Before competition, plant instructional phrases so the brain has a default ready when pressure hits — no need to think, just execute.</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- ══════════════════════════════════════════════════ -->
+    <!--  PART 3 — PRE-COMPETITION SCRIPT BUILDER           -->
+    <!-- ══════════════════════════════════════════════════ -->
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <h2>Pre-Competition Script Builder <span class="section-meta">— What You'll Say Before Games</span></h2>
+    </div>
+
+    <p style="font-size: 13px; color: #444; margin-bottom: 14px;">
+      These aren't pep talks. They are brief, calm, process-focused phrases you plant in the car, at warmup, or at the locker room goodbye — so your athlete has an instructional script ready before the pressure hits. The calmer and more matter-of-fact your delivery, the more their nervous system registers: <em>"This is normal. I've been here before."</em>
+    </p>
+
+    <div class="context-grid">
+      <div class="field-group">
+        <label class="field-label">Your athlete's sport / position</label>
+        <input type="text" class="text-input" placeholder="e.g. Soccer — center midfielder">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Pressure moments they face regularly</label>
+        <input type="text" class="text-input" placeholder="e.g. Penalty kicks, first-quarter nerves">
+      </div>
+    </div>
+
+    <div class="phrase-cards">
+
+      <div class="phrase-card">
+        <div class="phrase-card-head">Phrase 1 — Reset Cue</div>
+        <p class="phrase-purpose">For: when a mistake happens mid-competition</p>
+        <textarea class="phrase-input" placeholder="Write your reset cue here..."></textarea>
+        <p class="phrase-example">Example: "When something goes wrong today, just say 'next play' — and get back to your position."</p>
+      </div>
+
+      <div class="phrase-card">
+        <div class="phrase-card-head">Phrase 2 — Mistake Reframe</div>
+        <p class="phrase-purpose">For: when they make an error and start the internal spiral</p>
+        <textarea class="phrase-input" placeholder="Write your mistake reframe here..."></textarea>
+        <p class="phrase-example">Example: "If you make an error, your job is to learn from it — not punish yourself. Say: 'What's next?'"</p>
+      </div>
+
+      <div class="phrase-card">
+        <div class="phrase-card-head">Phrase 3 — Pre-Start Anchor</div>
+        <p class="phrase-purpose">For: right before competition begins — a calm, focused intention</p>
+        <textarea class="phrase-input" placeholder="Write your pre-start anchor phrase here..."></textarea>
+        <p class="phrase-example">Example: "Your job today is to play your game. Stay process-focused. Trust your training."</p>
+      </div>
+
+    </div>
+
+    <hr class="divider">
+
+    <!-- ══════════════════════════════════════════════════ -->
+    <!--  PART 4 — REFLECTION                               -->
+    <!-- ══════════════════════════════════════════════════ -->
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <h2>Reflection <span class="section-meta">— After the Game or Practice</span></h2>
+    </div>
+
+    <div class="reflect-block">
+      <div class="reflect-q">What self-talk pattern do you most consistently model — negative, hollow-positive, or instructional? What evidence supports that?</div>
+      <textarea class="reflect-input" placeholder="Be honest. What do they actually see and hear from you in hard moments?"></textarea>
+    </div>
+
+    <div class="reflect-block">
+      <div class="reflect-q">When your athlete uses harsh self-talk, what is your first impulse? Does that response help or hinder the Catch &amp; Redirect process?</div>
+      <textarea class="reflect-input" placeholder="e.g. I immediately try to fix it — which sometimes shuts the conversation down before it opens..."></textarea>
+    </div>
+
+    <div class="reflect-block">
+      <div class="reflect-q">If your athlete's self-talk one year from now is shaped by one habit you build starting this week — what would that habit be?</div>
+      <textarea class="reflect-input" placeholder="One specific, sustainable behavior change you can actually do..."></textarea>
+    </div>
+
+    <!-- Footer -->
+    <div class="doc-footer">
+      <div>
+        <span class="footer-brand">The Quiet Edge</span> &nbsp;&middot;&nbsp; Stage 2: Self-Awareness — Parent Edition &nbsp;&middot;&nbsp; Episode 2
+      </div>
+      <div>Parent Self-Talk Audit &nbsp;&middot;&nbsp; quietedge.com</div>
+    </div>
+
+  </div><!-- /page -->
+
+  <!-- Bottom Download Button -->
+  <div style="text-align: center; padding: 20px 0 36px;">
+    <button class="print-btn" onclick="window.print()">
+      &#8659; Download as PDF
+    </button>
+    <p class="print-hint" style="color: #888; font-size: 12px; margin-top: 8px;">In the print dialog, select "Save as PDF" as the destination</p>
+  </div>
+
+</body>
+</html>
