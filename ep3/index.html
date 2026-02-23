@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EP3: Control Circle Mapping | The Quiet Edge</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #1a1a2e;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    background: #fff;
+  }
+
+  @media print {
+    body { padding: 20px; font-size: 11pt; }
+    .no-print { display: none; }
+    .page-break { page-break-before: always; }
+    table { page-break-inside: avoid; }
+  }
+
+  .header { text-align: center; border-bottom: 3px solid #1a1a2e; padding-bottom: 24px; margin-bottom: 32px; }
+  .header .brand { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: #666; margin-bottom: 8px; }
+  .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+  .header .subtitle { font-size: 16px; color: #555; }
+  .header .episode-tag { display: inline-block; background: #1a1a2e; color: #fff; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-top: 12px; letter-spacing: 1px; }
+
+  h2 { font-size: 20px; font-weight: 700; margin-top: 36px; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid #eee; }
+  h3 { font-size: 16px; font-weight: 600; margin-top: 24px; margin-bottom: 8px; }
+  p, li { margin-bottom: 8px; }
+  ul, ol { padding-left: 24px; margin-bottom: 16px; }
+
+  .evidence-box { background: #f8f9fa; border-left: 4px solid #1a1a2e; padding: 16px 20px; margin: 16px 0; font-size: 14px; }
+  .evidence-box strong { color: #1a1a2e; }
+  .instructions-box { background: #e8f4f8; border-radius: 8px; padding: 16px 20px; margin: 16px 0; }
+  .instructions-box strong { display: block; margin-bottom: 4px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  th, td { border: 1px solid #ddd; padding: 10px 12px; text-align: left; font-size: 14px; }
+  th { background: #1a1a2e; color: #fff; font-weight: 600; font-size: 13px; }
+
+  .write-line { border-bottom: 1px solid #ccc; min-height: 28px; margin: 8px 0; padding: 4px 0; }
+  .write-area { border: 1px solid #ccc; border-radius: 4px; min-height: 60px; margin: 8px 0; padding: 8px; }
+  .tip-box { background: #fff3cd; border-radius: 8px; padding: 12px 16px; margin: 16px 0; font-size: 14px; }
+  .reflection-box { background: #f0f0f5; border-radius: 8px; padding: 16px 20px; margin: 16px 0; }
+  .reflection-box ol { margin-bottom: 0; }
+  .reflection-box li { margin-bottom: 12px; }
+
+  .circle-container { display: flex; justify-content: center; align-items: center; margin: 24px 0; }
+  .circle-outer { width: 360px; height: 360px; border-radius: 50%; border: 3px solid #ccc; display: flex; justify-content: center; align-items: center; position: relative; background: #f9f9f9; }
+  .circle-inner { width: 180px; height: 180px; border-radius: 50%; border: 3px solid #1a1a2e; display: flex; justify-content: center; align-items: center; background: #e8f4f8; }
+  .circle-label-inner { font-weight: 700; font-size: 14px; text-align: center; color: #1a1a2e; }
+  .circle-label-outer { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 13px; color: #888; }
+
+  .footer { text-align: center; margin-top: 48px; padding-top: 24px; border-top: 2px solid #eee; font-size: 13px; color: #888; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">The Quiet Edge</div>
+  <h1>Control Circle Mapping</h1>
+  <div class="subtitle">Inside / Outside Circle + Daily Redirect Practice</div>
+  <div class="episode-tag">EPISODE 3 &bull; STAGE 2: SELF AWARENESS</div>
+</div>
+
+<div class="evidence-box">
+  <strong>Why This Works</strong><br>
+  Athletes who focus on controllable factors experience less anxiety and perform more consistently under pressure (Rotter, 1966). Acceptance and Commitment Therapy (ACT) research shows that psychological flexibility &mdash; the ability to redirect attention from uncontrollables to controllables &mdash; is one of the strongest predictors of sustained performance (Hayes et al., 2006). This worksheet trains that skill.
+</div>
+
+<div class="instructions-box">
+  <strong>Instructions</strong>
+  <strong>Time required:</strong> 15 minutes initially, then 2 minutes daily for 7 days<br>
+  <strong>What you need:</strong> This worksheet, a pen<br>
+  <strong>When to use:</strong> Start within 24 hours of watching Episode 3. Use the daily check before every practice or competition this week.
+</div>
+
+<h2>Exercise 1: Build Your Control Circle</h2>
+<p>Think about a specific upcoming competition or high-pressure situation. List everything that's on your mind &mdash; worries, goals, variables &mdash; then sort them.</p>
+
+<div class="circle-container">
+  <div class="circle-outer">
+    <div class="circle-label-outer">OUTSIDE MY CONTROL</div>
+    <div class="circle-inner">
+      <div class="circle-label-inner">INSIDE<br>MY CONTROL</div>
+    </div>
+  </div>
+</div>
+
+<h3>INSIDE My Control (Things I can directly influence)</h3>
+<table>
+  <tr><th>#</th><th>What I Control</th><th>Specific Action I Can Take</th></tr>
+  <tr><td>1</td><td><div class="write-line"></div></td><td><div class="write-line"></div></td></tr>
+  <tr><td>2</td><td><div class="write-line"></div></td><td><div class="write-line"></div></td></tr>
+  <tr><td>3</td><td><div class="write-line"></div></td><td><div class="write-line"></div></td></tr>
+  <tr><td>4</td><td><div class="write-line"></div></td><td><div class="write-line"></div></td></tr>
+  <tr><td>5</td><td><div class="write-line"></div></td><td><div class="write-line"></div></td></tr>
+</table>
+
+<h3>OUTSIDE My Control (Things I need to let go of)</h3>
+<table>
+  <tr><th>#</th><th>What I Can't Control</th><th>My Redirect: What I'll Focus on Instead</th></tr>
+  <tr><td>1</td><td><div class="write-line"></div></td><td><div class="write-line"></div></td></tr>
+  <tr><td>2</td><td><div class="write-line"></div></td><td><div class="write-line"></div></td></tr>
+  <tr><td>3</td><td><div class="write-line"></div></td><td><div class="write-line"></div></td></tr>
+  <tr><td>4</td><td><div class="write-line"></div></td><td><div class="write-line"></div></td></tr>
+  <tr><td>5</td><td><div class="write-line"></div></td><td><div class="write-line"></div></td></tr>
+</table>
+
+<div class="tip-box">
+  <strong>Check yourself:</strong> If you listed "winning" or "the score" inside your circle, move it out. You influence outcomes through your actions, but you don't <em>control</em> outcomes. Focus on the actions that give you the best chance.
+</div>
+
+<h2>Exercise 2: The Redirect Drill</h2>
+<p>When you catch yourself worrying about something outside your control, use this 3-step redirect:</p>
+
+<table>
+  <tr>
+    <th>Step</th>
+    <th>What to Do</th>
+    <th>Example</th>
+  </tr>
+  <tr>
+    <td><strong>1. Catch it</strong></td>
+    <td>Notice you're focused on an uncontrollable</td>
+    <td>"I'm thinking about whether the ref will be fair"</td>
+  </tr>
+  <tr>
+    <td><strong>2. Name it</strong></td>
+    <td>Say: "That's outside my circle"</td>
+    <td>"Ref calls are outside my circle"</td>
+  </tr>
+  <tr>
+    <td><strong>3. Redirect</strong></td>
+    <td>Shift to one controllable action</td>
+    <td>"I'm going to focus on my first-step quickness"</td>
+  </tr>
+</table>
+
+<p><strong>Practice right now:</strong> Write one worry from your "Outside" list and run the redirect:</p>
+<p>My worry: <span class="write-line" style="display:inline-block;width:80%"></span></p>
+<p>"That's outside my circle."</p>
+<p>My redirect: <span class="write-line" style="display:inline-block;width:80%"></span></p>
+
+<div class="page-break"></div>
+
+<h2>Exercise 3: 7-Day Daily Control Check</h2>
+<p>Before each practice or competition, take 2 minutes to complete this check. Write one uncontrollable you're tempted to focus on, then redirect to one controllable.</p>
+
+<table>
+  <tr>
+    <th>Day</th>
+    <th>Uncontrollable I Caught Myself On</th>
+    <th>My Redirect (Controllable Focus)</th>
+    <th>Did I stay focused? (Y / N)</th>
+  </tr>
+  <tr><td><strong>Mon</strong></td><td><div class="write-line"></div></td><td><div class="write-line"></div></td><td style="text-align:center"></td></tr>
+  <tr><td><strong>Tue</strong></td><td><div class="write-line"></div></td><td><div class="write-line"></div></td><td style="text-align:center"></td></tr>
+  <tr><td><strong>Wed</strong></td><td><div class="write-line"></div></td><td><div class="write-line"></div></td><td style="text-align:center"></td></tr>
+  <tr><td><strong>Thu</strong></td><td><div class="write-line"></div></td><td><div class="write-line"></div></td><td style="text-align:center"></td></tr>
+  <tr><td><strong>Fri</strong></td><td><div class="write-line"></div></td><td><div class="write-line"></div></td><td style="text-align:center"></td></tr>
+  <tr><td><strong>Sat</strong></td><td><div class="write-line"></div></td><td><div class="write-line"></div></td><td style="text-align:center"></td></tr>
+  <tr><td><strong>Sun</strong></td><td><div class="write-line"></div></td><td><div class="write-line"></div></td><td style="text-align:center"></td></tr>
+</table>
+
+<p><strong>End-of-week success rate:</strong> ___/7 days I stayed focused on controllables</p>
+
+<h2>Exercise 4: Stress Situations Map</h2>
+<p>List 3 situations in your sport that consistently stress you out. For each one, separate the controllable from the uncontrollable.</p>
+
+<table>
+  <tr>
+    <th>Stressful Situation</th>
+    <th>What I CAN'T Control</th>
+    <th>What I CAN Control</th>
+    <th>My Go-To Redirect</th>
+  </tr>
+  <tr>
+    <td><div class="write-area" style="border:none;min-height:40px"></div></td>
+    <td><div class="write-area" style="border:none;min-height:40px"></div></td>
+    <td><div class="write-area" style="border:none;min-height:40px"></div></td>
+    <td><div class="write-area" style="border:none;min-height:40px"></div></td>
+  </tr>
+  <tr>
+    <td><div class="write-area" style="border:none;min-height:40px"></div></td>
+    <td><div class="write-area" style="border:none;min-height:40px"></div></td>
+    <td><div class="write-area" style="border:none;min-height:40px"></div></td>
+    <td><div class="write-area" style="border:none;min-height:40px"></div></td>
+  </tr>
+  <tr>
+    <td><div class="write-area" style="border:none;min-height:40px"></div></td>
+    <td><div class="write-area" style="border:none;min-height:40px"></div></td>
+    <td><div class="write-area" style="border:none;min-height:40px"></div></td>
+    <td><div class="write-area" style="border:none;min-height:40px"></div></td>
+  </tr>
+</table>
+
+<div class="reflection-box">
+  <h3>Reflection Questions</h3>
+  <ol>
+    <li>How much of your mental energy this week was spent on things outside your control? If you could redirect even 20% of that energy to controllables, what would change?</li>
+    <li>Think of an athlete you admire. What controllables do you think they focus on that other athletes ignore?</li>
+    <li>The video connects to EP2 (self-talk): when you catch yourself worrying about an uncontrollable, what does your inner voice say? How could you use a self-talk replacement from EP2 to help redirect faster?</li>
+  </ol>
+</div>
+
+<div class="footer">
+  <strong>The Quiet Edge</strong> &mdash; Stage 2: Self Awareness &mdash; Athlete Edition<br>
+  Episode 3: Controlling What You Can Control<br><br>
+  Evidence: Rotter (1966) &mdash; Locus of control; Hayes et al. (2006) &mdash; ACT and psychological flexibility<br><br>
+  <em>This guide is a companion to the video. Watch first, then complete within 24 hours.</em>
+</div>
+
+</body>
+</html>
