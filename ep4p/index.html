@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress Recognition Toolkit — For Parents | The Quiet Edge</title>
+<style>
+/* ===== VARIABLES ===== */
+:root {
+  --teal: #5fb3ac;
+  --teal-dark: #3d9089;
+  --teal-light: #e8f4f3;
+  --teal-mid: #c2e4e1;
+  --amber: #c87c2e;
+  --amber-light: #fdf2e8;
+  --dark: #1a2a2e;
+  --mid: #4a5a5e;
+  --light: #f7faf9;
+  --white: #ffffff;
+  --border: #d0dedd;
+  --trait-color: #d94040;
+  --trait-bg: #fdf0f0;
+  --outcome-color: #c97a20;
+  --outcome-bg: #fdf5e8;
+  --progress-color: #3d9089;
+  --progress-bg: #e8f4f3;
+  --radius: 8px;
+  --shadow: 0 2px 10px rgba(26,42,46,0.08);
+}
+
+/* ===== RESET ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--dark);
+  background: var(--light);
+}
+
+/* ===== PAGE ===== */
+.page {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 36px 44px 56px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+  min-height: 100vh;
+}
+
+/* ===== HEADER ===== */
+.header {
+  border-top: 4px solid var(--teal);
+  padding-top: 24px;
+  margin-bottom: 28px;
+}
+.header-brand {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 7px;
+}
+.header h1 {
+  font-size: 25px;
+  font-weight: 700;
+  color: var(--dark);
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.header-sub {
+  font-size: 13px;
+  color: var(--mid);
+  margin-bottom: 18px;
+}
+.print-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 22px;
+  background: var(--teal);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: background 0.15s;
+}
+.print-btn:hover { background: var(--teal-dark); }
+.print-btn svg { flex-shrink: 0; }
+
+/* ===== INTRO BOX ===== */
+.intro-box {
+  background: var(--teal-light);
+  border-left: 3px solid var(--teal);
+  padding: 14px 18px;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin-bottom: 36px;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.intro-box strong { color: var(--teal-dark); }
+
+/* ===== SECTION ===== */
+.section {
+  margin-bottom: 44px;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1.5px solid var(--border);
+}
+.section-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: var(--teal);
+  color: var(--white);
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.section-title {
+  font-size: 16.5px;
+  font-weight: 700;
+  color: var(--dark);
+}
+.section-desc {
+  font-size: 13px;
+  color: var(--mid);
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+
+/* ===== PHRASE LIST (Part 1) ===== */
+.phrase-list {
+  list-style: none;
+  margin-bottom: 20px;
+}
+.phrase-item {
+  margin-bottom: 6px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--white);
+  transition: border-color 0.12s, background 0.12s;
+}
+.phrase-item.checked { border-color: var(--teal); background: var(--teal-light); }
+.phrase-item label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  width: 100%;
+}
+.phrase-item input[type="checkbox"] {
+  margin-top: 2px;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--teal);
+  cursor: pointer;
+}
+.phrase-text {
+  font-size: 13.5px;
+  color: var(--dark);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* ===== TALLY ===== */
+.tally-wrapper {
+  padding: 16px 20px;
+  background: var(--light);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.tally-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 12px;
+}
+.tally-bars { display: flex; flex-direction: column; gap: 9px; margin-bottom: 14px; }
+.tally-row { display: flex; align-items: center; gap: 10px; }
+.tally-type {
+  font-size: 11.5px;
+  font-weight: 600;
+  width: 145px;
+  flex-shrink: 0;
+}
+.tally-track {
+  flex: 1;
+  height: 9px;
+  background: var(--border);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.tally-fill {
+  height: 100%;
+  border-radius: 5px;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+.tally-count { font-size: 13px; font-weight: 700; width: 18px; text-align: right; }
+
+.t-trait .tally-type  { color: var(--trait-color); }
+.t-trait .tally-fill  { background: var(--trait-color); }
+.t-trait .tally-count { color: var(--trait-color); }
+.t-out .tally-type    { color: var(--outcome-color); }
+.t-out .tally-fill    { background: var(--outcome-color); }
+.t-out .tally-count   { color: var(--outcome-color); }
+.t-prog .tally-type   { color: var(--progress-color); }
+.t-prog .tally-fill   { background: var(--progress-color); }
+.t-prog .tally-count  { color: var(--progress-color); }
+
+.tally-insight {
+  font-size: 13px;
+  color: var(--mid);
+  padding: 10px 14px;
+  background: var(--white);
+  border-left: 3px solid var(--teal);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-style: italic;
+  line-height: 1.55;
+  min-height: 40px;
+}
+
+/* ===== BUILDER FORM (Part 2) ===== */
+.builder-form { display: flex; flex-direction: column; gap: 16px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 4px; }
+.form-label { font-size: 12.5px; font-weight: 600; color: var(--dark); }
+.form-hint { font-size: 11.5px; color: var(--mid); font-style: italic; line-height: 1.5; }
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13.5px;
+  font-family: inherit;
+  color: var(--dark);
+  background: var(--white);
+  outline: none;
+  transition: border-color 0.12s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--teal); }
+.form-textarea { resize: vertical; min-height: 70px; }
+.build-btn {
+  align-self: flex-start;
+  padding: 10px 22px;
+  background: var(--amber);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: background 0.15s;
+}
+.build-btn:hover { background: #a56424; }
+
+.statement-output {
+  display: none;
+  padding: 18px 20px;
+  background: var(--teal-light);
+  border: 1.5px solid var(--teal);
+  border-radius: var(--radius);
+  margin-top: 4px;
+}
+.statement-output.visible { display: block; }
+.out-row { margin-bottom: 14px; }
+.out-row:last-child { margin-bottom: 0; }
+.out-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal-dark);
+  margin-bottom: 5px;
+}
+.out-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dark);
+  line-height: 1.55;
+  padding: 10px 14px;
+  background: var(--white);
+  border-radius: 6px;
+  border: 1px solid var(--teal-mid);
+}
+.out-tip {
+  font-size: 12px;
+  color: var(--mid);
+  font-style: italic;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+/* ===== SABOTEURS (Part 3) ===== */
+.saboteur-list { list-style: none; margin-bottom: 20px; }
+.saboteur-item {
+  margin-bottom: 8px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--white);
+  transition: border-color 0.12s, background 0.12s;
+}
+.saboteur-item.checked { border-color: var(--amber); background: var(--amber-light); }
+.saboteur-item label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  width: 100%;
+}
+.saboteur-item input[type="checkbox"] {
+  margin-top: 3px;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--amber);
+  cursor: pointer;
+}
+.sab-title { font-size: 13.5px; font-weight: 600; color: var(--dark); margin-bottom: 2px; }
+.sab-desc { font-size: 12.5px; color: var(--mid); line-height: 1.5; }
+.commitment-label { font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 5px; }
+.commitment-hint { font-size: 12px; color: var(--mid); font-style: italic; margin-bottom: 8px; line-height: 1.5; }
+
+/* ===== FOOTER ===== */
+.footer {
+  margin-top: 48px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  font-size: 11.5px;
+  color: var(--mid);
+  line-height: 1.6;
+}
+.footer-brand { font-weight: 700; color: var(--teal); margin-bottom: 4px; font-size: 12px; }
+
+/* ===== PRINT ===== */
+@media print {
+  body { background: white; font-size: 12px; }
+  .page { padding: 0; max-width: 100%; box-shadow: none; }
+  .print-btn { display: none !important; }
+  .build-btn { display: none !important; }
+  .section { page-break-inside: avoid; margin-bottom: 28px; }
+  .phrase-item { break-inside: avoid; }
+  .saboteur-item { break-inside: avoid; }
+  .tally-fill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .statement-output { display: block !important; }
+  .header { padding-top: 16px; }
+  .intro-box { background: #e8f4f3 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .tally-wrapper { background: #f7faf9 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+@page { size: letter; margin: 0.7in 0.75in; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-brand">The Quiet Edge &nbsp;&mdash;&nbsp; For Parents &nbsp;|&nbsp; Stage 2: Self Awareness</div>
+    <h1>Progress Recognition Toolkit</h1>
+    <p class="header-sub">Episode 4 &nbsp;&middot;&nbsp; Small Wins Build Real Confidence</p>
+    <button class="print-btn" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Download as PDF
+    </button>
+  </header>
+
+  <!-- INTRO -->
+  <div class="intro-box">
+    <strong>Before you begin:</strong> Bring a recent game or practice memory to mind — ideally from the last two weeks. You'll draw on that moment in each section below.<br>
+    <strong>Estimated time:</strong> 12–15 minutes &nbsp;|&nbsp;
+    <strong>Evidence base:</strong> Müller &amp; Dweck (1998), Deci &amp; Ryan (2000), Mageau &amp; Vallerand (2003)
+  </div>
+
+  <!-- ===== PART 1 ===== -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Praise Pattern Audit</div>
+    </div>
+    <p class="section-desc">
+      Check every phrase that sounds like something you actually say to your athlete — after games, practices, or when they need encouragement. Be honest; this is for your awareness only.
+    </p>
+
+    <ul class="phrase-list" id="phraseList">
+      <li class="phrase-item" id="p1">
+        <label>
+          <input type="checkbox" data-type="trait" onchange="syncItem('p1',this); updateTally()">
+          <span class="phrase-text">"You're so talented — I love watching you play."</span>
+        </label>
+      </li>
+      <li class="phrase-item" id="p2">
+        <label>
+          <input type="checkbox" data-type="trait" onchange="syncItem('p2',this); updateTally()">
+          <span class="phrase-text">"You're a natural athlete. You make it look easy."</span>
+        </label>
+      </li>
+      <li class="phrase-item" id="p3">
+        <label>
+          <input type="checkbox" data-type="trait" onchange="syncItem('p3',this); updateTally()">
+          <span class="phrase-text">"You're one of the smartest players on that field."</span>
+        </label>
+      </li>
+      <li class="phrase-item" id="p4">
+        <label>
+          <input type="checkbox" data-type="outcome" onchange="syncItem('p4',this); updateTally()">
+          <span class="phrase-text">"Great game! You were amazing today."</span>
+        </label>
+      </li>
+      <li class="phrase-item" id="p5">
+        <label>
+          <input type="checkbox" data-type="outcome" onchange="syncItem('p5',this); updateTally()">
+          <span class="phrase-text">"You played so well — I'm so proud of you."</span>
+        </label>
+      </li>
+      <li class="phrase-item" id="p6">
+        <label>
+          <input type="checkbox" data-type="outcome" onchange="syncItem('p6',this); updateTally()">
+          <span class="phrase-text">"Good job out there."</span>
+        </label>
+      </li>
+      <li class="phrase-item" id="p7">
+        <label>
+          <input type="checkbox" data-type="outcome" onchange="syncItem('p7',this); updateTally()">
+          <span class="phrase-text">"You did great — it just didn't go your way today."</span>
+        </label>
+      </li>
+      <li class="phrase-item" id="p8">
+        <label>
+          <input type="checkbox" data-type="progress" onchange="syncItem('p8',this); updateTally()">
+          <span class="phrase-text">"I noticed you got back up faster after that mistake."</span>
+        </label>
+      </li>
+      <li class="phrase-item" id="p9">
+        <label>
+          <input type="checkbox" data-type="progress" onchange="syncItem('p9',this); updateTally()">
+          <span class="phrase-text">"Your decision-making was sharper than last month."</span>
+        </label>
+      </li>
+      <li class="phrase-item" id="p10">
+        <label>
+          <input type="checkbox" data-type="progress" onchange="syncItem('p10',this); updateTally()">
+          <span class="phrase-text">"You stayed focused even when things got frustrating — I've seen you grow in that."</span>
+        </label>
+      </li>
+    </ul>
+
+    <div class="tally-wrapper">
+      <div class="tally-label">Your Pattern</div>
+      <div class="tally-bars">
+        <div class="tally-row t-trait">
+          <span class="tally-type">Trait Praise</span>
+          <div class="tally-track"><div class="tally-fill" id="barTrait"></div></div>
+          <span class="tally-count" id="cntTrait">0</span>
+        </div>
+        <div class="tally-row t-out">
+          <span class="tally-type">Outcome / Generic</span>
+          <div class="tally-track"><div class="tally-fill" id="barOutcome"></div></div>
+          <span class="tally-count" id="cntOutcome">0</span>
+        </div>
+        <div class="tally-row t-prog">
+          <span class="tally-type">Progress Recognition</span>
+          <div class="tally-track"><div class="tally-fill" id="barProgress"></div></div>
+          <span class="tally-count" id="cntProgress">0</span>
+        </div>
+      </div>
+      <div class="tally-insight" id="tallyInsight">Check the phrases above to see your pattern.</div>
+    </div>
+  </section>
+
+  <!-- ===== PART 2 ===== -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">"What I Noticed" Practice Builder</div>
+    </div>
+    <p class="section-desc">
+      The video's practice assignment: identify one specific improvement, name it explicitly to your athlete, and ask if they've noticed it too. Fill in the fields below to build your exact words before the conversation.
+    </p>
+
+    <div class="builder-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="athleteName">Athlete's name</label>
+          <input class="form-input" id="athleteName" type="text" placeholder="e.g. Jordan">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="areaSelect">Area of progress</label>
+          <select class="form-select" id="areaSelect">
+            <option value="">— Select —</option>
+            <option value="athletic">Athletic skill</option>
+            <option value="mental">Mental focus</option>
+            <option value="effort">Effort &amp; persistence</option>
+            <option value="character">Attitude &amp; character</option>
+            <option value="social">Social &amp; team contribution</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="observation">What specific thing have you noticed?</label>
+        <span class="form-hint">Describe a behavior, not a result. "You recovered faster after mistakes" not "you played better."</span>
+        <textarea class="form-textarea" id="observation" placeholder="e.g. kept your composure after that rough stretch in the second half..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="timeframe">Compared to when?</label>
+        <span class="form-hint">A timeframe makes the progress verifiable — something they can look back on and confirm.</span>
+        <input class="form-input" id="timeframe" type="text" placeholder="e.g. two months ago, the start of the season, last year...">
+      </div>
+
+      <button class="build-btn" onclick="buildStatement()">Build My Statement &rarr;</button>
+
+      <div class="statement-output" id="statementOutput">
+        <div class="out-row">
+          <div class="out-tag">Say this to your athlete</div>
+          <div class="out-text" id="outSay"></div>
+        </div>
+        <div class="out-row">
+          <div class="out-tag">Then ask</div>
+          <div class="out-text" id="outAsk"></div>
+        </div>
+        <div class="out-row">
+          <div class="out-tag">What to listen for</div>
+          <div class="out-text" id="outListen"></div>
+          <p class="out-tip">Whether they recognize it or not, you've just anchored something specific. That specificity is what separates credible feedback from praise they can dismiss.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PART 3 ===== -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">The 4 Saboteurs — My Commitment</div>
+    </div>
+    <p class="section-desc">
+      These are the four patterns most likely to undermine progress recognition. Check the ones you're personally at risk for, then write your commitment for this week.
+    </p>
+
+    <ul class="saboteur-list">
+      <li class="saboteur-item" id="s1">
+        <label>
+          <input type="checkbox" onchange="syncItem('s1',this)">
+          <div>
+            <div class="sab-title">Praising when they know they struggled</div>
+            <div class="sab-desc">Saying "great job" after a game your athlete knows went poorly. Even when well-intentioned, this teaches them your feedback can't be trusted — it doesn't match what they experienced.</div>
+          </div>
+        </label>
+      </li>
+      <li class="saboteur-item" id="s2">
+        <label>
+          <input type="checkbox" onchange="syncItem('s2',this)">
+          <div>
+            <div class="sab-title">Generic praise without specifics</div>
+            <div class="sab-desc">"Good job," "You were amazing," "So proud of you." Warm and loving, but no evidence is attached. Your athlete can't build confidence on praise they can't verify.</div>
+          </div>
+        </label>
+      </li>
+      <li class="saboteur-item" id="s3">
+        <label>
+          <input type="checkbox" onchange="syncItem('s3',this)">
+          <div>
+            <div class="sab-title">Comparing to others</div>
+            <div class="sab-desc">"You were the best one out there" or favorable comparisons to siblings or teammates. Creates performance climate, not mastery climate — confidence built on comparison collapses when the comparison shifts.</div>
+          </div>
+        </label>
+      </li>
+      <li class="saboteur-item" id="s4">
+        <label>
+          <input type="checkbox" onchange="syncItem('s4',this)">
+          <div>
+            <div class="sab-title">Only noticing athletic performance</div>
+            <div class="sab-desc">Missing progress in resilience, composure, attitude, leadership, or team contribution — the dimensions that build lifelong character and compound long after athletic careers end.</div>
+          </div>
+        </label>
+      </li>
+    </ul>
+
+    <p class="commitment-label">My commitment this week:</p>
+    <p class="commitment-hint">Based on what you checked above, write one thing you'll watch for — or do differently — in your next interaction with your athlete after a game or practice.</p>
+    <textarea class="form-textarea" id="commitmentText" rows="3" placeholder="e.g. After the next game, I'll pause before speaking and name one specific thing I actually observed — instead of defaulting to 'great job'..."></textarea>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-brand">The Quiet Edge — Parent Edition &nbsp;|&nbsp; Stage 2: Self Awareness</div>
+    <p>
+      Evidence base: Müller, C. M., &amp; Dweck, C. S. (1998). Praise for intelligence can undermine children's motivation. <em>JPSP, 75</em>(1). &nbsp;|&nbsp;
+      Deci, E. L., &amp; Ryan, R. M. (2000). The "what" and "why" of goal pursuits. <em>Psychological Inquiry, 11</em>(4). &nbsp;|&nbsp;
+      Mageau, G. A., &amp; Vallerand, R. J. (2003). The coach–athlete relationship. <em>Journal of Sports Sciences, 21</em>(11).
+    </p>
+    <p style="margin-top:6px">Parent Listening Guide: <strong>tinyurl.com/5dcm9b9d</strong></p>
+  </footer>
+
+</div>
+
+<script>
+// ===== PART 1: TALLY =====
+function syncItem(id, cb) {
+  document.getElementById(id).classList.toggle('checked', cb.checked);
+}
+
+function updateTally() {
+  var items = document.querySelectorAll('#phraseList input[type="checkbox"]');
+  var trait = 0, outcome = 0, progress = 0;
+  items.forEach(function(cb) {
+    if (cb.checked) {
+      var t = cb.dataset.type;
+      if (t === 'trait') trait++;
+      else if (t === 'outcome') outcome++;
+      else if (t === 'progress') progress++;
+    }
+  });
+  var total = Math.max(trait + outcome + progress, 1);
+
+  document.getElementById('cntTrait').textContent = trait;
+  document.getElementById('cntOutcome').textContent = outcome;
+  document.getElementById('cntProgress').textContent = progress;
+
+  document.getElementById('barTrait').style.width   = (trait   / total * 100) + '%';
+  document.getElementById('barOutcome').style.width = (outcome / total * 100) + '%';
+  document.getElementById('barProgress').style.width = (progress / total * 100) + '%';
+
+  var insight = document.getElementById('tallyInsight');
+  var checked = trait + outcome + progress;
+  if (checked === 0) {
+    insight.textContent = 'Check the phrases above to see your pattern.';
+  } else if (progress > trait && progress > outcome) {
+    insight.textContent = 'Strong. You\'re already leading with progress recognition more than trait or outcome praise. The goal now: bring it consistently — especially after hard games when the temptation to reassure with generic praise is highest.';
+  } else if (trait > outcome && trait > progress) {
+    insight.textContent = 'Your feedback tends to focus on who your athlete IS — their talent, intelligence, or natural ability. Research shows this quietly creates anxiety: athletes fear losing a label they didn\'t earn. The shift is to describe what they DO and HOW they\'ve grown.';
+  } else if (outcome > trait && outcome > progress) {
+    insight.textContent = 'Your feedback tends to be outcome- or result-attached. Your athlete may have learned to discount this feedback — they know when they didn\'t play well, and generic praise doesn\'t bridge that gap. The shift: make every compliment specific and observable.';
+  } else {
+    insight.textContent = 'Mixed pattern. You use some progress recognition alongside trait or outcome phrases. The goal is to increase specific, observable recognition — especially in post-game conversations after difficult performances.';
+  }
+}
+
+// ===== PART 2: STATEMENT BUILDER =====
+var listenMap = {
+  athletic:  'Recognition ("Yeah, I\'ve been working on that") means they\'re already self-monitoring — affirm it. Surprise means they haven\'t connected the dots yet; you\'ve just planted the seed of internal attribution.',
+  mental:    'If they recognize it, they\'re building internal self-awareness. Follow up: "What do you think helped you stay focused?" This moves them toward self-attribution, not parent-attribution.',
+  effort:    'Effort attribution is powerful. If they say "I was just trying harder," help them own it: "That trying IS the skill — that\'s what persistence looks like as it develops."',
+  character: 'Character recognition often surprises athletes. If they deflect, don\'t push — simply say: "I\'m not talking about the score. I\'m talking about you. I just wanted you to know I see it."',
+  social:    'Team contributions are often invisible to athletes. Help them see the impact: "Did you notice how your teammates responded when you did that?" This builds awareness of interpersonal influence.'
+};
+
+function buildStatement() {
+  var name = (document.getElementById('athleteName').value.trim() || 'your athlete');
+  var nameDisplay = name.charAt(0).toUpperCase() + name.slice(1);
+  var obs = document.getElementById('observation').value.trim();
+  var area = document.getElementById('areaSelect').value;
+  var tf = document.getElementById('timeframe').value.trim();
+
+  if (!obs) {
+    alert('Please describe what you noticed in your athlete before building the statement.');
+    return;
+  }
+
+  var timeRef = tf ? ' — that\'s progress from ' + tf : '';
+  var sayText = '\u201c' + nameDisplay + ', I noticed you ' + obs + timeRef + '.\u201d';
+  var shortObs = obs.length > 65 ? obs.substring(0, 65) + '\u2026' : obs;
+  var askText = '\u201cHave you noticed that in yourself \u2014 that you ' + shortObs + '?\u201d';
+  var listenText = listenMap[area] || 'Whether they recognize it or not, you\'ve just named something specific and observable. That specificity is what makes the feedback credible — unlike generic praise, they can\'t easily dismiss it, because it describes something real.';
+
+  document.getElementById('outSay').textContent = sayText;
+  document.getElementById('outAsk').textContent = askText;
+  document.getElementById('outListen').textContent = listenText;
+  document.getElementById('statementOutput').classList.add('visible');
+}
+</script>
+</body>
+</html>
