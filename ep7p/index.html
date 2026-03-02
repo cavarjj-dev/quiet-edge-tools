@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPS Goal-Builder | The Quiet Edge for Parents</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: linear-gradient(135deg, #fdf6e8 0%, #e8f7f5 100%);
+      min-height: 100vh;
+      color: #2c3e35;
+    }
+
+    .site-header {
+      background: linear-gradient(135deg, #1a4a42 0%, #2d7a6b 100%);
+      color: white;
+      padding: 28px 32px;
+      text-align: center;
+    }
+    .site-header .series-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      opacity: 0.7;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      margin-bottom: 8px;
+    }
+    .site-header h1 {
+      font-size: 28px;
+      font-weight: normal;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .site-header .subtitle {
+      font-size: 14px;
+      opacity: 0.8;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .teal-bar { height: 4px; background: #5fb3ac; }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .intro-card {
+      background: white;
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 32px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      border-left: 4px solid #5fb3ac;
+    }
+    .intro-card h2 {
+      font-size: 18px;
+      color: #1a4a42;
+      margin-bottom: 10px;
+    }
+    .intro-card p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #4a5e58;
+    }
+
+    .progress-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 32px;
+      align-items: center;
+    }
+    .progress-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #c5deda;
+      transition: background 0.3s;
+      flex-shrink: 0;
+    }
+    .progress-dot.done { background: #5fb3ac; }
+    .progress-dot.current {
+      background: #2d7a6b;
+      width: 14px;
+      height: 14px;
+    }
+    .progress-label {
+      font-size: 12px;
+      color: #7a9e98;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      margin-left: 4px;
+    }
+
+    .step-card {
+      background: white;
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      display: none;
+    }
+    .step-card.active { display: block; }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .step-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #5fb3ac;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: bold;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      flex-shrink: 0;
+    }
+    .step-label {
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #5fb3ac;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      margin-bottom: 2px;
+    }
+    .step-title { font-size: 20px; color: #1a4a42; }
+
+    .step-description {
+      font-size: 14px;
+      color: #5a7065;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #2c4a42;
+      margin-bottom: 6px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    input[type="text"], textarea, select {
+      width: 100%;
+      border: 1.5px solid #c5deda;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 15px;
+      font-family: Georgia, serif;
+      color: #2c3e35;
+      background: #fafffe;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+    input[type="text"]:focus, textarea:focus {
+      outline: none;
+      border-color: #5fb3ac;
+      background: white;
+    }
+    textarea { min-height: 80px; }
+
+    .form-row { margin-bottom: 18px; }
+
+    .helper-text {
+      font-size: 12px;
+      color: #7a9e98;
+      margin-top: 4px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .process-action-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    .action-number {
+      width: 32px;
+      height: 36px;
+      background: #e8f5f3;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: bold;
+      color: #5fb3ac;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      flex-shrink: 0;
+    }
+    .action-field { flex: 1; }
+    .action-field textarea { min-height: 60px; }
+
+    .callout {
+      background: #fff8e8;
+      border-left: 4px solid #e8a53a;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      font-size: 14px;
+      color: #6a5020;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+    .callout strong { color: #5a4010; }
+
+    .checkin-box {
+      background: #f0f9f8;
+      border-radius: 10px;
+      padding: 18px 22px;
+      border: 1.5px solid #c5deda;
+      margin-bottom: 20px;
+    }
+    .checkin-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    .checkin-row:last-child { margin-bottom: 0; }
+    .checkin-row label {
+      margin-bottom: 0;
+      min-width: 80px;
+      font-size: 13px;
+    }
+
+    .next-btn {
+      display: block;
+      width: 100%;
+      padding: 14px 24px;
+      background: #5fb3ac;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 8px;
+      letter-spacing: 0.3px;
+    }
+    .next-btn:hover { background: #4a9e97; }
+
+    /* Goal Card */
+    .goal-card {
+      display: none;
+      background: white;
+      border-radius: 12px;
+      padding: 36px 40px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+      border-top: 6px solid #5fb3ac;
+    }
+    .goal-card.visible { display: block; }
+
+    .goal-card-header {
+      text-align: center;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1.5px solid #e0f0ee;
+    }
+    .goal-card-header .series {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #5fb3ac;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      margin-bottom: 6px;
+    }
+    .goal-card-header h2 { font-size: 22px; color: #1a4a42; margin-bottom: 4px; }
+    .goal-card-header .athlete-name {
+      font-size: 14px;
+      color: #7a9e98;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .card-section { margin-bottom: 22px; }
+    .card-section-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #5fb3ac;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .card-content { font-size: 16px; color: #2c3e35; line-height: 1.6; }
+    .card-content.highlight { font-size: 18px; color: #1a4a42; font-weight: bold; }
+
+    .process-list { list-style: none; }
+    .process-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 15px;
+      color: #2c3e35;
+      line-height: 1.5;
+    }
+    .process-list li .bullet {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #5fb3ac;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: bold;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .card-divider { height: 1px; background: #e0f0ee; margin: 20px 0; }
+
+    .card-footer {
+      text-align: center;
+      font-size: 12px;
+      color: #9ab8b3;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid #e0f0ee;
+    }
+
+    .print-btn {
+      display: block;
+      width: 100%;
+      padding: 16px 24px;
+      background: #1a4a42;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      letter-spacing: 0.5px;
+    }
+    .print-btn:hover { background: #2d7a6b; }
+
+    .restart-btn {
+      display: block;
+      width: 100%;
+      padding: 12px 24px;
+      background: transparent;
+      color: #7a9e98;
+      border: 1.5px solid #c5deda;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: border-color 0.2s;
+    }
+    .restart-btn:hover { border-color: #5fb3ac; color: #5fb3ac; }
+
+    @media (max-width: 600px) {
+      .container { padding: 20px 16px 60px; }
+      .step-card, .goal-card { padding: 22px 20px; }
+      .site-header h1 { font-size: 22px; }
+      .checkin-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .checkin-row label { min-width: auto; }
+    }
+
+    @media print {
+      body { background: white; }
+      .site-header, .teal-bar, .intro-card,
+      .progress-bar, .step-card,
+      .print-btn, .restart-btn { display: none !important; }
+      .container { padding: 0; max-width: 100%; }
+      .goal-card {
+        display: block !important;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 24px 32px;
+        border-top: 6px solid #5fb3ac;
+      }
+      .goal-card-header h2 { font-size: 20px; }
+      .card-content { font-size: 14px; }
+      .card-content.highlight { font-size: 16px; }
+      .process-list li { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="series-label">The Quiet Edge &middot; Parent Edition &middot; Episode 7</div>
+  <h1>GPS Goal-Builder</h1>
+  <div class="subtitle">Build a process-focused goal conversation with your athlete</div>
+</header>
+<div class="teal-bar"></div>
+
+<div class="container">
+
+  <div class="intro-card">
+    <h2>How this works</h2>
+    <p>The GPS Framework from Episode 7 turns outcome goals into daily process focus: <strong>Goal &rarr; Process &rarr; Scoreboard</strong>. This tool walks you through the four-step goal conversation to have with your athlete &mdash; so you can support their goals without adding pressure. Fill it out together or use it to prepare before the conversation.</p>
+  </div>
+
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-dot current" id="dot0"></div>
+    <div class="progress-dot" id="dot1"></div>
+    <div class="progress-dot" id="dot2"></div>
+    <div class="progress-dot" id="dot3"></div>
+    <div class="progress-dot" id="dot4"></div>
+    <span class="progress-label" id="progressLabel">Step 1 of 5</span>
+  </div>
+
+  <!-- Step 1: Starting Point -->
+  <div class="step-card active" id="step0">
+    <div class="step-header">
+      <div class="step-badge">1</div>
+      <div>
+        <div class="step-label">Before We Start</div>
+        <div class="step-title">The Outcome Goal</div>
+      </div>
+    </div>
+    <p class="step-description">Before building a process goal, name the outcome goal that's been driving conversations. This could be something your athlete mentioned, or something you've been most focused on.</p>
+
+    <div class="form-row">
+      <label for="athleteName">Your athlete's name <span style="font-weight:normal;color:#7a9e98;">(optional)</span></label>
+      <input type="text" id="athleteName" placeholder="e.g. Jordan" maxlength="40">
+    </div>
+
+    <div class="form-row">
+      <label for="sport">Their sport / team</label>
+      <input type="text" id="sport" placeholder="e.g. Soccer &mdash; U14 travel team" maxlength="60">
+    </div>
+
+    <div class="form-row">
+      <label for="outcomeGoal">The outcome goal that's been in focus</label>
+      <textarea id="outcomeGoal" placeholder="e.g. 'Make the varsity team' / 'Be the starting goalkeeper' / 'Score 10 goals this season'"></textarea>
+      <div class="helper-text">This is the destination — not a direction. We'll convert it to a GPS route in the next steps.</div>
+    </div>
+
+    <div class="callout">
+      <strong>Quick check:</strong> Who named this goal &mdash; your athlete, or you? If it was you, that's important information. The most powerful goals start with what <em>they</em> want.
+    </div>
+
+    <button class="next-btn" onclick="nextStep(1)">Next: Name the Goal &rarr;</button>
+  </div>
+
+  <!-- Step 2: G — Goal -->
+  <div class="step-card" id="step1">
+    <div class="step-header">
+      <div class="step-badge">G</div>
+      <div>
+        <div class="step-label">GPS &mdash; Goal</div>
+        <div class="step-title">Let Them Name It</div>
+      </div>
+    </div>
+    <p class="step-description">The most powerful goals start with the athlete's own words. Your job here is to ask the question and listen — not suggest the answer before they've had a chance to think.</p>
+
+    <div class="callout">
+      <strong>The question to ask:</strong> &ldquo;What do you actually want to get better at this season? Not just the outcome &mdash; what skill or area feels most important to you right now?&rdquo;
+    </div>
+
+    <div class="form-row">
+      <label for="athleteGoal">What did they say? <span style="font-weight:normal;color:#7a9e98;">(their words, not a paraphrase)</span></label>
+      <textarea id="athleteGoal" placeholder="Write what they said in their own words. If you haven't asked yet — that's your action item. Leave this blank and plan the conversation first."></textarea>
+      <div class="helper-text">If you're not sure what they would say, that's valuable insight. Your next conversation should start with this question.</div>
+    </div>
+
+    <div class="form-row">
+      <label for="whyItMatters">Why does this matter to them? <span style="font-weight:normal;color:#7a9e98;">(what they said, or what you observed)</span></label>
+      <textarea id="whyItMatters" placeholder="e.g. 'She said she feels like she's been held back and wants to prove she can handle more responsibility on the field'"></textarea>
+    </div>
+
+    <button class="next-btn" onclick="nextStep(2)">Next: Build the Process &rarr;</button>
+  </div>
+
+  <!-- Step 3: P — Process -->
+  <div class="step-card" id="step2">
+    <div class="step-header">
+      <div class="step-badge">P</div>
+      <div>
+        <div class="step-label">GPS &mdash; Process</div>
+        <div class="step-title">Build the Daily Actions</div>
+      </div>
+    </div>
+    <p class="step-description">Process actions must be 100% within their control &mdash; no opponents, no coaches, no luck. Each action should be specific enough that they can check it off daily or weekly.</p>
+
+    <div class="callout">
+      <strong>Parent tip:</strong> Offer 2&ndash;3 ideas, then ask &ldquo;Which of these feels right to you?&rdquo; or &ldquo;What would you add?&rdquo; Process actions they choose are ones they'll actually work.
+    </div>
+
+    <label style="margin-bottom: 16px; display: block;">3 specific process actions that point toward their goal:</label>
+
+    <div class="process-action-row">
+      <div class="action-number">1</div>
+      <div class="action-field">
+        <textarea id="action1" placeholder="e.g. Watch 10 minutes of film on positioning before each game"></textarea>
+        <select id="freq1" style="margin-top: 6px; width: auto; min-width: 140px;">
+          <option value="Daily">Daily</option>
+          <option value="Before each game" selected>Before each game</option>
+          <option value="3x per week">3x per week</option>
+          <option value="Weekly">Weekly</option>
+          <option value="Each practice">Each practice</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="process-action-row">
+      <div class="action-number">2</div>
+      <div class="action-field">
+        <textarea id="action2" placeholder="e.g. Do 15 minutes of footwork drills at home — not waiting for practice"></textarea>
+        <select id="freq2" style="margin-top: 6px; width: auto; min-width: 140px;">
+          <option value="Daily">Daily</option>
+          <option value="Before each game">Before each game</option>
+          <option value="3x per week" selected>3x per week</option>
+          <option value="Weekly">Weekly</option>
+          <option value="Each practice">Each practice</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="process-action-row">
+      <div class="action-number">3</div>
+      <div class="action-field">
+        <textarea id="action3" placeholder="e.g. Ask the coach one specific question about positioning at the end of every practice"></textarea>
+        <select id="freq3" style="margin-top: 6px; width: auto; min-width: 140px;">
+          <option value="Daily">Daily</option>
+          <option value="Before each game">Before each game</option>
+          <option value="3x per week">3x per week</option>
+          <option value="Weekly">Weekly</option>
+          <option value="Each practice" selected>Each practice</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="next-btn" onclick="nextStep(3)">Next: Create the Scoreboard &rarr;</button>
+  </div>
+
+  <!-- Step 4: S — Scoreboard -->
+  <div class="step-card" id="step3">
+    <div class="step-header">
+      <div class="step-badge">S</div>
+      <div>
+        <div class="step-label">GPS &mdash; Scoreboard</div>
+        <div class="step-title">Measure the Process, Not the Outcome</div>
+      </div>
+    </div>
+    <p class="step-description">The scoreboard tracks whether they're working the process &mdash; not whether they're winning. A process scoreboard removes the pressure of results and puts control back in their hands.</p>
+
+    <div class="form-row">
+      <label for="scoreboardMethod">How will they track their process actions?</label>
+      <textarea id="scoreboardMethod" placeholder="e.g. Simple tally in a notes app: 'Did I complete my 3 process actions this week? Y/N for each' / Weekly check-in conversation every Sunday / Short journal note after each game"></textarea>
+      <div class="helper-text">Keep it simple. A tally, a notebook page, or one weekly question is enough. The method your athlete suggests is better than the one you propose.</div>
+    </div>
+
+    <div class="form-row">
+      <label for="successLook">What does a &ldquo;good week on the process&rdquo; look like?</label>
+      <textarea id="successLook" placeholder="e.g. Completed at least 2 of 3 process actions each week, even if the game result didn't reflect it yet"></textarea>
+      <div class="helper-text">Define this clearly — so you both know what to celebrate that has nothing to do with the scoreboard on the wall.</div>
+    </div>
+
+    <button class="next-btn" onclick="nextStep(4)">Next: Set the Check-In &rarr;</button>
+  </div>
+
+  <!-- Step 5: Weekly Check-In -->
+  <div class="step-card" id="step4">
+    <div class="step-header">
+      <div class="step-badge">5</div>
+      <div>
+        <div class="step-label">Weekly Rhythm</div>
+        <div class="step-title">The Check-In Plan</div>
+      </div>
+    </div>
+    <p class="step-description">A weekly process check-in replaces post-game score-focused conversations. It should feel low-pressure and short &mdash; five minutes is enough. The goal is to ask about the process, not the result.</p>
+
+    <div class="checkin-box">
+      <div class="checkin-row">
+        <label for="checkinDay">Day:</label>
+        <select id="checkinDay" style="width: auto; min-width: 130px;">
+          <option>Sunday</option>
+          <option>Monday</option>
+          <option>Saturday</option>
+          <option>Friday</option>
+          <option>After game day</option>
+        </select>
+      </div>
+      <div class="checkin-row">
+        <label for="checkinTime">Setting:</label>
+        <input type="text" id="checkinTime" placeholder="e.g. Car ride home, dinner table, before bed" style="width: auto; flex: 1; min-width: 0;">
+      </div>
+      <div class="checkin-row">
+        <label for="checkinFormat">Format:</label>
+        <select id="checkinFormat" style="width: auto; min-width: 170px;">
+          <option>Casual conversation</option>
+          <option>3 questions check-in</option>
+          <option>Quick text or message</option>
+          <option>Sunday dinner ritual</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label for="checkinQuestion">The one question you'll ask each week:</label>
+      <input type="text" id="checkinQuestion" placeholder="e.g. 'How did you do on your 3 process actions this week?'" maxlength="150">
+      <div class="helper-text">One question. About the process — not the score, not the coach's decisions. Commit to asking it every week.</div>
+    </div>
+
+    <button class="next-btn" onclick="buildCard()" style="background: #1a4a42;">Build My Goal Card &rarr;</button>
+  </div>
+
+  <!-- Goal Card (Summary / Print View) -->
+  <div class="goal-card" id="goalCard">
+    <div class="goal-card-header">
+      <div class="series">The Quiet Edge &middot; Parent Edition &middot; EP. 7</div>
+      <h2>GPS Goal Card</h2>
+      <div class="athlete-name" id="cardAthleteLabel">Season Goal Plan</div>
+    </div>
+
+    <div class="card-section">
+      <div class="card-section-label">Outcome Goal (Starting Point)</div>
+      <div class="card-content" id="cardOutcome" style="color: #7a9e98; font-style: italic;"></div>
+    </div>
+
+    <div class="card-divider"></div>
+
+    <div class="card-section">
+      <div class="card-section-label">G &mdash; Goal (Their Words)</div>
+      <div class="card-content highlight" id="cardGoal"></div>
+      <div class="card-content" id="cardWhy" style="margin-top: 8px; font-style: italic; color: #5a7065; font-size: 14px;"></div>
+    </div>
+
+    <div class="card-section">
+      <div class="card-section-label">P &mdash; Process Actions</div>
+      <ul class="process-list" id="cardProcess"></ul>
+    </div>
+
+    <div class="card-section">
+      <div class="card-section-label">S &mdash; Scoreboard</div>
+      <div class="card-content" id="cardScoreboard"></div>
+      <div class="card-content" id="cardSuccess" style="margin-top: 8px; font-size: 14px; color: #2d7a6b; font-weight: 600;"></div>
+    </div>
+
+    <div class="card-divider"></div>
+
+    <div class="card-section">
+      <div class="card-section-label">Weekly Check-In</div>
+      <div class="card-content" id="cardCheckin" style="font-size: 14px; color: #5a7065;"></div>
+      <div class="card-content" id="cardQuestion" style="margin-top: 8px; font-style: italic; color: #1a4a42; font-size: 15px;"></div>
+    </div>
+
+    <div class="card-footer">
+      The Quiet Edge for Parents &middot; Episode 7: Process Goals Over Outcomes &middot; thequietedge.com
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div id="actionButtons" style="display: none;">
+    <button class="print-btn" onclick="window.print()">Download as PDF</button>
+    <button class="restart-btn" onclick="restartTool()">Start Over</button>
+  </div>
+
+</div>
+
+<script>
+  var currentStep = 0;
+  var totalSteps = 5;
+
+  function nextStep(step) {
+    document.getElementById('step' + currentStep).classList.remove('active');
+    document.getElementById('dot' + currentStep).className = 'progress-dot done';
+    currentStep = step;
+    if (currentStep < totalSteps) {
+      document.getElementById('step' + currentStep).classList.add('active');
+      document.getElementById('dot' + currentStep).className = 'progress-dot current';
+      document.getElementById('progressLabel').textContent = 'Step ' + (currentStep + 1) + ' of ' + totalSteps;
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function buildCard() {
+    document.getElementById('step4').classList.remove('active');
+    document.getElementById('dot4').className = 'progress-dot done';
+    document.getElementById('progressBar').style.display = 'none';
+
+    var athleteName = document.getElementById('athleteName').value.trim();
+    var sport = document.getElementById('sport').value.trim();
+    var labelParts = [];
+    if (athleteName) labelParts.push(athleteName);
+    if (sport) labelParts.push(sport);
+    document.getElementById('cardAthleteLabel').textContent =
+      labelParts.length ? labelParts.join(' \u00B7 ') : 'Season Goal Plan';
+
+    var outcome = document.getElementById('outcomeGoal').value.trim();
+    document.getElementById('cardOutcome').textContent = outcome || '(Not specified)';
+
+    var goal = document.getElementById('athleteGoal').value.trim();
+    document.getElementById('cardGoal').textContent =
+      goal || '(Have the conversation first \u2014 ask them what they want to improve)';
+
+    var why = document.getElementById('whyItMatters').value.trim();
+    document.getElementById('cardWhy').textContent = why ? '\u201C' + why + '\u201D' : '';
+
+    var processList = document.getElementById('cardProcess');
+    processList.innerHTML = '';
+    var hasActions = false;
+    for (var i = 1; i <= 3; i++) {
+      var action = document.getElementById('action' + i).value.trim();
+      var freq = document.getElementById('freq' + i).value;
+      if (action) {
+        hasActions = true;
+        var li = document.createElement('li');
+        var bullet = document.createElement('span');
+        bullet.className = 'bullet';
+        bullet.textContent = i;
+        var text = document.createElement('span');
+        text.innerHTML = action + ' <strong style="color:#5fb3ac;">(' + freq + ')</strong>';
+        li.appendChild(bullet);
+        li.appendChild(text);
+        processList.appendChild(li);
+      }
+    }
+    if (!hasActions) {
+      var li = document.createElement('li');
+      li.innerHTML = '<span class="bullet">?</span><span>Build your process actions in the conversation with your athlete</span>';
+      processList.appendChild(li);
+    }
+
+    var scoreboard = document.getElementById('scoreboardMethod').value.trim();
+    document.getElementById('cardScoreboard').textContent = scoreboard || '(Define your tracking method together)';
+
+    var success = document.getElementById('successLook').value.trim();
+    document.getElementById('cardSuccess').textContent = success ? '\u2713 A good week: ' + success : '';
+
+    var checkinDay = document.getElementById('checkinDay').value;
+    var checkinTime = document.getElementById('checkinTime').value.trim();
+    var checkinFormat = document.getElementById('checkinFormat').value;
+    var checkinText = checkinDay;
+    if (checkinTime) checkinText += ' \u00B7 ' + checkinTime;
+    checkinText += ' \u00B7 ' + checkinFormat;
+    document.getElementById('cardCheckin').textContent = checkinText;
+
+    var question = document.getElementById('checkinQuestion').value.trim();
+    document.getElementById('cardQuestion').textContent =
+      question ? '\u201C' + question + '\u201D' : '';
+
+    document.getElementById('goalCard').classList.add('visible');
+    document.getElementById('actionButtons').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function restartTool() {
+    document.querySelectorAll('input[type="text"], textarea').forEach(function(el) { el.value = ''; });
+    document.querySelectorAll('.step-card').forEach(function(el) { el.classList.remove('active'); });
+    document.getElementById('step0').classList.add('active');
+    document.querySelectorAll('.progress-dot').forEach(function(dot, i) {
+      dot.className = i === 0 ? 'progress-dot current' : 'progress-dot';
+    });
+    document.getElementById('progressLabel').textContent = 'Step 1 of 5';
+    document.getElementById('progressBar').style.display = 'flex';
+    document.getElementById('goalCard').classList.remove('visible');
+    document.getElementById('actionButtons').style.display = 'none';
+    currentStep = 0;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
