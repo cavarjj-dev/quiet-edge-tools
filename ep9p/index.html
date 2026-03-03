@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sideline Reset Audit — Parent Edition | The Quiet Edge Ep. 9p</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #5fb3ac;
+      --teal-dark: #3d8f88;
+      --teal-light: #a8d5d1;
+      --amber: #e8a84c;
+      --amber-light: #fde9c4;
+      --warm-bg: #fdf6ee;
+      --text: #2c2c2c;
+      --text-light: #666;
+      --border: #ddd;
+      --white: #fff;
+      --adding: #c94040;
+      --adding-light: #fdeaea;
+      --eliminating: #c98300;
+      --eliminating-light: #fef7e8;
+      --reset: #3d8f88;
+      --reset-light: #edf7f6;
+    }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: var(--warm-bg);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 16px;
+    }
+
+    .page-wrapper {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 28px 20px 64px;
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, #e8a84c 0%, #5fb3ac 100%);
+      color: var(--white);
+      border-radius: 12px;
+      padding: 36px 32px 32px;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+    .header .series-label {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      opacity: 0.88;
+      margin-bottom: 10px;
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: normal;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    .header .subtitle {
+      font-size: 15px;
+      opacity: 0.92;
+      font-style: italic;
+    }
+
+    /* INTRO BOX */
+    .intro-box {
+      background: var(--white);
+      border-left: 4px solid var(--teal);
+      border-radius: 0 8px 8px 0;
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      font-size: 15px;
+    }
+    .intro-box p { margin-bottom: 10px; }
+    .intro-box p:last-child { margin-bottom: 0; }
+
+    /* SECTIONS */
+    .section {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 26px 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.06);
+    }
+    h2 {
+      font-size: 18px;
+      color: var(--teal-dark);
+      font-weight: normal;
+      border-bottom: 1px solid var(--teal-light);
+      padding-bottom: 7px;
+      margin-bottom: 6px;
+    }
+    .section-num {
+      display: inline-block;
+      background: var(--teal);
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    .section-intro {
+      color: var(--text-light);
+      font-size: 14px;
+      font-style: italic;
+      margin: 10px 0 20px;
+    }
+
+    /* LEGEND */
+    .legend {
+      display: flex;
+      gap: 18px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      font-family: Arial, sans-serif;
+    }
+    .legend-dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-adding    { background: var(--adding); }
+    .dot-eliminate { background: var(--amber); }
+    .dot-reset     { background: var(--teal); }
+
+    /* SCENARIO CARDS */
+    .scenario-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+    .scenario-label {
+      background: #f7f7f7;
+      padding: 11px 16px;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .scenario-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--teal);
+      color: white;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 11px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    .option-cell {
+      padding: 12px 14px;
+      cursor: pointer;
+      border-right: 1px solid var(--border);
+      transition: background 0.12s;
+      position: relative;
+    }
+    .option-cell:last-child { border-right: none; }
+    .option-cell input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .option-cell label { display: block; cursor: pointer; font-size: 13px; line-height: 1.45; }
+    .opt-header {
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .opt-header .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    .opt-adding   .opt-header { color: var(--adding); }
+    .opt-adding   .opt-header .dot { background: var(--adding); }
+    .opt-elim     .opt-header { color: var(--eliminating); }
+    .opt-elim     .opt-header .dot { background: var(--amber); }
+    .opt-reset    .opt-header { color: var(--reset); }
+    .opt-reset    .opt-header .dot { background: var(--teal); }
+
+    .opt-adding:hover  { background: var(--adding-light); }
+    .opt-elim:hover    { background: var(--eliminating-light); }
+    .opt-reset:hover   { background: var(--reset-light); }
+
+    .option-cell.selected.opt-adding { background: var(--adding-light); outline: 2px solid var(--adding); outline-offset: -2px; }
+    .option-cell.selected.opt-elim   { background: var(--eliminating-light); outline: 2px solid var(--amber); outline-offset: -2px; }
+    .option-cell.selected.opt-reset  { background: var(--reset-light); outline: 2px solid var(--teal); outline-offset: -2px; }
+
+    /* BUTTONS */
+    .btn-primary {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: var(--teal);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-family: Arial, sans-serif;
+      cursor: pointer;
+      margin-top: 22px;
+      transition: background 0.2s;
+      letter-spacing: 0.3px;
+    }
+    .btn-primary:hover { background: var(--teal-dark); }
+
+    .btn-print {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      background: #f2f2f2;
+      color: var(--text);
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+      cursor: pointer;
+      margin-top: 14px;
+      transition: background 0.2s;
+    }
+    .btn-print:hover { background: #e6e6e6; }
+
+    /* RESULTS */
+    #results-section { display: none; }
+    .pattern-badge {
+      border-radius: 10px;
+      padding: 22px 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .pattern-badge.weight-carrier { background: var(--adding-light); border: 2px solid var(--adding); }
+    .pattern-badge.dismissive     { background: var(--eliminating-light); border: 2px solid var(--amber); }
+    .pattern-badge.reset-partner  { background: var(--reset-light); border: 2px solid var(--teal); }
+    .pattern-badge h3 { font-size: 22px; margin-bottom: 8px; font-family: Georgia, serif; font-weight: normal; }
+    .pattern-badge.weight-carrier h3 { color: var(--adding); }
+    .pattern-badge.dismissive h3     { color: var(--eliminating); }
+    .pattern-badge.reset-partner h3  { color: var(--reset); }
+    .pattern-desc { font-size: 14px; line-height: 1.6; }
+
+    .score-bars { margin: 18px 0; }
+    .bar-row { margin-bottom: 10px; }
+    .bar-label {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .bar-track {
+      height: 11px;
+      border-radius: 6px;
+      background: #eee;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.7s ease;
+    }
+    .fill-adding    { background: var(--adding); }
+    .fill-elim      { background: var(--amber); }
+    .fill-reset     { background: var(--teal); }
+
+    .action-steps h3 { font-size: 15px; margin: 18px 0 10px; font-family: Arial, sans-serif; }
+    .action-steps ol { padding-left: 20px; }
+    .action-steps li { margin-bottom: 13px; font-size: 14px; line-height: 1.55; }
+
+    /* CO-PARENTING SCRIPTS */
+    .script-block {
+      background: #f6fbfb;
+      border: 1px solid var(--teal-light);
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+    }
+    .script-title {
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      font-size: 13px;
+      color: var(--teal-dark);
+      margin-bottom: 10px;
+    }
+    .script-line { margin-bottom: 7px; font-size: 14px; }
+    .speaker {
+      font-weight: bold;
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-right: 4px;
+    }
+    .quote { font-style: italic; }
+
+    /* TRACKER */
+    .intention-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .intention-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+      cursor: pointer;
+    }
+    .intention-option input { margin-top: 3px; flex-shrink: 0; }
+
+    .tracker-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+    .tracker-table th {
+      background: var(--teal);
+      color: white;
+      padding: 9px 11px;
+      text-align: left;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+    }
+    .tracker-table td {
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      vertical-align: top;
+    }
+    .tracker-table tr:nth-child(even) td { background: #fafafa; }
+    .tracker-table input, .tracker-table textarea {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-size: 13px;
+      font-family: Georgia, serif;
+      outline: none;
+      color: var(--text);
+      resize: none;
+    }
+    .tracker-table textarea { min-height: 36px; }
+
+    /* FOOTNOTE */
+    .footnote {
+      font-size: 12px;
+      color: var(--text-light);
+      text-align: center;
+      margin-top: 40px;
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    /* PRINT */
+    @media print {
+      body { background: white; font-size: 11pt; }
+      .page-wrapper { max-width: 100%; padding: 0; }
+      .no-print, .btn-primary, .btn-print { display: none !important; }
+      #results-section { display: block !important; }
+      .header {
+        border-radius: 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background: linear-gradient(135deg, #e8a84c 0%, #5fb3ac 100%) !important;
+      }
+      .section { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+      .scenario-card { page-break-inside: avoid; }
+      .tracker-table td { min-height: 36pt; }
+      .options-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .options-grid { grid-template-columns: 1fr; }
+      .option-cell { border-right: none; border-bottom: 1px solid var(--border); }
+      .option-cell:last-child { border-bottom: none; }
+      .intention-grid { grid-template-columns: 1fr; }
+      .legend { gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="series-label">The Quiet Edge &nbsp;·&nbsp; Parent Edition &nbsp;·&nbsp; Ep. 9p</div>
+      <h1>Sideline Reset Audit</h1>
+      <div class="subtitle">How Parents Support Their Athlete's Mistake Recovery</div>
+    </div>
+
+    <!-- INTRO -->
+    <div class="intro-box">
+      <p>How quickly your athlete resets after mistakes matters more than whether they make them. But here's the part that's harder to see: <strong>your sideline presence is part of their reset environment.</strong></p>
+      <p>Research on emotion coaching and autonomy-supportive parenting consistently shows that children reset faster when their caregivers hold steady — not adding emotional weight, and not dismissing the mistake. This audit helps you find your current pattern and shift toward genuine reset support.</p>
+      <p style="font-size: 14px; color: var(--text-light); font-style: italic;">Before you begin: bring a recent game or practice moment to mind — a visible mistake your athlete made while you were watching.</p>
+    </div>
+
+    <!-- PART 1: ASSESSMENT -->
+    <div class="section">
+      <h2><span class="section-num">Part 1</span> Sideline Scenario Assessment</h2>
+      <p class="section-intro">For each scenario, select the column that most honestly describes your <em>instinctive</em> reaction — not your ideal. Be honest; this is for your eyes only.</p>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot dot-adding"></div> Adds Weight</div>
+        <div class="legend-item"><div class="legend-dot dot-eliminate"></div> Eliminates / Dismisses</div>
+        <div class="legend-item"><div class="legend-dot dot-reset"></div> Reset Support</div>
+      </div>
+
+      <!-- Q1 -->
+      <div class="scenario-card">
+        <div class="scenario-label"><span class="scenario-num">1</span><span>Your athlete makes a visible error with people watching (missed shot, dropped pass, messed-up routine).</span></div>
+        <div class="options-grid">
+          <div class="option-cell opt-adding" onclick="pick(this,'q1','adding')">
+            <input type="radio" name="q1" value="adding">
+            <label><div class="opt-header"><span class="dot"></span>Adds Weight</div>Head shake, wince, or audible sigh — visible frustration before you can stop it</label>
+          </div>
+          <div class="option-cell opt-elim" onclick="pick(this,'q1','eliminating')">
+            <input type="radio" name="q1" value="eliminating">
+            <label><div class="opt-header"><span class="dot"></span>Eliminates</div>"It's okay! You'll get the next one!" — called out immediately</label>
+          </div>
+          <div class="option-cell opt-reset" onclick="pick(this,'q1','reset')">
+            <input type="radio" name="q1" value="reset">
+            <label><div class="opt-header"><span class="dot"></span>Reset Support</div>Hold a neutral expression and calm body language — let them process without an audience reaction</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="scenario-card">
+        <div class="scenario-label"><span class="scenario-num">2</span><span>Your athlete makes the same mistake for the second time in the same game.</span></div>
+        <div class="options-grid">
+          <div class="option-cell opt-adding" onclick="pick(this,'q2','adding')">
+            <input type="radio" name="q2" value="adding">
+            <label><div class="opt-header"><span class="dot"></span>Adds Weight</div>Visible body language shift — arms cross, jaw tightens, heavier exhale</label>
+          </div>
+          <div class="option-cell opt-elim" onclick="pick(this,'q2','eliminating')">
+            <input type="radio" name="q2" value="eliminating">
+            <label><div class="opt-header"><span class="dot"></span>Eliminates</div>"That's just a tough skill — don't even worry about it right now"</label>
+          </div>
+          <div class="option-cell opt-reset" onclick="pick(this,'q2','reset')">
+            <input type="radio" name="q2" value="reset">
+            <label><div class="opt-header"><span class="dot"></span>Reset Support</div>No change in expression or posture from the first time — same calm presence</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="scenario-card">
+        <div class="scenario-label"><span class="scenario-num">3</span><span>Your athlete looks toward you immediately after making a mistake.</span></div>
+        <div class="options-grid">
+          <div class="option-cell opt-adding" onclick="pick(this,'q3','adding')">
+            <input type="radio" name="q3" value="adding">
+            <label><div class="opt-header"><span class="dot"></span>Adds Weight</div>They see your real reaction — frustration, disappointment, or visible worry on your face</label>
+          </div>
+          <div class="option-cell opt-elim" onclick="pick(this,'q3','eliminating')">
+            <input type="radio" name="q3" value="eliminating">
+            <label><div class="opt-header"><span class="dot"></span>Eliminates</div>Immediately smile and give a big thumbs up or "you're fine!" gesture</label>
+          </div>
+          <div class="option-cell opt-reset" onclick="pick(this,'q3','reset')">
+            <input type="radio" name="q3" value="reset">
+            <label><div class="opt-header"><span class="dot"></span>Reset Support</div>Calm, neutral eye contact — a brief nod that says "I see you, keep going"</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="scenario-card">
+        <div class="scenario-label"><span class="scenario-num">4</span><span>The first 10 minutes of the car ride home after a loss where your athlete made visible mistakes.</span></div>
+        <div class="options-grid">
+          <div class="option-cell opt-adding" onclick="pick(this,'q4','adding')">
+            <input type="radio" name="q4" value="adding">
+            <label><div class="opt-header"><span class="dot"></span>Adds Weight</div>Bring up specific mistakes, offer corrections, or give "next time" advice</label>
+          </div>
+          <div class="option-cell opt-elim" onclick="pick(this,'q4','eliminating')">
+            <input type="radio" name="q4" value="eliminating">
+            <label><div class="opt-header"><span class="dot"></span>Eliminates</div>"Let's just forget it — what do you want for dinner?" (forced subject change)</label>
+          </div>
+          <div class="option-cell opt-reset" onclick="pick(this,'q4','reset')">
+            <input type="radio" name="q4" value="reset">
+            <label><div class="opt-header"><span class="dot"></span>Reset Support</div>Quiet presence — follow their lead on whether to talk; don't initiate game analysis</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="scenario-card">
+        <div class="scenario-label"><span class="scenario-num">5</span><span>Your athlete shows visible frustration or tears on the field/court after a mistake.</span></div>
+        <div class="options-grid">
+          <div class="option-cell opt-adding" onclick="pick(this,'q5','adding')">
+            <input type="radio" name="q5" value="adding">
+            <label><div class="opt-header"><span class="dot"></span>Adds Weight</div>Your reaction amplifies theirs — you become visibly anxious or upset yourself</label>
+          </div>
+          <div class="option-cell opt-elim" onclick="pick(this,'q5','eliminating')">
+            <input type="radio" name="q5" value="eliminating">
+            <label><div class="opt-header"><span class="dot"></span>Eliminates</div>"Shake it off — you're fine!" or immediately stepping in to solve their emotion</label>
+          </div>
+          <div class="option-cell opt-reset" onclick="pick(this,'q5','reset')">
+            <input type="radio" name="q5" value="reset">
+            <label><div class="opt-header"><span class="dot"></span>Reset Support</div>Hold calm presence — allow the emotion, don't rush it, steady body language without words</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q6 -->
+      <div class="scenario-card">
+        <div class="scenario-label"><span class="scenario-num">6</span><span>That evening, your athlete is still carrying the mistake mentally — quieter than usual.</span></div>
+        <div class="options-grid">
+          <div class="option-cell opt-adding" onclick="pick(this,'q6','adding')">
+            <input type="radio" name="q6" value="adding">
+            <label><div class="opt-header"><span class="dot"></span>Adds Weight</div>Re-open the mistake conversation now that they've calmed down — debrief it thoroughly</label>
+          </div>
+          <div class="option-cell opt-elim" onclick="pick(this,'q6','eliminating')">
+            <input type="radio" name="q6" value="eliminating">
+            <label><div class="opt-header"><span class="dot"></span>Eliminates</div>"It's just a game — by tomorrow it'll all be forgotten"</label>
+          </div>
+          <div class="option-cell opt-reset" onclick="pick(this,'q6','reset')">
+            <input type="radio" name="q6" value="reset">
+            <label><div class="opt-header"><span class="dot"></span>Reset Support</div>"That one's sticking with you." — acknowledge it, hold space, let them process at their pace</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q7 -->
+      <div class="scenario-card">
+        <div class="scenario-label"><span class="scenario-num">7</span><span>Your athlete resets quickly and plays well after a mistake. You notice the recovery.</span></div>
+        <div class="options-grid">
+          <div class="option-cell opt-adding" onclick="pick(this,'q7','adding')">
+            <input type="radio" name="q7" value="adding">
+            <label><div class="opt-header"><span class="dot"></span>Adds Weight</div>Relief in your praise: "You really recovered from that one" — anchors the mistake</label>
+          </div>
+          <div class="option-cell opt-elim" onclick="pick(this,'q7','eliminating')">
+            <input type="radio" name="q7" value="eliminating">
+            <label><div class="opt-header"><span class="dot"></span>Eliminates</div>Say nothing specific — just "great game!" without naming what you saw</label>
+          </div>
+          <div class="option-cell opt-reset" onclick="pick(this,'q7','reset')">
+            <input type="radio" name="q7" value="reset">
+            <label><div class="opt-header"><span class="dot"></span>Reset Support</div>"I saw you reset after that mistake. That's a skill." — name the recovery, not the error</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q8 -->
+      <div class="scenario-card">
+        <div class="scenario-label"><span class="scenario-num">8</span><span>Your co-parent reacts strongly on the sideline to a mistake (sighs, comments, gets up to pace).</span></div>
+        <div class="options-grid">
+          <div class="option-cell opt-adding" onclick="pick(this,'q8','adding')">
+            <input type="radio" name="q8" value="adding">
+            <label><div class="opt-header"><span class="dot"></span>Adds Weight</div>You join the reaction — or stay silent while your own tension visibly increases</label>
+          </div>
+          <div class="option-cell opt-elim" onclick="pick(this,'q8','eliminating')">
+            <input type="radio" name="q8" value="eliminating">
+            <label><div class="opt-header"><span class="dot"></span>Eliminates</div>Immediately apologize to your athlete or overcorrect with exaggerated positivity</label>
+          </div>
+          <div class="option-cell opt-reset" onclick="pick(this,'q8','reset')">
+            <input type="radio" name="q8" value="reset">
+            <label><div class="opt-header"><span class="dot"></span>Reset Support</div>Hold your own calm presence independent of your co-parent — model regulation in the contrast</label>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary no-print" onclick="calculate()">See My Pattern &rarr;</button>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="results-section" class="section">
+      <h2><span class="section-num">Results</span> Your Pattern Profile</h2>
+      <div id="pattern-badge" class="pattern-badge"></div>
+      <div class="score-bars">
+        <div class="bar-row">
+          <div class="bar-label"><span style="color:var(--adding)">&#9632; Adds Weight</span><span id="lbl-adding"></span></div>
+          <div class="bar-track"><div id="bar-adding" class="bar-fill fill-adding" style="width:0%"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span style="color:var(--eliminating)">&#9632; Eliminates / Dismisses</span><span id="lbl-elim"></span></div>
+          <div class="bar-track"><div id="bar-elim" class="bar-fill fill-elim" style="width:0%"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span style="color:var(--teal-dark)">&#9632; Reset Support</span><span id="lbl-reset"></span></div>
+          <div class="bar-track"><div id="bar-reset" class="bar-fill fill-reset" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="action-steps" id="action-steps"></div>
+    </div>
+
+    <!-- PART 2: CO-PARENTING SCRIPTS -->
+    <div class="section">
+      <h2><span class="section-num">Part 2</span> Co-Parenting Reset Scripts</h2>
+      <p class="section-intro">When co-parents have different sideline styles, the inconsistency itself becomes part of the environment your athlete is resetting inside. Use these conversation starters to align before the next game.</p>
+
+      <div class="script-block">
+        <div class="script-title">Before the Game — Setting a Shared Sideline Intention</div>
+        <div class="script-line"><span class="speaker">Parent A:</span> <span class="quote">"I've been thinking about how we show up on the sideline. Can we agree on something today?"</span></div>
+        <div class="script-line"><span class="speaker">Parent B:</span> <span class="quote">"Sure, what are you thinking?"</span></div>
+        <div class="script-line"><span class="speaker">Parent A:</span> <span class="quote">"If they make a mistake and look over at us — let's both just hold calm. No sighing, no big reaction. Just present."</span></div>
+        <div class="script-line"><span class="speaker">Parent B:</span> <span class="quote">"I can try that. What do I do if I feel myself reacting?"</span></div>
+        <div class="script-line"><span class="speaker">Parent A:</span> <span class="quote">"Look at me instead of the field for a second. We can reset together."</span></div>
+      </div>
+
+      <div class="script-block">
+        <div class="script-title">After One Co-Parent Reacted Strongly — Reconnecting Without Blame</div>
+        <div class="script-line"><span class="speaker">Parent A:</span> <span class="quote">"I noticed you had a reaction to that play. I get it — I felt it too."</span></div>
+        <div class="script-line"><span class="speaker">Parent B:</span> <span class="quote">"Yeah, that one got me. Do you think they saw?"</span></div>
+        <div class="script-line"><span class="speaker">Parent A:</span> <span class="quote">"Probably. It's okay. We can make the car ride home a reset — no game talk unless they start it."</span></div>
+        <div class="script-line"><span class="speaker">Parent B:</span> <span class="quote">"Agreed. I'll follow your lead."</span></div>
+      </div>
+
+      <div class="script-block">
+        <div class="script-title">When Your Athlete Resets Well — Name It Together</div>
+        <div class="script-line"><span class="speaker">Parent A (post-game):</span> <span class="quote">"Did you notice when [athlete] reset in the third quarter? Came right back after that."</span></div>
+        <div class="script-line"><span class="speaker">Parent B:</span> <span class="quote">"I did — that was impressive."</span></div>
+        <div class="script-line"><span class="speaker">Parent A:</span> <span class="quote">"Let's both tell them that — not about the mistake, just what they did after it. That's the thing worth naming."</span></div>
+      </div>
+    </div>
+
+    <!-- PART 3: 7-DAY TRACKER -->
+    <div class="section">
+      <h2><span class="section-num">Part 3</span> 7-Day Sideline Presence Practice</h2>
+      <p class="section-intro">Choose one sideline intention for this week and log your experience after each game or practice. Small, consistent shifts in your presence create the biggest changes in their reset speed.</p>
+
+      <p style="margin-bottom: 10px; font-size: 14px; font-family: Arial, sans-serif; font-weight: bold;">Choose your intention for this week:</p>
+      <div class="intention-grid">
+        <label class="intention-option"><input type="checkbox"> Hold a neutral expression for 30 seconds after any mistake before reacting</label>
+        <label class="intention-option"><input type="checkbox"> Wait for them to look at me — no unsolicited expressions or gestures</label>
+        <label class="intention-option"><input type="checkbox"> Nothing about mistakes during the game — trust their coach to address it</label>
+        <label class="intention-option"><input type="checkbox"> Post-game: only discuss mistakes if they bring it up first</label>
+        <label class="intention-option"><input type="checkbox"> Name one reset I witness: "I saw you come back after that. That's a skill."</label>
+      </div>
+
+      <table class="tracker-table">
+        <thead>
+          <tr>
+            <th style="width:80px;">Date</th>
+            <th style="width:140px;">Game / Practice</th>
+            <th style="width:95px;">Held intention?</th>
+            <th>What I noticed in them — or in me</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text" placeholder="Yes / Mostly / No"></td>
+            <td><textarea></textarea></td>
+          </tr>
+          <tr>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text" placeholder="Yes / Mostly / No"></td>
+            <td><textarea></textarea></td>
+          </tr>
+          <tr>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text" placeholder="Yes / Mostly / No"></td>
+            <td><textarea></textarea></td>
+          </tr>
+          <tr>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text" placeholder="Yes / Mostly / No"></td>
+            <td><textarea></textarea></td>
+          </tr>
+          <tr>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text" placeholder="Yes / Mostly / No"></td>
+            <td><textarea></textarea></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PRINT BUTTON -->
+    <button class="btn-print no-print" onclick="window.print()">&#11015; Download as PDF</button>
+
+    <div class="footnote">
+      The Quiet Edge &nbsp;·&nbsp; Parent Edition &nbsp;·&nbsp; Ep. 9p<br>
+      Evidence Base: Gottman &amp; DeClaire (1997) &middot; Mageau &amp; Vallerand (2003) &middot; Hatzigeorgiadis &amp; Biddle (2000)<br>
+      thequietedge.com
+    </div>
+
+  </div><!-- end .page-wrapper -->
+
+  <script>
+    function pick(cell, name, value) {
+      const card = cell.closest('.scenario-card');
+      card.querySelectorAll('.option-cell').forEach(c => c.classList.remove('selected'));
+      cell.classList.add('selected');
+      cell.querySelector('input[type="radio"]').checked = true;
+    }
+
+    function calculate() {
+      const qs = ['q1','q2','q3','q4','q5','q6','q7','q8'];
+      let adding = 0, elim = 0, reset = 0, blank = 0;
+
+      qs.forEach(q => {
+        const sel = document.querySelector(`input[name="${q}"]:checked`);
+        if (!sel) { blank++; return; }
+        if (sel.value === 'adding')     adding++;
+        if (sel.value === 'eliminating') elim++;
+        if (sel.value === 'reset')       reset++;
+      });
+
+      if (blank > 0) {
+        alert('Please respond to all 8 scenarios before seeing your results. (' + blank + ' unanswered)');
+        return;
+      }
+
+      const total = 8;
+      const aPct = Math.round((adding / total) * 100);
+      const ePct = Math.round((elim   / total) * 100);
+      const rPct = Math.round((reset  / total) * 100);
+
+      let badgeClass, title, desc, steps;
+
+      if (adding >= elim && adding >= reset) {
+        badgeClass = 'weight-carrier';
+        title = 'Emotional Weight Carrier';
+        desc = 'Your instinctive reactions add emotional weight to your athlete\'s mistakes — and this is almost always rooted in genuine care and investment. But after each error, your athlete is carrying two things: the mistake itself, and your reaction to it. The good news: this is the pattern most directly changed by intentional sideline presence practice.';
+        steps = [
+          '<strong>Before your next game, set one intention:</strong> "I will hold a neutral expression for 30 seconds after any mistake before I react to anything." Just 30 seconds is enough to break the automatic response.',
+          '<strong>Watch for the look-over:</strong> When they glance at you after a mistake, they\'re reading your face. What they need to see is calm — not effort, not reassurance. Just steady. Practice holding still when that moment comes.',
+          '<strong>Post-game shift this week:</strong> Wait for them to mention a mistake before you bring it up. If they don\'t mention it — it may have already reset.',
+          '<strong>Name the recovery, not the error:</strong> The next time they bounce back from a mistake, say only this: "I saw you reset after that. That\'s a skill." Don\'t reference what the mistake was. The recovery is the whole point.',
+          '<strong>Model it in daily life:</strong> When you make a mistake (wrong turn, forgotten errand, work stress), say out loud: "Okay — I\'m resetting. What\'s the next thing?" Let them see how an adult handles errors.'
+        ];
+      } else if (elim >= adding && elim >= reset) {
+        badgeClass = 'dismissive';
+        title = 'Dismissive Protector';
+        desc = 'Your instinct is to protect your athlete from the weight of mistakes — and that comes from love. But dismissive positivity ("It\'s fine! You\'re great!") teaches two things they didn\'t need to learn: that you can\'t be trusted for honest feedback, and that their real feelings about mistakes aren\'t valid. Research on emotion coaching consistently shows that acknowledged feelings move through faster than bypassed ones.';
+        steps = [
+          '<strong>Resist the immediate reassurance:</strong> Wait 10 full seconds before you respond after a visible mistake. Silence is almost always better than "it\'s okay!" in that first moment.',
+          '<strong>Acknowledge before you comfort:</strong> Replace "It\'s fine!" with one sentence that acknowledges reality: "That was a tough one." Then stop. You don\'t need to fix it.',
+          '<strong>Match their emotional level, not your ideal:</strong> If they\'re frustrated, don\'t immediately neutralize it. Let them feel it briefly. Follow their cue on when they\'re ready to move forward.',
+          '<strong>Name the recovery when it happens:</strong> "I saw you reset after that" is more powerful than any comfort phrase you can offer post-mistake. The recovery is what you want to acknowledge.',
+          '<strong>Post-game: use open questions:</strong> Instead of "You were great!" try: "What\'s one thing you felt solid on today?" Let them drive their own evaluation.'
+        ];
+      } else {
+        badgeClass = 'reset-partner';
+        title = 'Reset Support Partner';
+        desc = 'Your instincts are already aligned with what helps athletes reset fastest. You\'re providing what matters most: a calm, predictable sideline presence that communicates "I trust you to handle this" without words. Your work now is to deepen — staying consistent in the highest-stakes moments, and explicitly naming the recovery skill when you see it in action.';
+        steps = [
+          '<strong>Name it explicitly when you see it:</strong> If you\'re not already doing this regularly, add one phrase after a reset: "I noticed how you came back after that moment. That\'s a real skill." Consistency makes it land as truth.',
+          '<strong>Test yourself in high-stakes moments:</strong> Your neutral presence in normal games is already natural. Watch yourself during tournaments or decisive plays — do you hold the same composure when more is on the line?',
+          '<strong>Model reset in daily life:</strong> When you make a mistake or have a hard day, say out loud: "Okay — I\'m resetting. Here\'s what I\'m doing next." Let them witness how adults handle errors through action.',
+          '<strong>Bring your co-parent along:</strong> If your co-parent has a different pattern, your calm presence is the anchor. Use the scripts in Part 2 to set shared intentions before games — not during or after.',
+          '<strong>Extend the language beyond sport:</strong> When they handle any setback well (school, friendships, home), name the reset there too. You\'re building vocabulary for recovery across every part of their life.'
+        ];
+      }
+
+      // Render badge
+      const badge = document.getElementById('pattern-badge');
+      badge.className = 'pattern-badge ' + badgeClass;
+      badge.innerHTML = '<h3>' + title + '</h3><p class="pattern-desc">' + desc + '</p>';
+
+      // Render score bars
+      document.getElementById('lbl-adding').textContent = aPct + '% (' + adding + '/8)';
+      document.getElementById('lbl-elim').textContent   = ePct + '% (' + elim   + '/8)';
+      document.getElementById('lbl-reset').textContent  = rPct + '% (' + reset  + '/8)';
+
+      setTimeout(function() {
+        document.getElementById('bar-adding').style.width = aPct + '%';
+        document.getElementById('bar-elim').style.width   = ePct + '%';
+        document.getElementById('bar-reset').style.width  = rPct + '%';
+      }, 80);
+
+      // Render action steps
+      const stepsHtml = '<h3>Your Action Steps</h3><ol>' +
+        steps.map(function(s) { return '<li>' + s + '</li>'; }).join('') +
+        '</ol>';
+      document.getElementById('action-steps').innerHTML = stepsHtml;
+
+      // Show and scroll
+      const rs = document.getElementById('results-section');
+      rs.style.display = 'block';
+      rs.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+</body>
+</html>
