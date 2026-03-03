@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Am I Effort-First? — One-Week Parent Reaction Tracker</title>
+  <style>
+    /* ── Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #1e1e1e;
+      background: linear-gradient(135deg, #fdf6ee 0%, #f0faf8 100%);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ── Page wrapper ── */
+    .page {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: linear-gradient(135deg, #5fb3ac 0%, #3d9990 100%);
+      color: #fff;
+      padding: 36px 24px 32px;
+      text-align: center;
+    }
+    .header .series-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 8px;
+    }
+    .header h1 {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .header .subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    /* ── Sections ── */
+    .section {
+      background: #fff;
+      border-radius: 10px;
+      padding: 28px;
+      margin-top: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .section-number {
+      display: inline-block;
+      background: #5fb3ac;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .section h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+    }
+    .section .section-desc {
+      font-size: 13.5px;
+      color: #555;
+      margin-bottom: 20px;
+      line-height: 1.55;
+    }
+
+    /* ── Framing box ── */
+    .framing-box {
+      background: #f0faf8;
+      border-left: 4px solid #5fb3ac;
+      border-radius: 0 8px 8px 0;
+      padding: 16px 18px;
+      margin-bottom: 0;
+      font-size: 14px;
+      color: #2a2a2a;
+      line-height: 1.65;
+    }
+    .framing-box strong { color: #3d9990; }
+
+    /* ── Callout quote ── */
+    .callout {
+      background: #fff8f0;
+      border: 1px solid #e8d5bf;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 13.5px;
+      color: #5a3e2a;
+      font-style: italic;
+    }
+
+    /* ── 7-Day Log Table ── */
+    .log-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    .log-table th {
+      background: #f0faf8;
+      color: #2d7a74;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 10px 8px;
+      border: 1px solid #d8eeec;
+      text-align: left;
+    }
+    .log-table td {
+      padding: 6px 6px;
+      border: 1px solid #e8f3f2;
+      vertical-align: top;
+    }
+    .log-table tr:nth-child(even) td { background: #fafefe; }
+    .log-table .day-label {
+      font-weight: 700;
+      color: #5fb3ac;
+      font-size: 13px;
+      white-space: nowrap;
+      text-align: center;
+    }
+    .log-table input[type="text"],
+    .log-table textarea {
+      width: 100%;
+      border: 1px solid #d8eeec;
+      border-radius: 4px;
+      padding: 5px 7px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #1e1e1e;
+      background: #fff;
+      resize: vertical;
+    }
+    .log-table input[type="text"]:focus,
+    .log-table textarea:focus {
+      outline: none;
+      border-color: #5fb3ac;
+      box-shadow: 0 0 0 2px rgba(95,179,172,0.15);
+    }
+    .driver-group { display: flex; flex-direction: column; gap: 4px; }
+    .driver-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: #444;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .driver-group input[type="radio"] { accent-color: #5fb3ac; }
+
+    /* ── Weekly tally ── */
+    .tally-row {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .tally-item {
+      flex: 1;
+      min-width: 120px;
+      background: #f5fffe;
+      border: 1px solid #cce8e5;
+      border-radius: 8px;
+      padding: 12px 14px;
+      text-align: center;
+    }
+    .tally-item .tally-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+    .tally-item .tally-count { font-size: 28px; font-weight: 700; color: #5fb3ac; }
+    .tally-item.result .tally-count { color: #c0644a; }
+    .tally-item.both .tally-count { color: #8a6a1e; }
+
+    /* ── Audit columns ── */
+    .audit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .audit-col {
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .audit-col.result-col {
+      background: #fff5f3;
+      border: 1px solid #f0c8bc;
+    }
+    .audit-col.effort-col {
+      background: #f0faf8;
+      border: 1px solid #cce8e5;
+    }
+    .audit-col h3 {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid;
+    }
+    .result-col h3 { color: #c0644a; border-color: #f0c8bc; }
+    .effort-col h3 { color: #3d9990; border-color: #9dd4cf; }
+
+    .audit-col label {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 13px;
+      color: #2a2a2a;
+      line-height: 1.45;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .audit-col input[type="checkbox"] {
+      margin-top: 2px;
+      flex-shrink: 0;
+      width: 15px;
+      height: 15px;
+      accent-color: #5fb3ac;
+    }
+    .result-col input[type="checkbox"] { accent-color: #c0644a; }
+
+    .audit-score-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .audit-score-box {
+      flex: 1;
+      min-width: 120px;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .audit-score-box.result-score { background: #fff0ec; border: 1px solid #f0c8bc; }
+    .audit-score-box.effort-score { background: #edfaf8; border: 1px solid #9dd4cf; }
+    .audit-score-box .score-num { font-size: 32px; font-weight: 700; }
+    .result-score .score-num { color: #c0644a; }
+    .effort-score .score-num { color: #3d9990; }
+    .audit-score-box .score-label { font-size: 12px; color: #666; }
+
+    /* ── Profile reveal ── */
+    .profile-btn {
+      display: block;
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px;
+      background: #5fb3ac;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: background 0.2s;
+    }
+    .profile-btn:hover { background: #3d9990; }
+
+    .profile-result {
+      display: none;
+      margin-top: 16px;
+      border-radius: 10px;
+      padding: 20px;
+      border: 2px solid;
+    }
+    .profile-result.outcome { background: #fff5f2; border-color: #e8a090; }
+    .profile-result.mixed { background: #fffbf0; border-color: #e8d090; }
+    .profile-result.effort { background: #f0faf8; border-color: #9dd4cf; }
+    .profile-result .profile-name {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .outcome .profile-name { color: #c0644a; }
+    .mixed .profile-name { color: #8a6a1e; }
+    .effort .profile-name { color: #3d9990; }
+    .profile-result p { font-size: 14px; line-height: 1.65; color: #2a2a2a; }
+
+    /* ── Reframe table ── */
+    .reframe-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    .reframe-table th {
+      background: #f0faf8;
+      color: #2d7a74;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 10px 12px;
+      border: 1px solid #d8eeec;
+      text-align: left;
+    }
+    .reframe-table td {
+      padding: 11px 12px;
+      border: 1px solid #e8f3f2;
+      font-size: 13.5px;
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .reframe-table tr:nth-child(even) td { background: #fafefe; }
+    .reframe-table .phrase-col { color: #8a4a36; font-style: italic; }
+    .reframe-table .teaches-col { color: #666; font-size: 12.5px; }
+    .reframe-table .reframe-col { color: #2d7a74; font-weight: 600; }
+
+    /* ── Co-parenting cards ── */
+    .scenario-card {
+      border: 1px solid #e0e8e8;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .scenario-header {
+      background: #f5f5f5;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #555;
+    }
+    .scenario-body { padding: 14px; }
+    .scenario-body .situation {
+      font-size: 13.5px;
+      color: #444;
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+    .scenario-body .script-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #3d9990;
+      margin-bottom: 4px;
+    }
+    .scenario-body .script {
+      font-size: 13.5px;
+      color: #1a1a1a;
+      background: #f0faf8;
+      border-left: 3px solid #5fb3ac;
+      padding: 8px 12px;
+      border-radius: 0 6px 6px 0;
+      line-height: 1.6;
+    }
+
+    /* ── Commitment section ── */
+    .commitment-pair { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+    .commitment-item label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #2a2a2a;
+      margin-bottom: 6px;
+    }
+    .commitment-item textarea {
+      width: 100%;
+      min-height: 64px;
+      border: 1px solid #d8eeec;
+      border-radius: 6px;
+      padding: 9px 11px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #1e1e1e;
+      resize: vertical;
+    }
+    .commitment-item textarea:focus {
+      outline: none;
+      border-color: #5fb3ac;
+      box-shadow: 0 0 0 2px rgba(95,179,172,0.15);
+    }
+
+    /* ── Evidence footer ── */
+    .evidence-block {
+      background: #f7f7f7;
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-top: 20px;
+      font-size: 12px;
+      color: #666;
+      line-height: 1.6;
+    }
+    .evidence-block strong { color: #444; }
+
+    /* ── Brand footer ── */
+    .brand-footer {
+      text-align: center;
+      margin-top: 24px;
+      padding: 20px;
+      font-size: 12px;
+      color: #888;
+    }
+    .brand-footer strong { color: #5fb3ac; font-size: 13px; }
+
+    /* ── Print / PDF button ── */
+    .print-btn {
+      display: block;
+      width: 100%;
+      margin: 24px 0 0;
+      padding: 15px;
+      background: #fff;
+      color: #5fb3ac;
+      font-size: 15px;
+      font-weight: 700;
+      border: 2px solid #5fb3ac;
+      border-radius: 8px;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: all 0.2s;
+    }
+    .print-btn:hover { background: #5fb3ac; color: #fff; }
+
+    /* ── Responsive ── */
+    @media (max-width: 560px) {
+      .audit-grid { grid-template-columns: 1fr; }
+      .log-table { font-size: 12px; }
+    }
+
+    /* ── Print styles ── */
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+        font-size: 12pt;
+      }
+      .page { max-width: 100%; padding: 0; }
+      .header {
+        background: #5fb3ac !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .section {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        page-break-inside: avoid;
+      }
+      .print-btn, .profile-btn { display: none !important; }
+      .profile-result { display: block !important; }
+      .log-table input[type="text"],
+      .log-table textarea,
+      .commitment-item textarea {
+        border: 1px solid #ccc;
+        background: #fff;
+      }
+      a { text-decoration: none; color: inherit; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="series-label">The Quiet Edge · Stage 2 · Episode 8 · Parent Edition</div>
+    <h1>Am I Effort-First?<br>One-Week Parent Reaction Tracker</h1>
+    <div class="subtitle">A self-reflection tool for parents of youth athletes</div>
+  </div>
+
+  <div class="page">
+
+    <!-- FRAMING -->
+    <div class="section">
+      <div class="framing-box">
+        Children don't learn from what we <em>say</em> — they learn from what we <em>feel</em>. <strong>If your mood after the game depends on the score, your athlete learns that results determine your approval.</strong> Research on parent attributional feedback (Weiner, 1985) shows that how parents emotionally respond to competition — not just what they say — directly shapes whether children develop resilience or anxiety over time. This tracker helps you audit what you're actually teaching.
+      </div>
+      <div class="callout">
+        "Be honest. Does your mood after competition depend more on the result — or their effort?"
+      </div>
+    </div>
+
+    <!-- SECTION 1: 7-DAY REACTION LOG -->
+    <div class="section">
+      <div class="section-number">Section 1</div>
+      <h2>One-Week Reaction Log</h2>
+      <p class="section-desc">Complete one row after each game, practice, or competition event this week — ideally in the car or within 30 minutes. Don't wait until the end of the week. Honest, in-the-moment entries reveal patterns that memory smooths over.</p>
+
+      <table class="log-table">
+        <thead>
+          <tr>
+            <th style="width:38px">Day</th>
+            <th style="width:22%">Event</th>
+            <th style="width:28%">My first reaction<br><span style="font-weight:400;font-size:11px">(words, tone, mood, body language)</span></th>
+            <th style="width:100px">Driven by</th>
+            <th>What would effort-first look like?</th>
+          </tr>
+        </thead>
+        <tbody id="logBody">
+        </tbody>
+      </table>
+
+      <div class="tally-row" id="tallyRow">
+        <div class="tally-item effort">
+          <div class="tally-label">Effort</div>
+          <div class="tally-count" id="tallyEffort">0</div>
+        </div>
+        <div class="tally-item result">
+          <div class="tally-label">Result</div>
+          <div class="tally-count" id="tallyResult">0</div>
+        </div>
+        <div class="tally-item both">
+          <div class="tally-label">Both</div>
+          <div class="tally-count" id="tallyBoth">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: BEHAVIOR AUDIT -->
+    <div class="section">
+      <div class="section-number">Section 2</div>
+      <h2>Behavior Pattern Audit</h2>
+      <p class="section-desc">Check every behavior you recognized in yourself this week — even just once. Honesty here is more useful than a good score.</p>
+
+      <div class="audit-grid">
+        <div class="audit-col result-col">
+          <h3>Result-Focused</h3>
+          <label><input type="checkbox" class="result-check"> My mood after the game reflected the final score</label>
+          <label><input type="checkbox" class="result-check"> I asked "Did you win?" before anything else</label>
+          <label><input type="checkbox" class="result-check"> I compared my child to a teammate or opponent</label>
+          <label><input type="checkbox" class="result-check"> I replayed mistakes or missed opportunities on the drive home</label>
+          <label><input type="checkbox" class="result-check"> I used "at least" language ("At least you scored," "At least you played")</label>
+          <label><input type="checkbox" class="result-check"> I felt visibly more relaxed/happy after a win than after a loss</label>
+          <label><input type="checkbox" class="result-check"> I mentioned the score or result to another adult</label>
+          <label><input type="checkbox" class="result-check"> I offered "It's okay, next time" comfort instead of naming their feeling</label>
+        </div>
+        <div class="audit-col effort-col">
+          <h3>Effort-Focused</h3>
+          <label><input type="checkbox" class="effort-check"> I commented on a specific effort moment regardless of the result</label>
+          <label><input type="checkbox" class="effort-check"> My tone and energy after the game were consistent — win or loss</label>
+          <label><input type="checkbox" class="effort-check"> I waited for them to bring up the result, or didn't mention it</label>
+          <label><input type="checkbox" class="effort-check"> I asked about something within their control (hustle, focus, execution)</label>
+          <label><input type="checkbox" class="effort-check"> I referenced how they handled a mistake or a tough moment</label>
+          <label><input type="checkbox" class="effort-check"> I publicly recognized their effort to another adult or sibling</label>
+          <label><input type="checkbox" class="effort-check"> I asked "What felt good to you today?" before any evaluation</label>
+          <label><input type="checkbox" class="effort-check"> I matched my energy to their effort level — not the scoreboard</label>
+        </div>
+      </div>
+
+      <div class="audit-score-row">
+        <div class="audit-score-box result-score">
+          <div class="score-num" id="resultScore">0</div>
+          <div class="score-label">Result-focused behaviors</div>
+        </div>
+        <div class="audit-score-box effort-score">
+          <div class="score-num" id="effortScore">0</div>
+          <div class="score-label">Effort-focused behaviors</div>
+        </div>
+      </div>
+
+      <button class="profile-btn" onclick="revealProfile()">See My Pattern →</button>
+
+      <div class="profile-result outcome" id="profileOutcome">
+        <div class="profile-name">Outcome-Oriented</div>
+        <p>Your reactions this week were primarily driven by results. That's common — most parents experience this because outcome-based evaluation is the default in competitive culture. The important insight is this: your child is almost certainly learning that results determine your approval — and by extension, their worth. That's not the lesson you intend to teach. Start with one change: this week, ask one effort-first question before any evaluation. Small, consistent shifts compound over time.</p>
+      </div>
+      <div class="profile-result mixed" id="profileMixed">
+        <div class="profile-name">Mixed — Building Awareness</div>
+        <p>You're doing some things well and other habits still pull toward results. This is exactly the right stage — you have enough awareness to see the pattern, and you have effort-focused behaviors you can already build on. Focus on the specific result-focused behaviors you checked and create a concrete alternative for each one. The goal isn't perfection; it's calibration.</p>
+      </div>
+      <div class="profile-result effort" id="profileEffort">
+        <div class="profile-name">Effort-First</div>
+        <p>Your pattern this week reflects consistent effort-first parenting. Your athlete is receiving a clear, consistent signal: what you care about is within their control. That's the foundation of durable intrinsic motivation. Keep going — and consider sharing the specific questions and language that work for you with other parents in your community.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 3: LANGUAGE REFRAMES -->
+    <div class="section">
+      <div class="section-number">Section 3</div>
+      <h2>Language Reframes: Result-Anchored → Effort-First</h2>
+      <p class="section-desc">Some common phrases feel supportive but teach result-dependency. Here's what each one signals — and what to say instead.</p>
+
+      <table class="reframe-table">
+        <thead>
+          <tr>
+            <th style="width:30%">What you might say</th>
+            <th style="width:28%">What it actually teaches</th>
+            <th>Effort-first alternative</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="phrase-col">"You tried your best."</td>
+            <td class="teaches-col">Consolation framing — implies the result was a failure requiring comfort</td>
+            <td class="reframe-col">"Tell me about a moment from today you're proud of."</td>
+          </tr>
+          <tr>
+            <td class="phrase-col">"It's okay, you'll get 'em next time."</td>
+            <td class="teaches-col">Outcome-anchored — the implicit message is "this time was a loss"</td>
+            <td class="reframe-col">"How did you feel about your effort today?"</td>
+          </tr>
+          <tr>
+            <td class="phrase-col">"You were the best one out there."</td>
+            <td class="teaches-col">Worth through comparison — depends on external ranking</td>
+            <td class="reframe-col">"I saw you pushing hard on that play. That's who you are."</td>
+          </tr>
+          <tr>
+            <td class="phrase-col">"The coach should have played you more."</td>
+            <td class="teaches-col">Blame displacement — removes agency, teaches result-victimhood</td>
+            <td class="reframe-col">"What felt good about how you competed when you were in?"</td>
+          </tr>
+          <tr>
+            <td class="phrase-col">"Don't cry, it was just a game."</td>
+            <td class="teaches-col">Emotion suppression — dismisses the feeling, teaches emotional hiding</td>
+            <td class="reframe-col">"That's disappointing. What part bothers you most?"</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SECTION 4: CO-PARENTING SCRIPTS -->
+    <div class="section">
+      <div class="section-number">Section 4</div>
+      <h2>Co-Parenting Scenarios</h2>
+      <p class="section-desc">When parents send different signals, athletes learn to manage the emotional gap between them — not develop their own intrinsic standard. Here are scripts for three common tension points.</p>
+
+      <div class="scenario-card">
+        <div class="scenario-header">Scenario 1 — Result-focused comment on the drive home</div>
+        <div class="scenario-body">
+          <div class="situation">"Your co-parent says 'You really should have scored on that chance' before the car reaches the parking lot exit."</div>
+          <div class="script-label">Your redirect (to your athlete):</div>
+          <div class="script">"I noticed you working really hard to create those chances. That's what I saw. How did that feel?"</div>
+        </div>
+      </div>
+
+      <div class="scenario-card">
+        <div class="scenario-header">Scenario 2 — Visible frustration/silence after a loss</div>
+        <div class="scenario-body">
+          <div class="situation">"Your co-parent is quiet and visibly tense on the ride home. Your athlete is watching both of you."</div>
+          <div class="script-label">Later, privately:</div>
+          <div class="script">"I know that was frustrating to watch. I felt it too. But [Name] is reading our energy right now and learning what the result meant to us. Can we agree to lead with effort before anything else tonight?"</div>
+        </div>
+      </div>
+
+      <div class="scenario-card">
+        <div class="scenario-header">Scenario 3 — Ongoing effort vs. outcome gap</div>
+        <div class="scenario-body">
+          <div class="situation">"Your co-parent consistently ties reactions and praise to results. Your athlete gets mixed signals depending on who's at the game."</div>
+          <div class="script-label">A conversation to have before the next game:</div>
+          <div class="script">"I want us to be consistent for [Name]'s sake — not because one of us is wrong, but because consistency is what actually builds their confidence. Can we try this: for the next two weeks, whoever picks them up asks one effort question before anything about the score? Something like 'What felt good today?' — just to see what happens."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: COMMITMENT -->
+    <div class="section">
+      <div class="section-number">Section 5</div>
+      <h2>This Week's Commitment</h2>
+      <p class="section-desc">Based on your log and audit, complete these two statements. Write specifically — not "I'll be more effort-focused" but what you will actually say and do.</p>
+
+      <div class="commitment-pair">
+        <div class="commitment-item">
+          <label>The result-focused behavior I most want to change is:</label>
+          <textarea placeholder="e.g. My mood after the game reflects the score — I go quiet after a loss and my athlete reads it immediately."></textarea>
+        </div>
+        <div class="commitment-item">
+          <label>My go-to effort-first question for the next game — win or loss — is:</label>
+          <textarea placeholder="e.g. 'Tell me about a moment from today you're proud of.' I'll ask this before anything else."></textarea>
+        </div>
+      </div>
+
+      <div class="evidence-block">
+        <strong>Why this works:</strong> Effort attribution research (Weiner, 1985) shows that children who receive consistent effort-focused feedback from parents develop internal standards for evaluation — they stop needing the scoreboard to tell them how to feel. Autonomy-supportive parenting (Mageau &amp; Vallerand, 2003) produces athletes with measurably lower anxiety and higher persistence. The post-competition conversation is the highest-leverage parenting moment in sport. What you say in the first five minutes sets the emotional frame for the entire week.
+      </div>
+    </div>
+
+    <!-- PDF BUTTON -->
+    <button class="print-btn" onclick="window.print()">⬇ Download / Print as PDF</button>
+
+    <div class="brand-footer">
+      <strong>The Quiet Edge</strong> · Stage 2: Self-Awareness · Parent Edition<br>
+      <span style="font-size:11px">Evidence-based resources for parents of youth athletes</span>
+    </div>
+
+  </div><!-- /page -->
+
+  <script>
+    // ── Build the 7-day log rows ──
+    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const tbody = document.getElementById('logBody');
+    days.forEach((d, i) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td class="day-label">${d}</td>
+        <td><input type="text" placeholder="e.g. Saturday soccer match" aria-label="Event day ${i+1}"></td>
+        <td><textarea rows="2" placeholder="What did you say, feel, or do?" aria-label="Reaction day ${i+1}"></textarea></td>
+        <td>
+          <div class="driver-group">
+            <label><input type="radio" name="driver${i}" value="effort"> Effort</label>
+            <label><input type="radio" name="driver${i}" value="result"> Result</label>
+            <label><input type="radio" name="driver${i}" value="both"> Both</label>
+          </div>
+        </td>
+        <td><textarea rows="2" placeholder="What could you say instead?" aria-label="Effort reframe day ${i+1}"></textarea></td>
+      `;
+      tbody.appendChild(row);
+    });
+
+    // ── Live tally of driver radios ──
+    document.addEventListener('change', function(e) {
+      if (e.target.type === 'radio') updateTallies();
+      if (e.target.classList.contains('result-check') || e.target.classList.contains('effort-check')) updateAudit();
+    });
+
+    function updateTallies() {
+      let e = 0, r = 0, b = 0;
+      days.forEach((_, i) => {
+        const sel = document.querySelector(`input[name="driver${i}"]:checked`);
+        if (sel) {
+          if (sel.value === 'effort') e++;
+          else if (sel.value === 'result') r++;
+          else b++;
+        }
+      });
+      document.getElementById('tallyEffort').textContent = e;
+      document.getElementById('tallyResult').textContent = r;
+      document.getElementById('tallyBoth').textContent = b;
+    }
+
+    // ── Live audit scoring ──
+    function updateAudit() {
+      const rc = document.querySelectorAll('.result-check:checked').length;
+      const ec = document.querySelectorAll('.effort-check:checked').length;
+      document.getElementById('resultScore').textContent = rc;
+      document.getElementById('effortScore').textContent = ec;
+    }
+
+    // ── Profile reveal ──
+    function revealProfile() {
+      const rc = document.querySelectorAll('.result-check:checked').length;
+      const ec = document.querySelectorAll('.effort-check:checked').length;
+      document.getElementById('profileOutcome').style.display = 'none';
+      document.getElementById('profileMixed').style.display = 'none';
+      document.getElementById('profileEffort').style.display = 'none';
+
+      let id;
+      if (ec >= 5 && rc <= 2) id = 'profileEffort';
+      else if (rc >= 5 && ec <= 2) id = 'profileOutcome';
+      else id = 'profileMixed';
+
+      document.getElementById(id).style.display = 'block';
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  </script>
+</body>
+</html>
