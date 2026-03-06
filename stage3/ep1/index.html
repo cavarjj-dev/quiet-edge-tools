@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deliberate Practice Session Planner — The Quiet Edge</title>
+<style>
+  :root {
+    --orange: #F97316;
+    --orange-light: #FFF7ED;
+    --orange-mid: #FFEDD5;
+    --dark: #1C1C1E;
+    --gray: #6B7280;
+    --light-gray: #F3F4F6;
+    --border: #E5E7EB;
+    --white: #FFFFFF;
+    --green: #16A34A;
+    --green-light: #F0FDF4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--light-gray);
+    color: var(--dark);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    background: var(--white);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--dark);
+    padding: 28px 40px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 200px; height: 100%;
+    background: linear-gradient(135deg, transparent 40%, rgba(249,115,22,0.25) 100%);
+  }
+  .header-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 6px;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1.25;
+    margin-bottom: 4px;
+  }
+  .header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+  }
+
+  /* CONTENT */
+  .content { padding: 32px 40px; }
+
+  /* SECTIONS */
+  .section { margin-bottom: 36px; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--orange);
+  }
+  .section-num {
+    width: 28px; height: 28px;
+    background: var(--orange);
+    color: var(--white);
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--dark);
+  }
+  .section-subtitle {
+    font-size: 12px;
+    color: var(--gray);
+    font-weight: 400;
+    margin-left: 38px;
+    margin-top: -10px;
+    margin-bottom: 14px;
+  }
+
+  /* FCFA FRAMEWORK BOX */
+  .framework-box {
+    background: var(--orange-light);
+    border: 1.5px solid var(--orange);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+  }
+  .fcfa-item {
+    flex: 1;
+    text-align: center;
+    padding: 8px 12px;
+    position: relative;
+  }
+  .fcfa-item:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: var(--orange);
+    font-weight: 700;
+  }
+  .fcfa-letter {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--orange);
+    display: block;
+    line-height: 1;
+  }
+  .fcfa-word {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--dark);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-top: 2px;
+  }
+  .fcfa-desc {
+    font-size: 10px;
+    color: var(--gray);
+    display: block;
+    margin-top: 3px;
+  }
+
+  /* FORM FIELDS */
+  .field-group { margin-bottom: 18px; }
+  .field-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .field-hint {
+    font-size: 11px;
+    color: var(--gray);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .field-input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--dark);
+    background: var(--white);
+    transition: border-color 0.15s;
+    resize: vertical;
+    min-height: 44px;
+  }
+  .field-input:focus {
+    outline: none;
+    border-color: var(--orange);
+  }
+  textarea.field-input { min-height: 80px; }
+
+  /* TIME INPUT */
+  .time-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .time-input {
+    width: 90px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    text-align: center;
+  }
+  .time-input:focus { outline: none; border-color: var(--orange); }
+  .time-label { font-size: 13px; color: var(--gray); }
+
+  /* FEEDBACK CHECKBOXES */
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .checkbox-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    background: var(--light-gray);
+    border-radius: 8px;
+    padding: 10px 12px;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all 0.15s;
+  }
+  .checkbox-item:hover { border-color: var(--orange); background: var(--orange-mid); }
+  .checkbox-item input[type="checkbox"] {
+    margin-top: 2px;
+    accent-color: var(--orange);
+    width: 15px; height: 15px;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .checkbox-item span { font-size: 13px; font-weight: 500; color: var(--dark); }
+
+  /* CHALLENGE SLIDER */
+  .challenge-options {
+    display: flex;
+    gap: 8px;
+  }
+  .challenge-option {
+    flex: 1;
+    text-align: center;
+    padding: 12px 8px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .challenge-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0; height: 0;
+  }
+  .challenge-option:has(input:checked) {
+    border-color: var(--orange);
+    background: var(--orange-mid);
+  }
+  .challenge-icon { font-size: 20px; display: block; }
+  .challenge-text { font-size: 12px; font-weight: 600; color: var(--dark); display: block; margin-top: 4px; }
+  .challenge-desc { font-size: 10px; color: var(--gray); display: block; margin-top: 2px; }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 2px dashed var(--border);
+    margin: 28px 0;
+  }
+
+  /* FCFA CHECK */
+  .fcfa-check {
+    background: var(--light-gray);
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+  .fcfa-check-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .fcfa-check-item:last-child { border-bottom: none; }
+  .fcfa-check-item input[type="checkbox"] {
+    accent-color: var(--orange);
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .fcfa-check-text { font-size: 13px; color: var(--dark); }
+  .fcfa-check-label { font-weight: 700; color: var(--orange); }
+
+  .fcfa-score {
+    margin-top: 14px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--gray);
+  }
+  .fcfa-score-num {
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--orange);
+    display: block;
+    line-height: 1;
+  }
+  .fcfa-score-label { display: block; margin-top: 4px; }
+  .fcfa-score-msg { display: block; font-size: 12px; margin-top: 6px; font-style: italic; }
+
+  /* REFLECTION */
+  .reflection-item {
+    background: var(--light-gray);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .reflection-q {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 8px;
+  }
+
+  /* STAR RATING */
+  .star-row { display: flex; gap: 6px; }
+  .star-btn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--border);
+    padding: 0;
+    transition: color 0.1s;
+    line-height: 1;
+  }
+  .star-btn.active { color: var(--orange); }
+
+  /* SUMMARY BADGE */
+  .summary {
+    background: var(--green-light);
+    border: 1.5px solid var(--green);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 8px;
+    display: none;
+  }
+  .summary.visible { display: block; }
+  .summary-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 8px; }
+  .summary-line { font-size: 12px; color: var(--dark); margin-bottom: 4px; }
+
+  /* PRINT BUTTON */
+  .print-btn {
+    display: block;
+    width: 100%;
+    background: var(--orange);
+    color: var(--white);
+    border: none;
+    border-radius: 10px;
+    padding: 16px 24px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 32px;
+    transition: background 0.15s;
+    font-family: inherit;
+  }
+  .print-btn:hover { background: #EA6C0A; }
+
+  .footer-note {
+    text-align: center;
+    font-size: 11px;
+    color: var(--gray);
+    margin-top: 16px;
+    padding-bottom: 32px;
+  }
+
+  /* PRINT STYLES */
+  @media print {
+    body { background: white; font-size: 12px; }
+    .page { max-width: 100%; box-shadow: none; }
+    .header { padding: 20px 30px; }
+    .content { padding: 20px 30px; }
+    .print-btn { display: none !important; }
+    .field-input { border: 1px solid #ccc; }
+    .framework-box, .fcfa-check, .reflection-item { break-inside: avoid; }
+    .section { break-inside: avoid; }
+    @page { margin: 0.75in; size: letter; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-label">The Quiet Edge · Stage 3: Skill Acquisition · Ep. 1</div>
+    <h1>Deliberate Practice<br>Session Planner</h1>
+    <div class="header-sub">Focus → Challenge → Feedback → Adjust</div>
+  </div>
+
+  <div class="content">
+
+    <div class="framework-box">
+      <div class="fcfa-item">
+        <span class="fcfa-letter">F</span>
+        <span class="fcfa-word">Focus</span>
+        <span class="fcfa-desc">One specific skill target</span>
+      </div>
+      <div class="fcfa-item">
+        <span class="fcfa-letter">C</span>
+        <span class="fcfa-word">Challenge</span>
+        <span class="fcfa-desc">Edge of ability, not comfort</span>
+      </div>
+      <div class="fcfa-item">
+        <span class="fcfa-letter">F</span>
+        <span class="fcfa-word">Feedback</span>
+        <span class="fcfa-desc">Real-time info on each rep</span>
+      </div>
+      <div class="fcfa-item">
+        <span class="fcfa-letter">A</span>
+        <span class="fcfa-word">Adjust</span>
+        <span class="fcfa-desc">Corrections based on feedback</span>
+      </div>
+    </div>
+
+    <!-- PRE-PRACTICE -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div class="section-title">Pre-Practice Planning</div>
+      </div>
+      <div class="section-subtitle">Complete this before you start. Takes 5 minutes.</div>
+
+      <div class="field-group">
+        <label class="field-label">Today's specific skill target <span style="color:var(--orange)">*</span></label>
+        <span class="field-hint">One skill only. "Defense" is too vague. "First step quickness off the ball screen" is a target.</span>
+        <input type="text" class="field-input" id="skill-target" placeholder="e.g. Release point on jump shot, First touch control, Turn speed off the block..." />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">What "edge of ability" looks like today</label>
+        <span class="field-hint">Just beyond comfortable — not so hard you can't get feedback, not so easy you cruise.</span>
+        <input type="text" class="field-input" id="edge-description" placeholder="e.g. Make 7/10 from this distance with correct form before moving back..." />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Challenge level today</label>
+        <div class="challenge-options">
+          <label class="challenge-option">
+            <input type="radio" name="challenge" value="comfortable" onchange="updateChallenge()">
+            <span class="challenge-icon">😐</span>
+            <span class="challenge-text">Comfortable</span>
+            <span class="challenge-desc">Not deliberate practice</span>
+          </label>
+          <label class="challenge-option">
+            <input type="radio" name="challenge" value="edge" onchange="updateChallenge()">
+            <span class="challenge-icon">🔥</span>
+            <span class="challenge-text">Edge of ability</span>
+            <span class="challenge-desc">This is the target zone</span>
+          </label>
+          <label class="challenge-option">
+            <input type="radio" name="challenge" value="too-hard" onchange="updateChallenge()">
+            <span class="challenge-icon">😰</span>
+            <span class="challenge-text">Too hard</span>
+            <span class="challenge-desc">Can't get feedback</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">How I'll get immediate feedback</label>
+        <div class="checkbox-grid">
+          <label class="checkbox-item">
+            <input type="checkbox" value="film"> <span>Film myself (phone/tripod)</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="coach"> <span>Coach — real-time cues</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="partner"> <span>Training partner feedback</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="target"> <span>Visible target or marker</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="feel"> <span>Body mechanics — feel it</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="data"> <span>Stat / measurable outcome</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">The one adjustment I'm testing this session</label>
+        <span class="field-hint">Based on what you already know needs work — what specific tweak are you trying?</span>
+        <input type="text" class="field-input" id="adjustment" placeholder="e.g. Keep elbow in on release. Drive left before attacking right. Eyes up before contact." />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Time budget for deliberate reps</label>
+        <div class="time-row">
+          <input type="number" class="field-input time-input" id="time-budget" min="10" max="90" placeholder="—" />
+          <span class="time-label">minutes &nbsp;(10–90 min max — after that, it's not deliberate)</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- POST-PRACTICE -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div class="section-title">Post-Practice Reflection</div>
+      </div>
+      <div class="section-subtitle">Complete within 30 minutes of finishing. While it's fresh.</div>
+
+      <div class="field-group">
+        <label class="field-label">What actually improved this session?</label>
+        <textarea class="field-input" id="what-improved" placeholder="Be specific. Not 'my shot felt better' — what exactly changed?"></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">What still needs work — and why?</label>
+        <textarea class="field-input" id="needs-work" placeholder="Identify the gap. Understanding why something isn't working is half the battle."></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">The adjustment I'm bringing into my next session</label>
+        <input type="text" class="field-input" id="next-adjustment" placeholder="Specific, actionable — not 'try harder'" />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Focus quality today</label>
+        <span class="field-hint">How locked in were you? No phone, no coasting, no cruise control.</span>
+        <div class="star-row" id="star-rating">
+          <button class="star-btn" onclick="setRating(1)" data-val="1">★</button>
+          <button class="star-btn" onclick="setRating(2)" data-val="2">★</button>
+          <button class="star-btn" onclick="setRating(3)" data-val="3">★</button>
+          <button class="star-btn" onclick="setRating(4)" data-val="4">★</button>
+          <button class="star-btn" onclick="setRating(5)" data-val="5">★</button>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- FCFA CHECK -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title">FCFA Check — Was This Deliberate Practice?</div>
+      </div>
+      <div class="section-subtitle">All four elements must be present. Missing one = regular practice.</div>
+
+      <div class="fcfa-check">
+        <div class="fcfa-check-item">
+          <input type="checkbox" id="check-focus" onchange="updateFCFAScore()">
+          <div class="fcfa-check-text"><span class="fcfa-check-label">Focus</span> — I stayed on one specific skill target throughout the session</div>
+        </div>
+        <div class="fcfa-check-item">
+          <input type="checkbox" id="check-challenge" onchange="updateFCFAScore()">
+          <div class="fcfa-check-text"><span class="fcfa-check-label">Challenge</span> — I worked at the edge of my ability, not in the comfort zone</div>
+        </div>
+        <div class="fcfa-check-item">
+          <input type="checkbox" id="check-feedback" onchange="updateFCFAScore()">
+          <div class="fcfa-check-text"><span class="fcfa-check-label">Feedback</span> — I received clear, real-time information on each rep</div>
+        </div>
+        <div class="fcfa-check-item">
+          <input type="checkbox" id="check-adjust" onchange="updateFCFAScore()">
+          <div class="fcfa-check-text"><span class="fcfa-check-label">Adjust</span> — I actively made corrections based on that feedback during the session</div>
+        </div>
+        <div class="fcfa-score">
+          <span class="fcfa-score-num" id="fcfa-num">0</span>
+          <span class="fcfa-score-label">/ 4 elements present</span>
+          <span class="fcfa-score-msg" id="fcfa-msg">Check the boxes above after your session.</span>
+        </div>
+      </div>
+
+      <div id="session-summary" class="summary">
+        <div class="summary-title">✓ Session Summary</div>
+        <div id="summary-content"></div>
+      </div>
+    </div>
+
+    <button class="print-btn" onclick="window.print()">⬇ Download / Save as PDF</button>
+    <div class="footer-note">
+      The Quiet Edge · Stage 3: Skill Acquisition · Ep. 1 — Why Hours of Practice Can Still Leave You Stuck<br>
+      Based on deliberate practice research (Ericsson et al., 1993)
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let currentRating = 0;
+
+  function setRating(val) {
+    currentRating = val;
+    document.querySelectorAll('.star-btn').forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.val) <= val);
+    });
+    updateSummary();
+  }
+
+  function updateFCFAScore() {
+    const boxes = ['check-focus', 'check-challenge', 'check-feedback', 'check-adjust'];
+    const count = boxes.filter(id => document.getElementById(id).checked).length;
+    document.getElementById('fcfa-num').textContent = count;
+
+    const msgs = {
+      0: 'Check the boxes above after your session.',
+      1: 'One element — mostly habit maintenance.',
+      2: 'Getting there. Missing key elements.',
+      3: 'Close — one element still absent.',
+      4: '✓ All four present. This was deliberate practice.'
+    };
+    document.getElementById('fcfa-msg').textContent = msgs[count];
+    document.getElementById('fcfa-num').style.color = count === 4 ? '#16A34A' : '#F97316';
+    updateSummary();
+  }
+
+  function updateChallenge() { updateSummary(); }
+
+  function updateSummary() {
+    const skill = document.getElementById('skill-target').value.trim();
+    const adjustment = document.getElementById('next-adjustment').value.trim();
+    const boxes = ['check-focus', 'check-challenge', 'check-feedback', 'check-adjust'];
+    const count = boxes.filter(id => document.getElementById(id).checked).length;
+
+    if (skill && count === 4 && currentRating > 0) {
+      const summary = document.getElementById('session-summary');
+      summary.classList.add('visible');
+      document.getElementById('summary-content').innerHTML =
+        `<div class="summary-line">🎯 <strong>Skill practiced:</strong> ${skill}</div>` +
+        (adjustment ? `<div class="summary-line">🔧 <strong>Next session adjustment:</strong> ${adjustment}</div>` : '') +
+        `<div class="summary-line">⭐ <strong>Focus quality:</strong> ${currentRating}/5</div>` +
+        `<div class="summary-line">✅ <strong>FCFA complete:</strong> All four elements present</div>`;
+    }
+  }
+
+  document.getElementById('skill-target').addEventListener('input', updateSummary);
+  document.getElementById('next-adjustment').addEventListener('input', updateSummary);
+</script>
+</body>
+</html>
