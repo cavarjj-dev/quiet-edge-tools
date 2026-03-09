@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mental Cue Playbook Builder — The Quiet Edge</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --card: #1a1d27;
+      --card2: #20243a;
+      --accent: #ff6b35;
+      --accent-light: #ff8a5b;
+      --text: #e8e8f0;
+      --muted: #8a8a9a;
+      --border: #2d3147;
+      --success: #4ade80;
+      --danger: #f87171;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .container { max-width: 860px; margin: 0 auto; padding: 0 20px 80px; }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #1a1d27 0%, #0f1117 100%);
+      border-bottom: 2px solid var(--accent);
+      padding: 36px 20px 28px;
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .header-tag {
+      font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 8px;
+    }
+    header h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+    header p { font-size: 15px; color: var(--muted); }
+    .quote {
+      font-style: italic; color: var(--muted);
+      margin-top: 12px; font-size: 14px;
+    }
+
+    /* ── Step cards ── */
+    .step-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .step-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .step-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent); color: white;
+      font-weight: 700; font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-header h2 { font-size: 18px; font-weight: 700; }
+    .step-desc { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+    /* ── Inputs ── */
+    label {
+      display: block; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.8px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 5px;
+    }
+    input[type="text"], select, textarea {
+      width: 100%; background: var(--bg);
+      border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); padding: 10px 14px;
+      font-size: 14px; font-family: inherit; outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--accent); }
+    textarea { resize: vertical; min-height: 62px; }
+    select { cursor: pointer; }
+    select option { background: #1a1d27; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      border: none; border-radius: 8px; cursor: pointer;
+      font-size: 14px; font-weight: 700; padding: 10px 20px;
+      transition: background 0.2s, transform 0.1s; font-family: inherit;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-light); }
+    .btn-secondary {
+      background: var(--card2); color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: #282c47; }
+    .btn-ghost {
+      background: none; color: var(--muted);
+      border: 1px solid var(--border); padding: 5px 10px;
+      font-size: 12px; font-weight: 600; border-radius: 6px;
+    }
+    .btn-ghost:hover { color: var(--danger); border-color: var(--danger); }
+    .btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+
+    /* ── Info box ── */
+    .info-box {
+      background: rgba(255,107,53,0.08);
+      border: 1px solid rgba(255,107,53,0.25);
+      border-radius: 8px; padding: 14px 16px;
+      margin-bottom: 16px; font-size: 13px;
+    }
+    .info-box strong { color: var(--accent); }
+
+    /* ── Situation rows ── */
+    .situation-row {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+    }
+    .sit-num {
+      width: 26px; height: 26px; background: var(--accent);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; flex-shrink: 0;
+    }
+
+    /* ── Progress ── */
+    .progress-bar {
+      background: var(--border); border-radius: 20px; height: 6px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; background: var(--accent); border-radius: 20px; transition: width 0.3s;
+    }
+    .stat-box {
+      display: flex; align-items: center; gap: 10px; padding: 10px 0;
+    }
+    .stat-num { font-size: 26px; font-weight: 800; color: var(--accent); }
+    .stat-label { font-size: 13px; color: var(--muted); }
+
+    /* ── Grid ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 520px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      header h1 { font-size: 21px; }
+    }
+
+    /* ── Examples ── */
+    .examples-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      gap: 10px; margin-top: 12px;
+    }
+    .ex-item {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 12px; font-size: 13px;
+    }
+    .ex-sport {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px;
+      color: var(--accent); font-weight: 700; margin-bottom: 3px;
+    }
+    details summary { cursor: pointer; font-size: 13px; color: var(--muted); font-weight: 600; }
+    details summary:hover { color: var(--text); }
+
+    /* ── Cue scripting ── */
+    .cue-block {
+      background: var(--card2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 20px; margin-bottom: 16px;
+    }
+    .cue-block-title {
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--accent); margin-bottom: 14px;
+    }
+    .cue-input-wrap {
+      display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end;
+    }
+    @media (max-width: 420px) { .cue-input-wrap { grid-template-columns: 1fr; } }
+    .wc-badge {
+      font-size: 12px; padding: 10px 14px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; white-space: nowrap; color: var(--muted);
+      text-align: center; min-width: 72px;
+    }
+    .wc-ok { color: var(--success); border-color: rgba(74,222,128,0.4); }
+    .wc-over { color: var(--danger); border-color: rgba(248,113,113,0.4); }
+
+    .rules-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+    .rule-check {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; cursor: pointer; user-select: none;
+    }
+    .rule-check input[type="checkbox"] {
+      accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer;
+    }
+    .pass-badge {
+      display: inline-block; margin-top: 10px;
+      background: rgba(74,222,128,0.12); color: var(--success);
+      border: 1px solid rgba(74,222,128,0.3);
+      font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+    }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex; gap: 2px; border-bottom: 2px solid var(--border);
+      margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: none; border: none; color: var(--muted);
+      padding: 8px 16px; cursor: pointer; font-size: 13px; font-weight: 700;
+      border-radius: 6px 6px 0 0; font-family: inherit;
+      border-bottom: 2px solid transparent; margin-bottom: -2px;
+      transition: color 0.15s;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Tracker table ── */
+    .tracker-cue-header {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 16px; margin-bottom: 16px;
+    }
+    .tracker-cue-word {
+      font-size: 24px; font-weight: 800; color: var(--accent); margin-top: 4px;
+    }
+    .t-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .t-table th {
+      text-align: left; padding: 8px 12px;
+      border-bottom: 2px solid var(--border);
+      font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; color: var(--muted);
+    }
+    .t-table td {
+      padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: middle;
+    }
+    .t-table tr:last-child td { border-bottom: none; }
+    .t-table input[type="checkbox"] {
+      width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer;
+    }
+    .t-table input[type="text"] { padding: 6px 10px; font-size: 13px; }
+    .yn-wrap { display: flex; gap: 6px; }
+    .yn-btn {
+      padding: 4px 10px; border-radius: 6px;
+      border: 1px solid var(--border); background: var(--bg);
+      color: var(--muted); font-size: 12px; font-weight: 700;
+      cursor: pointer; font-family: inherit; transition: all 0.15s;
+    }
+    .yn-btn.y-on { border-color: var(--success); color: var(--success); background: rgba(74,222,128,0.1); }
+    .yn-btn.n-on { border-color: var(--danger); color: var(--danger); background: rgba(248,113,113,0.1); }
+
+    /* ── Cue card preview (screen) ── */
+    #card-preview {
+      display: none;
+      background: white; color: #111827;
+      border-radius: 10px; padding: 28px; margin-top: 20px;
+    }
+    .card-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      border-bottom: 3px solid #ff6b35; padding-bottom: 14px; margin-bottom: 18px;
+    }
+    .card-series {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px;
+      color: #9ca3af; margin-bottom: 4px;
+    }
+    .card-title { font-size: 20px; font-weight: 900; color: #111827; }
+    .card-date { font-size: 12px; color: #6b7280; margin-top: 2px; }
+    .card-sport-pill {
+      background: #ff6b35; color: white; font-size: 11px; font-weight: 800;
+      padding: 4px 12px; border-radius: 20px; letter-spacing: 0.5px;
+      white-space: nowrap; align-self: flex-start;
+    }
+    .card-cue-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
+    .card-cue-table th {
+      background: #f3f4f6; padding: 8px 12px; text-align: left;
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #6b7280;
+    }
+    .card-cue-table td {
+      padding: 10px 12px; border-bottom: 1px solid #e5e7eb; font-size: 14px;
+    }
+    .card-cue-word { font-weight: 900; font-size: 17px; color: #ff6b35; }
+    .card-rules-box {
+      background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px;
+      padding: 12px 14px; margin-bottom: 12px;
+    }
+    .card-rules-title {
+      font-size: 10px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.8px; color: #6b7280; margin-bottom: 6px;
+    }
+    .card-rules-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3px;
+      font-size: 12px; color: #374151;
+    }
+    .card-footer {
+      font-size: 11px; color: #9ca3af; text-align: center; margin-top: 10px;
+    }
+
+    /* ── Print ── */
+    @media print {
+      body { background: white !important; color: #111827 !important; }
+      header, .step-card, #print-btn, .no-print { display: none !important; }
+      #card-preview {
+        display: block !important;
+        box-shadow: none !important;
+        border: 2px solid #ff6b35 !important;
+        margin: 0 !important; padding: 28px !important;
+      }
+      .container { max-width: 100% !important; padding: 0 !important; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">The Quiet Edge &middot; Stage 3 &middot; Episode 3</div>
+  <h1>🎯 Mental Cue Playbook Builder</h1>
+  <p>Build your personal execution trigger system — one word at a time.</p>
+  <div class="quote">&ldquo;One word can change your whole performance.&rdquo;</div>
+</header>
+
+<div class="container">
+
+  <!-- STEP 1 -->
+  <div class="step-card">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <h2>Your Sport &amp; Situations</h2>
+    </div>
+    <p class="step-desc">Identify 3–5 specific moments where your performance varies most under pressure. Be precise — not "big moments," but the exact scenario.</p>
+
+    <div class="info-box">
+      <strong>What counts as a situation?</strong> A specific, repeatable moment where you've experienced overthinking, inconsistency, or pressure affecting your execution. Example: <em>"Free throw with under 90 seconds left"</em> — not just <em>"pressure moments."</em>
+    </div>
+
+    <div class="grid-2" style="margin-bottom: 20px;">
+      <div>
+        <label for="sport-sel">Your Sport</label>
+        <select id="sport-sel" onchange="setSport(this.value)">
+          <option value="">Select sport…</option>
+          <option>Basketball</option>
+          <option>Soccer</option>
+          <option>Swimming</option>
+          <option>Track &amp; Field</option>
+          <option>Tennis</option>
+          <option>Baseball / Softball</option>
+          <option>Volleyball</option>
+          <option>Football</option>
+          <option>Golf</option>
+          <option>Gymnastics</option>
+          <option>Wrestling</option>
+          <option>Cross Country</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label>Progress</label>
+        <div class="stat-box">
+          <div class="stat-num" id="sit-count">0</div>
+          <div class="stat-label">of 5 situations added</div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="sit-prog" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <label>Your Situations</label>
+    <div id="sit-list"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="addSituation()">+ Add Situation</button>
+    </div>
+
+    <details style="margin-top: 18px;">
+      <summary>See example situations &rarr;</summary>
+      <div class="examples-grid">
+        <div class="ex-item"><div class="ex-sport">Basketball</div>Free throw · under 2 min tight game</div>
+        <div class="ex-item"><div class="ex-sport">Soccer</div>Penalty kick in a shootout</div>
+        <div class="ex-item"><div class="ex-sport">Tennis</div>First serve after a double fault</div>
+        <div class="ex-item"><div class="ex-sport">Track</div>Drive phase off the blocks</div>
+        <div class="ex-item"><div class="ex-sport">Swimming</div>Underwater pull-out after the turn</div>
+        <div class="ex-item"><div class="ex-sport">Golf</div>Approach shot from rough while behind</div>
+        <div class="ex-item"><div class="ex-sport">Any sport</div>After making a visible mistake</div>
+        <div class="ex-item"><div class="ex-sport">Any sport</div>Under fatigue — late game / late set</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-card">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <h2>Script Your Cues</h2>
+    </div>
+    <p class="step-desc">For each situation, write one cue word (1–3 words max). Then run it through the 4-Rule checklist. A cue that fails any rule needs revision before testing.</p>
+
+    <div class="info-box">
+      <strong>The 4 Rules</strong><br>
+      <span style="color:var(--text)">① Short</span> — 1–3 words (1 word is ideal)&nbsp;&nbsp;
+      <span style="color:var(--text)">② Action-focused</span> — what TO do, not what to avoid&nbsp;&nbsp;
+      <span style="color:var(--text)">③ Feel-based</span> — evokes the physical sensation of correct execution&nbsp;&nbsp;
+      <span style="color:var(--text)">④ Tested</span> — in practice BEFORE competition
+    </div>
+
+    <div id="cue-area">
+      <p style="color:var(--muted); font-size:14px; text-align:center; padding:28px 0;">Add situations in Step 1 to begin scripting cues.</p>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step-card">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <h2>7-Day Testing Log</h2>
+    </div>
+    <p class="step-desc">Test each cue in practice every day this week. A cue is not competition-ready until it feels automatic. This is Rule 4 in action.</p>
+
+    <div id="tracker-area">
+      <p style="color:var(--muted); font-size:14px; text-align:center; padding:28px 0;">Script cues in Step 2 to unlock your testing log.</p>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step-card">
+    <div class="step-header">
+      <div class="step-num">4</div>
+      <h2>Your Pocket Cue Card</h2>
+    </div>
+    <p class="step-desc">Generate a printable cue card once your cues are tested and ready. Laminate it and keep it with your gear as a pre-competition reference.</p>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="generateCard()">Generate Cue Card</button>
+      <button class="btn btn-secondary no-print" id="print-btn" onclick="window.print()" style="display:none">🖨 Print / Save as PDF</button>
+    </div>
+
+    <div id="card-preview"></div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ─── State ───────────────────────────────────────────────────────────────────
+const S = {
+  sport: '',
+  situations: [],   // { id, text }
+  cues: {},         // id -> { word, sensation, r1, r2, r3, r4 }
+  tracker: {}       // id -> [{used, auto, note}, ...]
+};
+let idSeq = 0;
+let activeTab = null;
+
+// ─── Init ────────────────────────────────────────────────────────────────────
+function init() {
+  // Start with 3 blank situations
+  addSituation(); addSituation(); addSituation();
+  loadState();
+}
+
+// ─── Sport ───────────────────────────────────────────────────────────────────
+function setSport(v) { S.sport = v; save(); }
+
+// ─── Situations ──────────────────────────────────────────────────────────────
+function addSituation() {
+  if (S.situations.length >= 5) return;
+  const id = ++idSeq;
+  S.situations.push({ id, text: '' });
+  S.cues[id] = { word: '', sensation: '', r1: false, r2: false, r3: false, r4: false };
+  S.tracker[id] = Array.from({ length: 7 }, () => ({ used: false, auto: null, note: '' }));
+  renderSits(); renderCues(); renderTracker(); save();
+}
+
+function removeSit(id) {
+  if (S.situations.length <= 1) return;
+  S.situations = S.situations.filter(s => s.id !== id);
+  delete S.cues[id];
+  delete S.tracker[id];
+  renderSits(); renderCues(); renderTracker(); save();
+}
+
+function setSitText(id, v) {
+  const s = S.situations.find(x => x.id === id);
+  if (s) { s.text = v; renderCues(); renderTracker(); save(); }
+}
+
+function renderSits() {
+  const n = S.situations.length;
+  document.getElementById('sit-count').textContent = n;
+  document.getElementById('sit-prog').style.width = (n / 5 * 100) + '%';
+
+  document.getElementById('sit-list').innerHTML = S.situations.map((s, i) => `
+    <div class="situation-row">
+      <div class="sit-num">${i + 1}</div>
+      <input type="text" value="${esc(s.text)}"
+        placeholder="Describe the specific moment…"
+        maxlength="100"
+        oninput="setSitText(${s.id}, this.value)">
+      ${S.situations.length > 1
+        ? `<button class="btn btn-ghost" onclick="removeSit(${s.id})">✕</button>`
+        : ''}
+    </div>
+  `).join('');
+}
+
+// ─── Cue scripting ───────────────────────────────────────────────────────────
+function renderCues() {
+  const area = document.getElementById('cue-area');
+  const filled = S.situations.filter(s => s.text.trim());
+
+  if (!filled.length) {
+    area.innerHTML = '<p style="color:var(--muted);font-size:14px;text-align:center;padding:28px 0;">Add situations in Step 1 to begin scripting cues.</p>';
+    return;
+  }
+
+  area.innerHTML = filled.map((s, i) => {
+    const c = S.cues[s.id];
+    const wds = c.word.trim() ? c.word.trim().split(/\s+/).length : 0;
+    const wcCls = wds === 0 ? '' : wds <= 3 ? 'wc-ok' : 'wc-over';
+    const allPass = c.r1 && c.r2 && c.r3 && c.r4;
+
+    return `
+    <div class="cue-block">
+      <div class="cue-block-title">Situation ${i + 1}: ${esc(s.text)}</div>
+
+      <div style="margin-bottom:14px">
+        <label>Cue Word (1–3 words max)</label>
+        <div class="cue-input-wrap">
+          <input type="text"
+            value="${esc(c.word)}"
+            placeholder="e.g.  Smooth · Arc · Drive · Extend · Long"
+            maxlength="40"
+            oninput="setCueWord(${s.id}, this.value)">
+          <div class="wc-badge ${wcCls}" id="wc-${s.id}">${wds}/3</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:14px">
+        <label>What does this cue make your body do?</label>
+        <textarea
+          placeholder="e.g. Releases tension in my shoulders and lets my arm follow through naturally…"
+          oninput="setCueSensation(${s.id}, this.value)">${esc(c.sensation)}</textarea>
+      </div>
+
+      <div>
+        <label>4-Rule Check</label>
+        <div class="rules-row">
+          <label class="rule-check">
+            <input type="checkbox" ${c.r1 ? 'checked' : ''} onchange="setCueRule(${s.id},'r1',this.checked)">
+            ① Short (≤3 words)
+          </label>
+          <label class="rule-check">
+            <input type="checkbox" ${c.r2 ? 'checked' : ''} onchange="setCueRule(${s.id},'r2',this.checked)">
+            ② Action-focused
+          </label>
+          <label class="rule-check">
+            <input type="checkbox" ${c.r3 ? 'checked' : ''} onchange="setCueRule(${s.id},'r3',this.checked)">
+            ③ Feel-based
+          </label>
+          <label class="rule-check">
+            <input type="checkbox" ${c.r4 ? 'checked' : ''} onchange="setCueRule(${s.id},'r4',this.checked)">
+            ④ Tested in practice
+          </label>
+        </div>
+        ${allPass ? '<div class="pass-badge">✓ Passes all 4 rules — competition ready</div>' : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setCueWord(id, v) {
+  if (!S.cues[id]) return;
+  S.cues[id].word = v;
+  const wds = v.trim() ? v.trim().split(/\s+/).length : 0;
+  const el = document.getElementById(`wc-${id}`);
+  if (el) {
+    el.textContent = wds + '/3';
+    el.className = 'wc-badge ' + (wds === 0 ? '' : wds <= 3 ? 'wc-ok' : 'wc-over');
+  }
+  renderTracker(); save();
+}
+function setCueSensation(id, v) { if (S.cues[id]) { S.cues[id].sensation = v; save(); } }
+function setCueRule(id, r, v) {
+  if (!S.cues[id]) return;
+  S.cues[id][r] = v;
+  renderCues(); save();
+}
+
+// ─── Tracker ─────────────────────────────────────────────────────────────────
+function renderTracker() {
+  const area = document.getElementById('tracker-area');
+  const ready = S.situations.filter(s => s.text.trim() && S.cues[s.id]?.word.trim());
+
+  if (!ready.length) {
+    area.innerHTML = '<p style="color:var(--muted);font-size:14px;text-align:center;padding:28px 0;">Script cues in Step 2 to unlock your testing log.</p>';
+    return;
+  }
+
+  if (!activeTab || !ready.find(s => s.id === activeTab)) {
+    activeTab = ready[0].id;
+  }
+
+  const tabs = ready.map(s => `
+    <button class="tab-btn ${s.id === activeTab ? 'active' : ''}"
+      onclick="switchTab(${s.id})">
+      ${esc(S.cues[s.id].word || ('Cue ' + (ready.indexOf(s) + 1)))}
+    </button>`).join('');
+
+  const panels = ready.map(s => {
+    const log = S.tracker[s.id] || [];
+    const rows = Array.from({ length: 7 }, (_, d) => {
+      const day = log[d] || { used: false, auto: null, note: '' };
+      return `
+      <tr>
+        <td style="font-weight:700">Day ${d + 1}</td>
+        <td><input type="checkbox" ${day.used ? 'checked' : ''} onchange="setTrackerField(${s.id},${d},'used',this.checked)"></td>
+        <td>
+          <div class="yn-wrap">
+            <button class="yn-btn ${day.auto === true ? 'y-on' : ''}"
+              onclick="setTrackerField(${s.id},${d},'auto',true)">Y</button>
+            <button class="yn-btn ${day.auto === false ? 'n-on' : ''}"
+              onclick="setTrackerField(${s.id},${d},'auto',false)">N</button>
+          </div>
+        </td>
+        <td><input type="text" value="${esc(day.note)}"
+          placeholder="Notes / adjustments…"
+          oninput="setTrackerField(${s.id},${d},'note',this.value)"></td>
+      </tr>`;
+    }).join('');
+
+    return `
+    <div class="tab-panel ${s.id === activeTab ? 'active' : ''}" id="tp-${s.id}">
+      <div class="tracker-cue-header">
+        <div style="font-size:12px;color:var(--muted)">Situation</div>
+        <div style="font-weight:700">${esc(s.text)}</div>
+        <div class="tracker-cue-word">&ldquo;${esc(S.cues[s.id].word)}&rdquo;</div>
+      </div>
+      <table class="t-table">
+        <thead><tr>
+          <th>Day</th><th>Used it?</th><th>Felt automatic?</th><th>Notes</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+  }).join('');
+
+  area.innerHTML = `<div class="tabs">${tabs}</div>${panels}`;
+}
+
+function switchTab(id) { activeTab = id; renderTracker(); }
+
+function setTrackerField(sitId, day, field, value) {
+  if (!S.tracker[sitId]) return;
+  if (!S.tracker[sitId][day]) S.tracker[sitId][day] = { used: false, auto: null, note: '' };
+  S.tracker[sitId][day][field] = value;
+  if (field === 'auto') renderTracker();
+  save();
+}
+
+// ─── Cue Card ─────────────────────────────────────────────────────────────────
+function generateCard() {
+  const ready = S.situations.filter(s => s.text.trim() && S.cues[s.id]?.word.trim());
+  if (!ready.length) {
+    alert('Add at least one situation with a cue word before generating your card.');
+    return;
+  }
+
+  const sport = S.sport || document.getElementById('sport-sel').value || 'My Sport';
+  const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+  const rows = ready.map(s => `
+    <tr>
+      <td>${esc(s.text)}</td>
+      <td class="card-cue-word">${esc(S.cues[s.id].word.toUpperCase())}</td>
+    </tr>`).join('');
+
+  document.getElementById('card-preview').innerHTML = `
+    <div class="card-top">
+      <div>
+        <div class="card-series">The Quiet Edge &middot; Stage 3 &middot; Ep. 3</div>
+        <div class="card-title">🎯 My Cue Playbook</div>
+        <div class="card-date">Built ${today}</div>
+      </div>
+      <div class="card-sport-pill">${esc(sport)}</div>
+    </div>
+
+    <table class="card-cue-table">
+      <thead><tr><th>Situation</th><th>Cue Word</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+
+    <div class="card-rules-box">
+      <div class="card-rules-title">The 4 Rules</div>
+      <div class="card-rules-grid">
+        <div>① Short — 1 word ideal</div>
+        <div>② Action — what TO do</div>
+        <div>③ Feel — evokes the sensation</div>
+        <div>④ Tested — practice first</div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      &ldquo;One word can change your whole performance.&rdquo; &middot; Laminate &amp; keep with your gear
+    </div>`;
+
+  document.getElementById('card-preview').style.display = 'block';
+  document.getElementById('print-btn').style.display = 'inline-flex';
+  document.getElementById('card-preview').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ─── Persist ──────────────────────────────────────────────────────────────────
+function save() {
+  try { localStorage.setItem('qe_ep3_cues', JSON.stringify({ S, idSeq })); } catch(e) {}
+}
+function loadState() {
+  try {
+    const raw = localStorage.getItem('qe_ep3_cues');
+    if (!raw) { renderSits(); return; }
+    const d = JSON.parse(raw);
+    if (d.idSeq) idSeq = d.idSeq;
+    if (d.S) {
+      Object.assign(S, d.S);
+      const sel = document.getElementById('sport-sel');
+      if (S.sport) sel.value = S.sport;
+    }
+  } catch(e) {}
+  renderSits(); renderCues(); renderTracker();
+}
+
+// ─── Utils ────────────────────────────────────────────────────────────────────
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── Boot ─────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
