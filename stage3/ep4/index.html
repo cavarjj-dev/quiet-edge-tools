@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mid-Competition Refocus Card Builder | The Quiet Edge</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; color: #2d2d2d; line-height: 1.6; }
+
+    /* ── App ── */
+    .app { max-width: 800px; margin: 0 auto; padding-bottom: 60px; }
+
+    /* ── Header ── */
+    header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 28px 32px; text-align: center; }
+    .logo-line { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: #e8742a; font-weight: 700; margin-bottom: 8px; }
+    header h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.3px; }
+    header .subtitle { font-size: 12px; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 2px; }
+
+    /* ── Step Indicators ── */
+    .step-indicators { display: flex; background: white; border-bottom: 1px solid #e5e7eb; }
+    .step-ind { flex: 1; padding: 13px 8px; text-align: center; font-size: 13px; font-weight: 600; color: #9ca3af; border-bottom: 3px solid transparent; }
+    .step-ind.active { color: #e8742a; border-bottom-color: #e8742a; }
+    .step-ind.done { color: #10b981; border-bottom-color: #10b981; }
+
+    /* ── Section ── */
+    .step-section { padding: 32px; display: none; }
+    .step-section.active { display: block; }
+    .section-intro h2 { font-size: 20px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+    .section-intro p { color: #6b7280; font-size: 15px; margin-bottom: 28px; }
+
+    /* ── Pattern Cards ── */
+    .patterns-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+    .pattern-card { background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.2s; user-select: none; }
+    .pattern-card:hover { border-color: #e8742a; box-shadow: 0 4px 14px rgba(232,116,42,0.14); }
+    .pattern-card.selected { border-color: #e8742a; background: #fff7f2; }
+    .pcard-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .pcard-icon { font-size: 26px; }
+    .pcard-check { width: 22px; height: 22px; border: 2px solid #d1d5db; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; color: transparent; flex-shrink: 0; }
+    .pattern-card.selected .pcard-check { background: #e8742a; border-color: #e8742a; color: white; }
+    .pcard-label { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 5px; }
+    .pcard-desc { font-size: 13px; color: #6b7280; line-height: 1.5; }
+
+    /* ── Athlete Info ── */
+    .athlete-info { display: flex; gap: 14px; margin-bottom: 24px; }
+    .athlete-info input { flex: 1; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; }
+    .athlete-info input:focus { border-color: #e8742a; }
+
+    /* ── Buttons ── */
+    .btn-primary { background: #e8742a; color: white; border: none; padding: 14px 28px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; width: 100%; transition: background 0.2s; font-family: inherit; }
+    .btn-primary:hover { background: #d4621a; }
+    .btn-secondary { background: transparent; color: #6b7280; border: 1.5px solid #d1d5db; padding: 14px 20px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+    .btn-secondary:hover { border-color: #9ca3af; color: #374151; }
+    .nav-buttons { display: flex; gap: 12px; margin-top: 24px; }
+    .nav-buttons .btn-primary { flex: 2; }
+    .nav-buttons .btn-secondary { flex: 1; }
+    .btn-print-wrap { text-align: center; margin-bottom: 24px; }
+    .btn-print { background: #1a1a2e; color: white; border: none; padding: 12px 28px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .btn-print:hover { background: #2d3748; }
+
+    /* ── Validation ── */
+    .val-msg { background: #fff3cd; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 14px; color: #92400e; display: none; }
+    .val-msg.visible { display: block; }
+
+    /* ── Step 2: Script Builder ── */
+    #step2 h2 { font-size: 20px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+    #step2 .step2-intro { color: #6b7280; font-size: 15px; margin-bottom: 28px; }
+    #step2 .step2-intro strong { color: #1a1a2e; }
+
+    .script-block { background: white; border-radius: 12px; padding: 24px; margin-bottom: 18px; border-left: 4px solid #e8742a; }
+    .sb-header { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+    .sb-icon { font-size: 22px; }
+    .sb-label { font-size: 16px; font-weight: 700; color: #1a1a2e; }
+
+    .nnn-row { margin-bottom: 18px; }
+    .nnn-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: #e8742a; margin-bottom: 4px; }
+    .nnn-sub { font-size: 12px; color: #9ca3af; margin-bottom: 8px; }
+    .nnn-row textarea, .nnn-row input[type="text"] { width: 100%; padding: 10px 12px; border: 1.5px solid #e5e7eb; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; line-height: 1.5; }
+    .nnn-row textarea { resize: vertical; min-height: 54px; }
+    .nnn-row textarea:focus, .nnn-row input[type="text"]:focus { border-color: #e8742a; }
+
+    .next-options { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+    .next-opt { padding: 7px 14px; border: 1.5px solid #e5e7eb; border-radius: 20px; font-size: 13px; cursor: pointer; background: white; font-family: inherit; transition: all 0.2s; }
+    .next-opt:hover { border-color: #e8742a; color: #e8742a; }
+    .next-opt.selected { border-color: #e8742a; background: #e8742a; color: white; }
+    .custom-input-wrap { display: none; }
+    .custom-input-label { font-size: 12px; color: #9ca3af; margin-bottom: 6px; }
+
+    /* ── Physical Reset ── */
+    .reset-section { background: white; border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+    .reset-section h3 { font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+    .reset-section > p { font-size: 14px; color: #6b7280; margin-bottom: 16px; }
+    .reset-opt { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border: 1.5px solid #e5e7eb; border-radius: 8px; cursor: pointer; margin-bottom: 10px; transition: all 0.2s; }
+    .reset-opt:hover { border-color: #e8742a; }
+    .reset-opt.selected { border-color: #e8742a; background: #fff7f2; }
+    .reset-opt input[type="radio"] { margin-top: 3px; accent-color: #e8742a; flex-shrink: 0; }
+    .reset-opt-text strong { display: block; font-size: 14px; font-weight: 600; color: #1a1a2e; }
+    .reset-opt-text span { font-size: 13px; color: #6b7280; }
+    #customResetWrap { display: none; margin-top: 4px; }
+    #customResetInput { width: 100%; padding: 10px 12px; border: 1.5px solid #e5e7eb; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; }
+    #customResetInput:focus { border-color: #e8742a; }
+
+    /* ── Step 3: Refocus Card ── */
+    #step3 { background: #f0f2f5; }
+    .card-preview-header { text-align: center; margin-bottom: 28px; }
+    .card-preview-header h2 { font-size: 20px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+    .card-preview-header p { color: #6b7280; font-size: 15px; margin-bottom: 20px; }
+
+    .refocus-card { background: white; border-radius: 16px; padding: 36px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); max-width: 600px; margin: 0 auto; }
+
+    .rc-header { text-align: center; margin-bottom: 26px; padding-bottom: 22px; border-bottom: 2px solid #f3f4f6; }
+    .rc-logo { font-size: 10px; text-transform: uppercase; letter-spacing: 3px; color: #e8742a; font-weight: 700; margin-bottom: 8px; }
+    .rc-title { font-size: 21px; font-weight: 800; color: #1a1a2e; margin-bottom: 4px; }
+    .rc-athlete { font-size: 14px; color: #6b7280; }
+
+    .rc-physical { background: #1a1a2e; color: white; border-radius: 10px; padding: 16px 20px; margin-bottom: 22px; }
+    .rc-physical-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #e8742a; font-weight: 700; margin-bottom: 8px; }
+    .rc-physical-steps { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 14px; font-weight: 600; }
+    .rc-arrow { color: #e8742a; font-size: 13px; }
+
+    .rc-pattern { border: 1.5px solid #e5e7eb; border-radius: 10px; padding: 18px; margin-bottom: 14px; }
+    .rc-pattern:last-of-type { margin-bottom: 0; }
+    .rc-pattern-header { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: #e8742a; margin-bottom: 12px; }
+    .rc-nnn { display: flex; gap: 10px; margin-bottom: 8px; align-items: flex-start; }
+    .rc-badge { background: #1a1a2e; color: white; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding: 3px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px; min-width: 52px; text-align: center; }
+    .rc-text { font-size: 14px; color: #374151; line-height: 1.5; }
+    .rc-text.next { font-weight: 700; color: #1a1a2e; font-size: 15px; }
+
+    .rc-footer { text-align: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid #f3f4f6; }
+    .rc-motto { font-size: 14px; font-style: italic; color: #6b7280; margin-bottom: 4px; }
+    .rc-brand { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #d1d5db; }
+
+    /* ── Evidence ── */
+    .evidence-section { background: white; border-radius: 12px; padding: 24px; margin-top: 28px; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .evidence-section h3 { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 16px; }
+    .ev-item { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid #f3f4f6; }
+    .ev-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .ev-cite { font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 3px; }
+    .ev-finding { font-size: 13px; color: #6b7280; line-height: 1.5; }
+
+    /* ── Print ── */
+    @media print {
+      body { background: white; }
+      .app { max-width: none; padding: 0; }
+      header, .step-indicators, #step1, #step2,
+      .card-preview-header, .nav-buttons, .evidence-section,
+      .no-print { display: none !important; }
+      #step3 { display: block !important; padding: 0; background: white; }
+      .refocus-card { box-shadow: none; border: 1px solid #e5e7eb; max-width: none; margin: 0; border-radius: 0; }
+      @page { size: letter; margin: 0.65in; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="logo-line">The Quiet Edge &middot; Stage 3: Skill Acquisition</div>
+    <h1>Mid-Competition Refocus Card Builder</h1>
+    <p class="subtitle">Episode 4 &middot; Notice &rarr; Name &rarr; Next</p>
+  </header>
+
+  <div class="step-indicators">
+    <div class="step-ind active" id="si1">① Select Patterns</div>
+    <div class="step-ind" id="si2">② Build Scripts</div>
+    <div class="step-ind" id="si3">③ Your Card</div>
+  </div>
+
+  <!-- STEP 1 -->
+  <section id="step1" class="step-section active">
+    <div class="section-intro">
+      <h2>What happens to you mid-competition?</h2>
+      <p>Select the pattern(s) that show up when things go sideways. You'll build a pre-scripted 5-second reset for each one — so it's ready when pressure hits.</p>
+    </div>
+    <div class="val-msg" id="val1">Please select at least one pattern to continue.</div>
+    <div class="patterns-grid" id="patternsGrid"></div>
+    <div class="athlete-info">
+      <input type="text" id="athleteName" placeholder="Your name (optional)" />
+      <input type="text" id="sport" placeholder="Your sport (optional)" />
+    </div>
+    <button class="btn-primary" onclick="goToStep2()">Next: Build My Scripts &rarr;</button>
+  </section>
+
+  <!-- STEP 2 -->
+  <section id="step2" class="step-section">
+    <h2>Build Your Notice &rarr; Name &rarr; Next Scripts</h2>
+    <p class="step2-intro">Edit any pre-filled text. Keep your <strong>"Next" cue to 5 words or fewer</strong> — shorter is faster under pressure.</p>
+    <div id="scriptBuilder"></div>
+    <div class="reset-section">
+      <h3>Your Physical Reset Sequence</h3>
+      <p>The physical trigger creates a cognitive break before your "Next" cue fires. Choose yours:</p>
+      <div id="resetOptions"></div>
+      <div id="customResetWrap">
+        <input type="text" id="customResetInput" placeholder="e.g. Bounce ball three times → look at target → breathe" />
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn-secondary" onclick="goToStep1()">&#8592; Back</button>
+      <button class="btn-primary" onclick="generateCard()">Build My Card &rarr;</button>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section id="step3" class="step-section">
+    <div class="card-preview-header no-print">
+      <h2>Your Refocus Card is Ready</h2>
+      <p>Keep this in your gear bag or phone. Practice triggering it in training so it fires automatically when pressure hits.</p>
+      <button class="btn-print" onclick="window.print()">&#128424; Print / Save as PDF</button>
+    </div>
+    <div id="refocusCard" class="refocus-card"></div>
+    <div class="nav-buttons no-print" style="max-width:600px;margin:20px auto 0;">
+      <button class="btn-secondary" onclick="goToStep2()">&#8592; Edit Scripts</button>
+      <button class="btn-primary" onclick="window.print()">&#128424; Print Card</button>
+    </div>
+    <div class="evidence-section no-print">
+      <h3>Why This Works — Evidence Base</h3>
+      <div class="ev-item">
+        <div class="ev-cite">Moran &amp; Toner (2017) — Attentional Control in Sport</div>
+        <div class="ev-finding">Narrow, task-relevant focus cues reduce performance interference under competitive pressure. Athletes who pre-select a focal target recover from disruptions faster than those searching for focus in the moment.</div>
+      </div>
+      <div class="ev-item">
+        <div class="ev-cite">Bernier et al. (2009) — Present-Moment Awareness</div>
+        <div class="ev-finding">Mindfulness-based attention training interrupts rumination cycles mid-competition. Athletes trained to label and redirect attention show lower competitive anxiety and higher flow state frequency.</div>
+      </div>
+      <div class="ev-item">
+        <div class="ev-cite">Wulf (2013) — Constrained Action Hypothesis</div>
+        <div class="ev-finding">A pre-scripted "Next" cue gives conscious attention a simple, contained task — allowing trained motor programs to execute without prefrontal override. This is why prepared cue words work faster than thinking of one under pressure.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const PATTERNS = [
+  {
+    id: 'tight',
+    icon: '💪',
+    label: 'Tight &amp; Forcing',
+    labelPlain: 'Tight & Forcing',
+    desc: 'Muscles tense, forcing plays that aren\'t there, trying too hard instead of smarter',
+    noticeDef: 'Shoulders rising, jaw clenching, forcing plays',
+    nameDef: 'I\'m tight.',
+    nextOpts: ['Stay loose.', 'Let it happen.', 'Soft hands. Next.', 'Breathe. Easy.']
+  },
+  {
+    id: 'overthinking',
+    icon: '🧠',
+    label: 'Overthinking',
+    labelPlain: 'Overthinking',
+    desc: 'Too many thoughts competing, analyzing during execution, second-guessing every move',
+    noticeDef: 'Multiple thoughts competing, second-guessing, processing too slowly',
+    nameDef: 'I\'m overthinking.',
+    nextOpts: ['See it, trust it.', 'One play.', 'Less thinking. Now.', 'Trust training.']
+  },
+  {
+    id: 'sloppy',
+    icon: '📉',
+    label: 'Sloppy &amp; Detached',
+    labelPlain: 'Sloppy & Detached',
+    desc: 'Effort dropping, losing precision on basics, going through the motions',
+    noticeDef: 'Effort dropping, attention drifting, basics getting loose',
+    nameDef: 'I\'m checked out.',
+    nextOpts: ['Lock in.', 'Sharp. Here.', 'Precision. Now.', 'Wake up. Next.']
+  },
+  {
+    id: 'scoreboard',
+    icon: '📊',
+    label: 'Score-Distracted',
+    labelPlain: 'Score-Distracted',
+    desc: 'Eyes on the scoreboard, thinking about the gap, worried about the result',
+    noticeDef: 'Eyes going to scoreboard, thinking about the gap',
+    nameDef: 'I\'m scoreboard-watching.',
+    nextOpts: ['This possession.', 'Just this play.', 'Score doesn\'t exist.', 'Right here.']
+  }
+];
+
+const RESET_OPTS = [
+  { id: 'r1', label: 'Deep breath → Shake arms → Adjust equipment', detail: 'Most versatile — works in any sport, any situation' },
+  { id: 'r2', label: 'Step away briefly → Roll shoulders → Deliberate breath', detail: 'Best for between-point sports (tennis, baseball, volleyball)' },
+  { id: 'r3', label: 'Custom', detail: 'Write your own physical reset sequence' }
+];
+
+let selectedPatterns = [];
+let selectedReset = 'r1';
+
+// ── Render Pattern Cards ──
+function renderPatterns() {
+  document.getElementById('patternsGrid').innerHTML = PATTERNS.map(p => `
+    <div class="pattern-card" id="pcard-${p.id}" onclick="togglePattern('${p.id}')">
+      <div class="pcard-top">
+        <span class="pcard-icon">${p.icon}</span>
+        <div class="pcard-check" id="pcheck-${p.id}">✓</div>
+      </div>
+      <div class="pcard-label">${p.label}</div>
+      <div class="pcard-desc">${p.desc}</div>
+    </div>
+  `).join('');
+}
+
+function togglePattern(id) {
+  const card = document.getElementById('pcard-' + id);
+  if (selectedPatterns.includes(id)) {
+    selectedPatterns = selectedPatterns.filter(x => x !== id);
+    card.classList.remove('selected');
+  } else {
+    if (selectedPatterns.length >= 3) return;
+    selectedPatterns.push(id);
+    card.classList.add('selected');
+  }
+}
+
+// ── Render Script Builder ──
+function renderScriptBuilder() {
+  document.getElementById('scriptBuilder').innerHTML = selectedPatterns.map(id => {
+    const p = PATTERNS.find(x => x.id === id);
+    const opts = p.nextOpts.map((opt, i) =>
+      `<button class="next-opt${i === 0 ? ' selected' : ''}" onclick="pickNext('${p.id}', '${opt.replace(/'/g,"\\'")}', this)">${opt}</button>`
+    ).join('') +
+    `<button class="next-opt" onclick="pickNext('${p.id}', null, this)">Custom…</button>`;
+
+    return `
+      <div class="script-block">
+        <div class="sb-header">
+          <span class="sb-icon">${p.icon}</span>
+          <span class="sb-label">${p.label}</span>
+        </div>
+        <div class="nnn-row">
+          <div class="nnn-label">Notice</div>
+          <div class="nnn-sub">What's the first signal in your body or mind when this pattern hits?</div>
+          <textarea id="notice-${p.id}">${p.noticeDef}</textarea>
+        </div>
+        <div class="nnn-row">
+          <div class="nnn-label">Name</div>
+          <div class="nnn-sub">A short label — naming it reduces intensity and creates separation from it</div>
+          <input type="text" id="name-${p.id}" value="${p.nameDef}" />
+        </div>
+        <div class="nnn-row">
+          <div class="nnn-label">Next</div>
+          <div class="nnn-sub">One clear action — 5 words or fewer. Pick one or write your own:</div>
+          <div class="next-options">${opts}</div>
+          <div class="custom-input-wrap" id="custom-wrap-${p.id}">
+            <div class="custom-input-label">Your custom cue (≤5 words):</div>
+            <input type="text" id="next-custom-${p.id}" placeholder="Write your cue…" maxlength="40"
+              oninput="document.getElementById('next-val-${p.id}').value = this.value" />
+          </div>
+          <input type="hidden" id="next-val-${p.id}" value="${p.nextOpts[0]}" />
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function pickNext(patternId, value, btn) {
+  btn.closest('.next-options').querySelectorAll('.next-opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const wrap = document.getElementById('custom-wrap-' + patternId);
+  const hidden = document.getElementById('next-val-' + patternId);
+  if (value === null) {
+    wrap.style.display = 'block';
+    hidden.value = '';
+  } else {
+    wrap.style.display = 'none';
+    hidden.value = value;
+  }
+}
+
+// ── Render Reset Options ──
+function renderResetOptions() {
+  document.getElementById('resetOptions').innerHTML = RESET_OPTS.map((r, i) => `
+    <div class="reset-opt ${i === 0 ? 'selected' : ''}" id="ropt-${r.id}" onclick="pickReset('${r.id}')">
+      <input type="radio" name="reset" value="${r.id}" ${i === 0 ? 'checked' : ''} onclick="event.stopPropagation()" />
+      <div class="reset-opt-text">
+        <strong>${r.label}</strong>
+        <span>${r.detail}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function pickReset(id) {
+  RESET_OPTS.forEach(r => {
+    const el = document.getElementById('ropt-' + r.id);
+    el.classList.toggle('selected', r.id === id);
+    el.querySelector('input[type="radio"]').checked = (r.id === id);
+  });
+  selectedReset = id;
+  document.getElementById('customResetWrap').style.display = id === 'r3' ? 'block' : 'none';
+}
+
+function getResetSteps() {
+  if (selectedReset === 'r1') return ['Deep breath', 'Shake arms', 'Adjust'];
+  if (selectedReset === 'r2') return ['Step away', 'Roll shoulders', 'Breathe'];
+  const v = document.getElementById('customResetInput').value.trim();
+  return v ? v.split(/→|->|,/).map(s => s.trim()).filter(Boolean) : ['Breathe', 'Refocus', 'Next play'];
+}
+
+// ── Navigation ──
+function goToStep2() {
+  if (selectedPatterns.length === 0) {
+    document.getElementById('val1').classList.add('visible');
+    return;
+  }
+  document.getElementById('val1').classList.remove('visible');
+  renderScriptBuilder();
+  renderResetOptions();
+  showStep('step2');
+  setIndicators(2);
+}
+
+function goToStep1() {
+  showStep('step1');
+  setIndicators(1);
+}
+
+function generateCard() {
+  const name = document.getElementById('athleteName').value.trim();
+  const sport = document.getElementById('sport').value.trim();
+  const athleteInfo = [name, sport].filter(Boolean).join(' · ');
+  const resetSteps = getResetSteps();
+
+  const stepsHtml = resetSteps.map((s, i) =>
+    `${i > 0 ? '<span class="rc-arrow">→</span>' : ''}<span>${['①','②','③'][i] || '•'} ${s}</span>`
+  ).join(' ');
+
+  const patternsHtml = selectedPatterns.map(id => {
+    const p = PATTERNS.find(x => x.id === id);
+    const notice = document.getElementById('notice-' + id).value || p.noticeDef;
+    const name = document.getElementById('name-' + id).value || p.nameDef;
+    const next = document.getElementById('next-val-' + id).value || p.nextOpts[0];
+    return `
+      <div class="rc-pattern">
+        <div class="rc-pattern-header">${p.icon} ${p.labelPlain}</div>
+        <div class="rc-nnn">
+          <div class="rc-badge">Notice</div>
+          <div class="rc-text">${escHtml(notice)}</div>
+        </div>
+        <div class="rc-nnn">
+          <div class="rc-badge">Name</div>
+          <div class="rc-text">"${escHtml(name)}"</div>
+        </div>
+        <div class="rc-nnn">
+          <div class="rc-badge">Next</div>
+          <div class="rc-text next">"${escHtml(next)}"</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('refocusCard').innerHTML = `
+    <div class="rc-header">
+      <div class="rc-logo">The Quiet Edge · Stage 3</div>
+      <div class="rc-title">🎯 Mid-Competition Refocus Card</div>
+      ${athleteInfo ? `<div class="rc-athlete">${escHtml(athleteInfo)}</div>` : ''}
+    </div>
+    <div class="rc-physical">
+      <div class="rc-physical-label">Physical Reset — Do This First</div>
+      <div class="rc-physical-steps">${stepsHtml}</div>
+    </div>
+    ${patternsHtml}
+    <div class="rc-footer">
+      <div class="rc-motto"><em>One thing. Next play. That's enough.</em></div>
+      <div class="rc-brand">The Quiet Edge · Stage 3: Skill Acquisition · Episode 4</div>
+    </div>
+  `;
+
+  showStep('step3');
+  setIndicators(3);
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showStep(id) {
+  document.querySelectorAll('.step-section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function setIndicators(step) {
+  for (let i = 1; i <= 3; i++) {
+    const el = document.getElementById('si' + i);
+    el.className = 'step-ind' + (i < step ? ' done' : i === step ? ' active' : '');
+  }
+}
+
+// Init
+renderPatterns();
+</script>
+</body>
+</html>
