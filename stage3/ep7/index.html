@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mental Rep Builder — The Quiet Edge</title>
+<style>
+  /* === RESET & BASE === */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange: #e8813a;
+    --orange-dark: #c96820;
+    --dark: #1a1a2e;
+    --dark2: #16213e;
+    --dark3: #0f3460;
+    --text: #e8e8f0;
+    --text-muted: #9999bb;
+    --surface: rgba(255,255,255,0.06);
+    --surface-hover: rgba(255,255,255,0.10);
+    --border: rgba(255,255,255,0.12);
+    --success: #4caf78;
+    --radius: 12px;
+    --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    font-family: var(--font);
+    background: linear-gradient(135deg, var(--dark) 0%, var(--dark2) 50%, var(--dark3) 100%);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* === LAYOUT === */
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+  }
+
+  /* === HEADER === */
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .channel-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-size: clamp(24px, 5vw, 36px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #fff 0%, var(--orange) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header .subtitle {
+    color: var(--text-muted);
+    font-size: 15px;
+  }
+
+  /* === PROGRESS BAR === */
+  .progress-bar-wrap {
+    margin-bottom: 32px;
+  }
+  .progress-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .progress-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s;
+    flex: 1;
+    text-align: center;
+  }
+  .progress-label.active { color: var(--orange); }
+  .progress-label.done { color: var(--success); }
+  .progress-track {
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--orange-dark), var(--orange));
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  /* === STEPS === */
+  .step { display: none; animation: fadeIn 0.3s ease; }
+  .step.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .step-header {
+    margin-bottom: 24px;
+  }
+  .step-number {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 6px;
+  }
+  .step-header h2 {
+    font-size: clamp(20px, 4vw, 28px);
+    font-weight: 800;
+    line-height: 1.2;
+  }
+  .step-header p {
+    color: var(--text-muted);
+    margin-top: 8px;
+    font-size: 14px;
+  }
+
+  /* === CARDS === */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .card-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 6px;
+  }
+  .card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .card p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  /* === SCENARIO PICKER === */
+  .scenario-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .scenario-btn {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    color: var(--text);
+  }
+  .scenario-btn:hover { background: var(--surface-hover); border-color: var(--orange); }
+  .scenario-btn.selected { background: rgba(232,129,58,0.15); border-color: var(--orange); }
+  .scenario-btn .icon { font-size: 24px; margin-bottom: 8px; display: block; }
+  .scenario-btn .name { font-size: 14px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .scenario-btn .desc { font-size: 12px; color: var(--text-muted); display: block; }
+
+  /* === FORM ELEMENTS === */
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  textarea, input[type="text"], input[type="number"], select {
+    width: 100%;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 14px;
+    transition: border-color 0.2s;
+    resize: vertical;
+  }
+  textarea:focus, input:focus, select:focus {
+    outline: none;
+    border-color: var(--orange);
+  }
+  textarea { min-height: 80px; }
+  .form-row { margin-bottom: 16px; }
+
+  select option { background: #1a1a2e; }
+
+  /* === PETTLEP ITEMS === */
+  .pettlep-item {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: start;
+  }
+  .pettlep-letter {
+    width: 40px;
+    height: 40px;
+    background: rgba(232,129,58,0.15);
+    border: 2px solid var(--orange);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--orange);
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .pettlep-content label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+  .pettlep-content .hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  /* === TIMING DISPLAY === */
+  .timing-note {
+    background: rgba(232,129,58,0.1);
+    border: 1px solid rgba(232,129,58,0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--orange);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* === ADVERSITY SECTION === */
+  .recovery-steps {
+    counter-reset: step-counter;
+  }
+  .recovery-step {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+    align-items: start;
+  }
+  .step-num {
+    width: 28px;
+    height: 28px;
+    background: var(--orange);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+    color: #fff;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  /* === SCRIPT PREVIEW === */
+  .script-preview {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    font-size: 15px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    min-height: 120px;
+  }
+  .script-section {
+    margin-bottom: 20px;
+  }
+  .script-section h4 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 8px;
+  }
+
+  /* === BUTTONS === */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+    color: #fff;
+  }
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-secondary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .btn-secondary:hover { background: var(--surface-hover); }
+  .btn-success {
+    background: linear-gradient(135deg, #2e7d52, var(--success));
+    color: #fff;
+  }
+  .btn-success:hover { opacity: 0.9; transform: translateY(-1px); }
+  .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 28px;
+    gap: 12px;
+  }
+
+  /* === TIPS === */
+  .tip-box {
+    background: rgba(255,255,255,0.04);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .tip-box strong { color: var(--text); }
+
+  /* === COMPLETE SCREEN === */
+  .complete-icon { font-size: 64px; text-align: center; margin-bottom: 16px; }
+  .complete-title {
+    font-size: 28px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #fff, var(--orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .complete-subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+  }
+
+  /* === PRINT === */
+  @media print {
+    body { background: #fff !important; color: #000 !important; }
+    .no-print, .nav-buttons, .progress-bar-wrap, .header .subtitle, button { display: none !important; }
+    .container { padding: 0; max-width: 100%; }
+    .header {
+      background: none !important;
+      border: none !important;
+      padding: 16px 0 !important;
+      color: #000 !important;
+      page-break-inside: avoid;
+    }
+    .header h1 {
+      background: none !important;
+      -webkit-text-fill-color: #1a1a2e !important;
+      color: #1a1a2e !important;
+      font-size: 22px !important;
+    }
+    .channel-tag { color: #e8813a !important; }
+    .step { display: block !important; page-break-before: always; }
+    .step:first-of-type { page-break-before: avoid; }
+    .card { border: 1px solid #ccc !important; background: #f9f9f9 !important; }
+    .script-preview { background: #f9f9f9 !important; border: 1px solid #ccc !important; color: #000 !important; }
+    .script-section h4 { color: #c96820 !important; }
+    .pettlep-letter { border-color: #e8813a !important; color: #e8813a !important; background: #fff3e0 !important; }
+    textarea, input { border: 1px solid #999 !important; background: #fff !important; color: #000 !important; min-height: 60px; }
+    .step-number, .card-label { color: #c96820 !important; }
+    .tip-box { border-left-color: #e8813a !important; background: #fff8f0 !important; color: #444 !important; }
+    .timing-note { border-color: #e8813a !important; background: #fff3e0 !important; color: #c96820 !important; }
+    .complete-title { -webkit-text-fill-color: #1a1a2e !important; color: #1a1a2e !important; }
+    .step-num { background: #e8813a !important; }
+  }
+  @page { margin: 0.75in; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="channel-tag">The Quiet Edge · Stage 3</div>
+    <h1>Mental Rep Builder</h1>
+    <p class="subtitle">Build your personalized visualization script using the PETTLEP framework — the gold standard for mental practice in elite sport.</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar-wrap no-print">
+    <div class="progress-labels">
+      <span class="progress-label active" id="lbl-0" onclick="goToStep(0)">Scenario</span>
+      <span class="progress-label" id="lbl-1" onclick="goToStep(1)">Scene</span>
+      <span class="progress-label" id="lbl-2" onclick="goToStep(2)">Adversity</span>
+      <span class="progress-label" id="lbl-3" onclick="goToStep(3)">Your Script</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:12%"></div></div>
+  </div>
+
+  <!-- ===== STEP 0: CHOOSE SCENARIO ===== -->
+  <div class="step active" id="step-0">
+    <div class="step-header">
+      <div class="step-number">Step 1 of 4</div>
+      <h2>Choose Your Scenario</h2>
+      <p>Elite athletes don't visualize vaguely. They target specific scenarios. Which situation do you most need to pre-rehearse?</p>
+    </div>
+
+    <div class="tip-box">
+      <strong>Why this matters:</strong> Visualization is only as powerful as it is specific. A vague "I see myself winning" produces weak neural encoding. A detailed, scenario-specific script produces functional equivalence — your brain treats it as a real rep.
+    </div>
+
+    <div class="scenario-grid">
+      <button class="scenario-btn" id="sc-precomp" onclick="selectScenario('precomp', this)">
+        <span class="icon">🎯</span>
+        <span class="name">Pre-Competition Routine</span>
+        <span class="desc">Entering the arena, warm-up, mental preparation before a game or event</span>
+      </button>
+      <button class="scenario-btn" id="sc-skill" onclick="selectScenario('skill', this)">
+        <span class="icon">⚙️</span>
+        <span class="name">Specific Skill Execution</span>
+        <span class="desc">A technical skill you're developing — perfect form, timing, decision-making</span>
+      </button>
+      <button class="scenario-btn" id="sc-pressure" onclick="selectScenario('pressure', this)">
+        <span class="icon">🔥</span>
+        <span class="name">Pressure Moment</span>
+        <span class="desc">High-stakes moment: last play, penalty shot, final seconds, must-perform situation</span>
+      </button>
+      <button class="scenario-btn" id="sc-recovery" onclick="selectScenario('recovery', this)">
+        <span class="icon">↩️</span>
+        <span class="name">Mistake + Recovery</span>
+        <span class="desc">Pre-rehearse making an error and resetting — builds real recovery skills</span>
+      </button>
+    </div>
+
+    <div class="form-row" style="margin-top:20px">
+      <label>Your sport & position/event</label>
+      <input type="text" id="sport-input" placeholder="e.g. Basketball — point guard, Soccer — goalkeeper, Swimming — 200m freestyle">
+    </div>
+
+    <div class="nav-buttons">
+      <div></div>
+      <button class="btn btn-primary" onclick="nextStep(0)">Build My Scene →</button>
+    </div>
+  </div>
+
+  <!-- ===== STEP 1: PETTLEP SCENE BUILDER ===== -->
+  <div class="step" id="step-1">
+    <div class="step-header">
+      <div class="step-number">Step 2 of 4</div>
+      <h2>Build Your Scene</h2>
+      <p>The PETTLEP model. The more specific your answers, the more real your brain treats the rep.</p>
+    </div>
+
+    <div class="tip-box">
+      <strong>The key rule:</strong> Write in present tense, first person. Not "I will feel nervous" — <em>"I feel my heart rate rise, I breathe through it."</em>
+    </div>
+
+    <div class="pettlep-item">
+      <div class="pettlep-letter">P</div>
+      <div class="pettlep-content">
+        <label>Physical — Your body right now</label>
+        <div class="hint">What are you wearing? What are you holding or touching? Your exact body position?</div>
+        <textarea id="p-physical" placeholder="e.g. I'm wearing my game jersey, number 12. I feel the grip tape on the bat in my right hand. My cleats are laced tight. I'm standing in the on-deck circle..."></textarea>
+      </div>
+    </div>
+
+    <div class="pettlep-item">
+      <div class="pettlep-letter">E</div>
+      <div class="pettlep-content">
+        <label>Environment — The scene around you</label>
+        <div class="hint">What do you see, hear, smell? Indoor or outdoor? Crowd size? Weather? Time of day?</div>
+        <textarea id="p-environment" placeholder="e.g. The gym is loud — maybe 300 people. I can hear sneakers squeaking on the hardwood. The lights above the court are bright and white. I smell popcorn from the concession stand..."></textarea>
+      </div>
+    </div>
+
+    <div class="pettlep-item">
+      <div class="pettlep-letter">T</div>
+      <div class="pettlep-content">
+        <label>Task — The exact skill, step by step</label>
+        <div class="hint">Break it into 3–5 component steps. Be mechanical — this is the technical blueprint.</div>
+        <textarea id="p-task" placeholder="e.g. Step 1: I load my weight back onto my rear foot. Step 2: I track the ball out of the pitcher's hand. Step 3: I fire my hips, hands follow..."></textarea>
+      </div>
+    </div>
+
+    <div class="pettlep-item">
+      <div class="pettlep-letter">T</div>
+      <div class="pettlep-content">
+        <label>Timing — Real speed, not slow motion</label>
+        <div class="hint">Slow-motion visualization weakens neural encoding. Your brain needs real-time reps.</div>
+        <div class="timing-note">⏱ Run this visualization at full, competition speed. Time it now if you can.</div>
+        <div style="margin-top:12px">
+          <label>How long does this skill/scenario take at real speed?</label>
+          <input type="text" id="p-timing" placeholder="e.g. About 3 seconds · Full routine is 90 seconds">
+        </div>
+      </div>
+    </div>
+
+    <div class="pettlep-item">
+      <div class="pettlep-letter">L</div>
+      <div class="pettlep-content">
+        <label>Learning — Your current skill level</label>
+        <div class="hint">Visualize your actual current form, not a perfect ideal. Advanced athletes picture high precision; developing athletes picture solid execution of fundamentals.</div>
+        <select id="p-learning">
+          <option value="">Select your current level for this skill...</option>
+          <option value="developing">Developing — I'm still learning the fundamentals</option>
+          <option value="intermediate">Intermediate — Consistent in practice, inconsistent in competition</option>
+          <option value="advanced">Advanced — High consistency, working on refinement under pressure</option>
+          <option value="elite">Elite — Already reliable, using visualization to sharpen automaticity</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="pettlep-item">
+      <div class="pettlep-letter">E</div>
+      <div class="pettlep-content">
+        <label>Emotion — What are you feeling?</label>
+        <div class="hint">Don't visualize perfect calm if you actually feel nervous. Rehearse executing through the real emotion.</div>
+        <textarea id="p-emotion" placeholder="e.g. I feel my pulse quicken. There's a tightness in my chest — that edge-of-competition feeling. I breathe through my nose, feel my shoulders drop. I'm locked in, not panicked..."></textarea>
+      </div>
+    </div>
+
+    <div class="pettlep-item">
+      <div class="pettlep-letter">P</div>
+      <div class="pettlep-content">
+        <label>Perspective — First person only</label>
+        <div class="hint">Always look through your own eyes. Never watch yourself from outside — third-person imagery is significantly less effective for motor skill encoding.</div>
+        <div class="timing-note">👁 Confirmed: I am looking through my own eyes, first-person view throughout.</div>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevStep(1)">← Back</button>
+      <button class="btn btn-primary" onclick="nextStep(1)">Add Adversity →</button>
+    </div>
+  </div>
+
+  <!-- ===== STEP 2: ADVERSITY + RECOVERY ===== -->
+  <div class="step" id="step-2">
+    <div class="step-header">
+      <div class="step-number">Step 3 of 4</div>
+      <h2>Adversity + Recovery</h2>
+      <p>This is where most athletes stop — and why most visualization doesn't transfer. Pre-rehearsing mistakes and recovery builds a separate, critical neural track.</p>
+    </div>
+
+    <div class="tip-box">
+      <strong>The research on this:</strong> Standard mental imagery only rehearses success. Adversity visualization pre-encodes the <em>recovery</em> response — so when the mistake actually happens, your brain has already been there and knows what to do. This is the difference between visualization and wishful thinking.
+    </div>
+
+    <div class="card">
+      <div class="card-label">The Mistake</div>
+      <h3>What could realistically go wrong?</h3>
+      <p>Pick one specific, realistic mistake that could happen in your scenario. Not catastrophizing — a real possibility.</p>
+      <div class="form-row">
+        <textarea id="adv-mistake" placeholder="e.g. I miss the first free throw badly — it rattles in and out. The crowd reacts. I feel heat in my face..."></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">The 3-Second Recovery Response</div>
+      <h3>Exactly what happens next — in your body, your mind, your next action?</h3>
+      <p>Be specific about each of the three channels. Write it in present tense.</p>
+      <div class="recovery-steps">
+        <div class="recovery-step">
+          <div class="step-num">1</div>
+          <div class="form-row" style="width:100%; margin-bottom:0">
+            <label>Body (physical reset)</label>
+            <textarea id="adv-body" placeholder="e.g. I take one slow breath out through my mouth. I shake my hands loose at my sides. My feet reset to shoulder width..." style="min-height:60px"></textarea>
+          </div>
+        </div>
+        <div class="recovery-step">
+          <div class="step-num">2</div>
+          <div class="form-row" style="width:100%; margin-bottom:0">
+            <label>Self-talk cue (one word or short phrase)</label>
+            <input type="text" id="adv-selftalk" placeholder='e.g. "Next one." · "Reset." · "Right now."'>
+          </div>
+        </div>
+        <div class="recovery-step">
+          <div class="step-num">3</div>
+          <div class="form-row" style="width:100%; margin-bottom:0">
+            <label>Next action (what you do immediately)</label>
+            <textarea id="adv-action" placeholder="e.g. I step back to the line. I find my spot on the rim. I go through my routine the same way I always do..." style="min-height:60px"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevStep(2)">← Back</button>
+      <button class="btn btn-primary" onclick="buildScript()">Build My Script →</button>
+    </div>
+  </div>
+
+  <!-- ===== STEP 3: SCRIPT OUTPUT ===== -->
+  <div class="step" id="step-3">
+    <div class="step-header">
+      <div class="step-number">Step 4 of 4</div>
+      <h2>Your Visualization Script</h2>
+      <p>Read this script slowly before every practice session or competition. Target: 5–10 minutes of focused mental reps daily.</p>
+    </div>
+
+    <div class="tip-box">
+      <strong>How to use this:</strong> Find a quiet place. Close your eyes. Read through your script once, then visualize without the text — pure mental replay. Start with execution script (3–5 reps), then adversity+recovery (2–3 reps). Quality over quantity.
+    </div>
+
+    <div id="script-output">
+      <!-- Filled by JS -->
+    </div>
+
+    <div class="card">
+      <div class="card-label">7-Day Practice Log</div>
+      <h3>Track your reps</h3>
+      <p>Log each session. Focus quality matters more than duration — a distracted 15 minutes produces weaker neural encoding than 5 fully locked-in minutes.</p>
+      <div style="overflow-x:auto; margin-top:8px">
+        <table style="width:100%; border-collapse:collapse; font-size:13px">
+          <thead>
+            <tr style="color:var(--text-muted)">
+              <th style="text-align:left; padding:8px; border-bottom:1px solid var(--border)">Day</th>
+              <th style="text-align:left; padding:8px; border-bottom:1px solid var(--border)">Minutes</th>
+              <th style="text-align:left; padding:8px; border-bottom:1px solid var(--border)">Focus Quality (1–5)</th>
+              <th style="text-align:left; padding:8px; border-bottom:1px solid var(--border)">Notes</th>
+            </tr>
+          </thead>
+          <tbody id="log-tbody">
+            <!-- filled by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevStep(3)">← Edit</button>
+      <button class="btn btn-success" onclick="window.print()">⬇ Download / Print Script</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let currentStep = 0;
+  let selectedScenario = null;
+  const scenarioLabels = {
+    precomp: 'Pre-Competition Routine',
+    skill: 'Specific Skill Execution',
+    pressure: 'Pressure Moment',
+    recovery: 'Mistake + Recovery'
+  };
+  const progressWidths = ['12%', '38%', '65%', '100%'];
+
+  function selectScenario(type, btn) {
+    document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedScenario = type;
+  }
+
+  function goToStep(n) {
+    if (n > currentStep) return; // only go back freely
+    document.getElementById('step-' + currentStep).classList.remove('active');
+    currentStep = n;
+    document.getElementById('step-' + currentStep).classList.add('active');
+    updateProgress();
+  }
+
+  function nextStep(from) {
+    if (from === 0 && !selectedScenario) {
+      alert('Please choose a scenario type before continuing.');
+      return;
+    }
+    document.getElementById('step-' + from).classList.remove('active');
+    currentStep = from + 1;
+    document.getElementById('step-' + currentStep).classList.add('active');
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function prevStep(from) {
+    document.getElementById('step-' + from).classList.remove('active');
+    currentStep = from - 1;
+    document.getElementById('step-' + currentStep).classList.add('active');
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateProgress() {
+    document.getElementById('progress-fill').style.width = progressWidths[currentStep];
+    document.querySelectorAll('.progress-label').forEach((el, i) => {
+      el.classList.remove('active', 'done');
+      if (i === currentStep) el.classList.add('active');
+      else if (i < currentStep) el.classList.add('done');
+    });
+  }
+
+  function val(id) {
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : '';
+  }
+
+  function buildScript() {
+    const sport = val('sport-input') || 'my sport';
+    const scenario = scenarioLabels[selectedScenario] || 'Competition';
+    const physical = val('p-physical');
+    const environment = val('p-environment');
+    const task = val('p-task');
+    const timing = val('p-timing');
+    const learning = val('p-learning') || 'intermediate';
+    const emotion = val('p-emotion');
+    const mistake = val('adv-mistake');
+    const body = val('adv-body');
+    const selftalk = val('adv-selftalk') || 'Reset.';
+    const action = val('adv-action');
+
+    const levelNote = {
+      developing: 'Focus on solid, fundamental execution. You are building the pattern.',
+      intermediate: 'You execute this well in practice. In this visualization, competition pressure is present — and you are still executing.',
+      advanced: 'High precision. You are refining automaticity — every detail, every micro-adjustment.',
+      elite: 'Fully automatic. Your conscious attention is free. You are simply letting trained movement run.'
+    }[learning] || '';
+
+    const outputEl = document.getElementById('script-output');
+    outputEl.innerHTML = `
+      <div class="script-section">
+        <h4>Scenario: ${scenario} &mdash; ${sport}</h4>
+        <div style="font-size:12px; color:var(--text-muted); margin-bottom:16px">${levelNote}</div>
+      </div>
+
+      <div class="card script-section">
+        <h4>Part 1 &mdash; Execution Script</h4>
+        <div style="font-size:13px; color:var(--text-muted); margin-bottom:12px">Read this before closing your eyes. Then replay from memory at full speed, first-person view.</div>
+        <div class="script-preview">${buildExecutionScript(physical, environment, task, timing, emotion)}</div>
+      </div>
+
+      <div class="card script-section">
+        <h4>Part 2 &mdash; Adversity + Recovery Script</h4>
+        <div style="font-size:13px; color:var(--text-muted); margin-bottom:12px">Practice this separately — 2–3 reps after execution script. This builds the real recovery neural track.</div>
+        <div class="script-preview">${buildAdversityScript(mistake, body, selftalk, action)}</div>
+      </div>
+
+      <div class="card script-section">
+        <h4>My Recovery Cue</h4>
+        <div style="font-size:28px; font-weight:900; color:var(--orange); text-align:center; padding:12px 0">"${selftalk}"</div>
+        <div style="font-size:12px; color:var(--text-muted); text-align:center">Memorize this. Use it in practice, then transfer to competition.</div>
+      </div>
+    `;
+
+    // Build log table
+    const tbody = document.getElementById('log-tbody');
+    tbody.innerHTML = '';
+    ['Day 1','Day 2','Day 3','Day 4','Day 5','Day 6','Day 7'].forEach(day => {
+      tbody.innerHTML += `
+        <tr>
+          <td style="padding:8px; border-bottom:1px solid var(--border); color:var(--text-muted)">${day}</td>
+          <td style="padding:8px; border-bottom:1px solid var(--border)"><input type="number" style="width:60px; min-height:auto; padding:4px 8px" placeholder="—"></td>
+          <td style="padding:8px; border-bottom:1px solid var(--border)"><input type="number" min="1" max="5" style="width:60px; min-height:auto; padding:4px 8px" placeholder="1–5"></td>
+          <td style="padding:8px; border-bottom:1px solid var(--border)"><input type="text" style="min-height:auto; padding:4px 8px" placeholder="Notes..."></td>
+        </tr>`;
+    });
+
+    nextStep(2);
+  }
+
+  function buildExecutionScript(physical, environment, task, timing, emotion) {
+    let parts = [];
+    if (physical) parts.push(physical);
+    if (environment) parts.push(environment);
+    if (emotion) parts.push(emotion);
+    if (task) parts.push(task);
+    if (timing) parts.push(`I run through this at full, real speed — ${timing}. No slow motion.`);
+    if (parts.length === 0) {
+      return 'Complete the scene fields in Step 2 to generate your execution script here.';
+    }
+    return parts.join('\n\n');
+  }
+
+  function buildAdversityScript(mistake, body, selftalk, action) {
+    if (!mistake) return 'Complete the adversity fields in Step 3 to generate your recovery script here.';
+    let s = mistake + '\n\n';
+    if (body) s += body + '\n\n';
+    if (selftalk) s += `"${selftalk}"\n\n`;
+    if (action) s += action;
+    return s;
+  }
+</script>
+</body>
+</html>
