@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fatigue Training Protocol Builder — The Quiet Edge</title>
+<style>
+  :root {
+    --orange: #E8622A;
+    --orange-light: #F4894F;
+    --dark: #1A1A1A;
+    --dark2: #242424;
+    --dark3: #2E2E2E;
+    --mid: #3A3A3A;
+    --text: #F0F0F0;
+    --text-muted: #A0A0A0;
+    --accent-bg: rgba(232,98,42,0.10);
+    --border: rgba(255,255,255,0.08);
+    --green: #4CAF7D;
+    --yellow: #F0C060;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 24px 16px;
+    font-size: 15px;
+  }
+  .page { max-width: 860px; margin: 0 auto; }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 32px 24px 28px;
+    background: linear-gradient(135deg, #1f1208 0%, var(--dark2) 60%, #1a1a24 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+  }
+  .header .logo-line {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 10px;
+    opacity: 0.9;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .header h1 span { color: var(--orange); }
+  .header p {
+    font-size: 14px;
+    color: var(--text-muted);
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  /* Sections */
+  .section {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 16px;
+    font-weight: 700;
+  }
+  .section h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .section-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  /* Form elements */
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  input[type="text"], textarea, select {
+    width: 100%;
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 14px;
+    padding: 10px 12px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: var(--orange);
+  }
+  textarea { resize: vertical; min-height: 60px; }
+  select option { background: var(--dark3); }
+  .field { margin-bottom: 18px; }
+
+  /* Sport examples box */
+  .sport-examples {
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+    display: none;
+    line-height: 1.7;
+  }
+  .sport-examples.visible { display: block; }
+  .sport-examples strong { color: var(--orange-light); }
+
+  /* Protocol summary card */
+  .protocol-card {
+    background: var(--accent-bg);
+    border: 1px solid rgba(232,98,42,0.25);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 20px;
+    display: none;
+  }
+  .protocol-card.visible { display: block; }
+  .protocol-card .card-title {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+  .protocol-card .card-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    align-items: baseline;
+  }
+  .protocol-card .card-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    min-width: 110px;
+    flex-shrink: 0;
+  }
+  .protocol-card .card-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .cue-badge {
+    display: inline-block;
+    background: rgba(232,98,42,0.18);
+    border: 1px solid rgba(232,98,42,0.35);
+    color: var(--orange-light);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+
+  /* Grid for reps/time/rest */
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+  /* Log section */
+  .week-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .week-tab {
+    padding: 7px 18px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--dark3);
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .week-tab.active {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: white;
+  }
+  .week-panel { display: none; }
+  .week-panel.visible { display: block; }
+
+  /* Session entry */
+  .session-block {
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  .session-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .session-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--orange-light);
+  }
+  .session-date { font-size: 12px; color: var(--text-muted); }
+
+  .rating-group { margin-bottom: 14px; }
+  .rating-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .stars { display: flex; gap: 8px; }
+  .star-btn {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--mid);
+    color: var(--text-muted);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.12s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .star-btn.selected-tech { background: var(--orange); border-color: var(--orange); color: white; }
+  .star-btn.selected-focus { background: var(--green); border-color: var(--green); color: white; }
+  .star-btn:hover { opacity: 0.85; }
+
+  .rating-legend {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    display: flex;
+    gap: 16px;
+  }
+
+  /* Averages */
+  .averages-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .avg-card {
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .avg-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+  .avg-value { font-size: 22px; font-weight: 800; }
+  .avg-value.tech { color: var(--orange); }
+  .avg-value.focus { color: var(--green); }
+  .avg-value.neutral { color: var(--text-muted); font-size: 16px; }
+
+  .insight-box {
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--orange);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    min-height: 44px;
+  }
+  .insight-box strong { color: var(--orange-light); }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: none;
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--orange);
+    color: white;
+  }
+  .btn-primary:hover { background: var(--orange-light); }
+  .btn-secondary {
+    background: var(--dark3);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { color: var(--text); border-color: var(--text-muted); }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+
+  /* Progress bar */
+  .progress-bar-wrap { margin-top: 10px; }
+  .progress-bar-track {
+    height: 6px;
+    background: var(--mid);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+  .fill-tech { background: var(--orange); }
+  .fill-focus { background: var(--green); }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: var(--text-muted);
+    opacity: 0.6;
+    margin-top: 8px;
+  }
+
+  /* ─── PRINT STYLES ─── */
+  @media print {
+    body {
+      background: white;
+      color: #111;
+      font-size: 12pt;
+      padding: 0;
+    }
+    .no-print, .btn, .btn-row, .week-tabs { display: none !important; }
+    .page { max-width: 100%; }
+    .header {
+      background: white;
+      border: 2px solid #E8622A;
+      color: #111;
+    }
+    .header .logo-line { color: #E8622A; }
+    .header h1 { color: #111; }
+    .header p { color: #555; }
+    .section {
+      background: white;
+      border: 1px solid #ddd;
+      break-inside: avoid;
+    }
+    .section-title { color: #E8622A; }
+    .section h2 { color: #111; }
+    .section-desc { color: #555; }
+    input[type="text"], textarea, select {
+      background: white;
+      border: 1px solid #ccc;
+      color: #111;
+    }
+    .sport-examples { background: #f5f5f5; color: #555; border-color: #ddd; }
+    .protocol-card {
+      background: #fff8f4;
+      border-color: #E8622A;
+    }
+    .protocol-card .card-value { color: #111; }
+    .cue-badge { background: #fff0e6; border-color: #E8622A; color: #c45210; }
+    .session-block { background: #fafafa; border-color: #ddd; }
+    .session-label { color: #E8622A; }
+    .avg-card { background: #fafafa; border-color: #ddd; }
+    .avg-value.tech { color: #E8622A; }
+    .avg-value.focus { color: #2e8a57; }
+    .insight-box { background: #fafafa; border-left-color: #E8622A; color: #555; }
+    .star-btn {
+      background: #eee !important;
+      border-color: #ccc !important;
+      color: #999 !important;
+    }
+    .star-btn.selected-tech { background: #E8622A !important; color: white !important; border-color: #E8622A !important; }
+    .star-btn.selected-focus { background: #2e8a57 !important; color: white !important; border-color: #2e8a57 !important; }
+    .week-panel { display: block !important; }
+    .footer { color: #aaa; }
+    .week-panel::before {
+      content: attr(data-week-label);
+      display: block;
+      font-size: 14pt;
+      font-weight: 700;
+      color: #E8622A;
+      margin-bottom: 12px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-line">The Quiet Edge · Stage 3 · Episode 8</div>
+    <h1>Fatigue Training<br><span>Protocol Builder</span></h1>
+    <p>Design your deliberate fatigue practice blocks, set your focus cue, and track technique + attention quality over 4 weeks.</p>
+  </div>
+
+  <!-- Step 1: Protocol Setup -->
+  <div class="section">
+    <div class="section-title">Step 1</div>
+    <h2>Build Your Protocol</h2>
+    <p class="section-desc">Define the skill, fatigue method, and focus cue you'll use in every session this week. Specificity is what makes this work.</p>
+
+    <div class="field">
+      <label>Your Sport</label>
+      <select id="sportSelect" onchange="onSportChange()">
+        <option value="">— Select your sport —</option>
+        <option value="basketball">Basketball</option>
+        <option value="soccer">Soccer</option>
+        <option value="swimming">Swimming</option>
+        <option value="track">Track / Cross Country</option>
+        <option value="volleyball">Volleyball</option>
+        <option value="custom">Other / Custom</option>
+      </select>
+      <div class="sport-examples" id="sportExamples"></div>
+    </div>
+
+    <div class="field">
+      <label>Target Skill <span style="font-weight:400;text-transform:none;font-size:11px;color:var(--text-muted)">(the exact skill that breaks down when you're tired)</span></label>
+      <input type="text" id="targetSkill" placeholder="e.g. Free throw mechanics / First touch on passes / Flip turn technique" oninput="updateCard()">
+    </div>
+
+    <div class="field">
+      <label>Fatigue Method <span style="font-weight:400;text-transform:none;font-size:11px;color:var(--text-muted)">(how you'll create real fatigue before skill reps)</span></label>
+      <input type="text" id="fatigueMethod" placeholder="e.g. 4 full-court sprints → free throws / 3×30m sprint intervals → finishing circuit" oninput="updateCard()">
+    </div>
+
+    <div class="three-col">
+      <div class="field">
+        <label>Focused Reps / Block</label>
+        <input type="text" id="repsPerBlock" placeholder="5–8" oninput="updateCard()">
+      </div>
+      <div class="field">
+        <label>Skill Work Duration</label>
+        <input type="text" id="skillDuration" placeholder="3–5 min" oninput="updateCard()">
+      </div>
+      <div class="field">
+        <label>Recovery Between Blocks</label>
+        <input type="text" id="recovery" placeholder="Full rest" oninput="updateCard()">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Focus Cue <span style="font-weight:400;text-transform:none;font-size:11px;color:var(--text-muted)">(one short phrase — external or process, not "focus harder")</span></label>
+      <input type="text" id="focusCue" placeholder='e.g. "Follow through" / "Hips to target" / "Eyes on catch point"' oninput="updateCard()">
+    </div>
+
+    <div class="field">
+      <label>1-Rep Success Standard <span style="font-weight:400;text-transform:none;font-size:11px;color:var(--text-muted)">(what does one good rep look/feel like?)</span></label>
+      <textarea id="successStandard" placeholder="Define what a clean rep feels like before you're tired, so you know what to aim for when you are..." oninput="updateCard()"></textarea>
+    </div>
+
+    <!-- Protocol Summary Card -->
+    <div class="protocol-card" id="protocolCard">
+      <div class="card-title">Your Protocol — Pinned</div>
+      <div id="cardRows"></div>
+    </div>
+
+  </div>
+
+  <!-- Step 2: Session Log -->
+  <div class="section">
+    <div class="section-title">Step 2</div>
+    <h2>4-Week Session Log</h2>
+    <p class="section-desc">After each fatigue training block, rate your <strong style="color:var(--orange)">Technique</strong> (did the mechanics hold?) and <strong style="color:var(--green)">Attention</strong> (did you use your focus cue?). Over time, you'll see where capacity is building.</p>
+
+    <div class="week-tabs no-print">
+      <div class="week-tab active" onclick="switchWeek(1, this)">Week 1</div>
+      <div class="week-tab" onclick="switchWeek(2, this)">Week 2</div>
+      <div class="week-tab" onclick="switchWeek(3, this)">Week 3</div>
+      <div class="week-tab" onclick="switchWeek(4, this)">Week 4</div>
+    </div>
+
+    <div id="week1" class="week-panel visible" data-week-label="Week 1">
+      <div id="sessions-week1"></div>
+    </div>
+    <div id="week2" class="week-panel" data-week-label="Week 2">
+      <div id="sessions-week2"></div>
+    </div>
+    <div id="week3" class="week-panel" data-week-label="Week 3">
+      <div id="sessions-week3"></div>
+    </div>
+    <div id="week4" class="week-panel" data-week-label="Week 4">
+      <div id="sessions-week4"></div>
+    </div>
+  </div>
+
+  <!-- Step 3: Progress -->
+  <div class="section">
+    <div class="section-title">Step 3</div>
+    <h2>Progress Snapshot</h2>
+    <p class="section-desc">Your 4-week averages. A rising Attention score before a rising Technique score is normal — focus always comes first.</p>
+
+    <div class="averages-grid">
+      <div class="avg-card">
+        <div class="avg-label">Avg Technique</div>
+        <div class="avg-value tech" id="avgTech">—</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-track"><div class="progress-bar-fill fill-tech" id="barTech" style="width:0%"></div></div></div>
+      </div>
+      <div class="avg-card">
+        <div class="avg-label">Avg Attention</div>
+        <div class="avg-value focus" id="avgFocus">—</div>
+        <div class="progress-bar-wrap"><div class="progress-bar-track"><div class="progress-bar-fill fill-focus" id="barFocus" style="width:0%"></div></div></div>
+      </div>
+      <div class="avg-card">
+        <div class="avg-label">Sessions Logged</div>
+        <div class="avg-value neutral" id="totalSessions">0</div>
+      </div>
+      <div class="avg-card">
+        <div class="avg-label">Weeks Active</div>
+        <div class="avg-value neutral" id="weeksActive">0</div>
+      </div>
+    </div>
+
+    <div class="insight-box" id="insightBox">
+      Log your first session to see your progress insight here.
+    </div>
+  </div>
+
+  <!-- Step 4: Reflection -->
+  <div class="section">
+    <div class="section-title">Step 4 (After Week 2)</div>
+    <h2>Mid-Point Reflection</h2>
+    <p class="section-desc">Answer after 4–6 sessions. These questions are the difference between doing the protocol and actually learning from it.</p>
+
+    <div class="field">
+      <label>1. How is your technique holding up in later reps vs. early reps of each block?</label>
+      <textarea id="reflect1" placeholder="Compare your first rep in a block vs. your last. Any pattern?"></textarea>
+    </div>
+    <div class="field">
+      <label>2. Is your focus cue actually working when you're tired — or do you forget it?</label>
+      <textarea id="reflect2" placeholder="If you forget it, what needs to change (make it shorter, say it out loud, have a coach cue you)?"></textarea>
+    </div>
+    <div class="field">
+      <label>3. Compared to before this protocol — how do you feel executing under pressure in competition?</label>
+      <textarea id="reflect3" placeholder="Any games or competitions where you noticed a difference?"></textarea>
+    </div>
+    <div class="field">
+      <label>4. What's harder — the physical fatigue, or keeping your attention standard when tired?</label>
+      <textarea id="reflect4" placeholder="Your honest answer tells you what to train harder next month."></textarea>
+    </div>
+  </div>
+
+  <!-- Action Row -->
+  <div class="btn-row no-print" style="justify-content:center; padding: 8px 0 4px;">
+    <button class="btn btn-primary" onclick="window.print()">⬇ Download as PDF</button>
+    <button class="btn btn-secondary" onclick="clearAll()">Clear All Data</button>
+  </div>
+
+  <div class="footer">
+    The Quiet Edge · Stage 3 · Skill Acquisition · Episode 8<br>
+    Based on Schmidt &amp; Lee (2014), Wulf (2013), Ericsson et al. (1993)
+  </div>
+
+</div>
+
+<script>
+// ─── Sport examples ───────────────────────────────────────────────
+const SPORT_EXAMPLES = {
+  basketball: {
+    skill: "Free throw mechanics / Pull-up jumper form / Ball-handling under pressure",
+    fatigue: "4–5 full-court sprints (60–75% effort) → immediate free throw set / 3-on-3 half-court possession → pull-up drill",
+    cue: '"Elbow in, follow through" / "Catch and balance" / "Eyes on rim"'
+  },
+  soccer: {
+    skill: "First touch and pass accuracy / Finishing under pressure / Dribbling in tight space",
+    fatigue: "3×30m sprint intervals (80%) → finishing circuit / Full-field press drill → passing accuracy set",
+    cue: '"Soft first touch" / "Plant foot to target" / "Head up on receive"'
+  },
+  swimming: {
+    skill: "Flip turn technique / Dive start mechanics / Stroke efficiency in final 25m",
+    fatigue: "Hard 100m at 90% race pace → 5 flip turn reps at race pace / 200m TT → start + breakout drill",
+    cue: '"Tight tuck" / "Drive off the wall" / "High elbow recovery"'
+  },
+  track: {
+    skill: "Race posture and form / Start mechanics / Pace control in final 200m",
+    fatigue: "400m at 85–90% → 60m build-up at race pace / Hill reps → sprint start mechanics drill",
+    cue: '"Tall through the hips" / "Drive, don\'t reach" / "Relax the hands"'
+  },
+  volleyball: {
+    skill: "Serving precision / Setting accuracy / Defensive positioning",
+    fatigue: "6 consecutive hard rally sets at full intensity → 8 serving reps to target zones",
+    cue: '"Contact out front" / "Eyes on ball, hips open" / "Platform to target"'
+  },
+  custom: {
+    skill: "Identify the skill that breaks down latest in a competition when you're most tired.",
+    fatigue: "Design a conditioning block that creates real metabolic fatigue (heart rate 80%+), then immediately switch to 5–10 focused skill reps at full attention.",
+    cue: "Choose ONE external or process cue — something about where your eyes go, where the ball should land, or what your body does on impact. Not 'focus harder.'"
+  }
+};
+
+function onSportChange() {
+  const val = document.getElementById('sportSelect').value;
+  const box = document.getElementById('sportExamples');
+  if (!val) { box.classList.remove('visible'); return; }
+  const ex = SPORT_EXAMPLES[val];
+  box.innerHTML = `<strong>Skill ideas:</strong> ${ex.skill}<br><strong>Fatigue method ideas:</strong> ${ex.fatigue}<br><strong>Focus cue examples:</strong> ${ex.cue}`;
+  box.classList.add('visible');
+  saveState();
+}
+
+// ─── Protocol card ────────────────────────────────────────────────
+function updateCard() {
+  const skill = document.getElementById('targetSkill').value.trim();
+  const fatigue = document.getElementById('fatigueMethod').value.trim();
+  const reps = document.getElementById('repsPerBlock').value.trim();
+  const dur = document.getElementById('skillDuration').value.trim();
+  const rec = document.getElementById('recovery').value.trim();
+  const cue = document.getElementById('focusCue').value.trim();
+  const std = document.getElementById('successStandard').value.trim();
+
+  const card = document.getElementById('protocolCard');
+  const rows = document.getElementById('cardRows');
+  const hasContent = skill || fatigue || cue;
+
+  if (!hasContent) { card.classList.remove('visible'); saveState(); return; }
+  card.classList.add('visible');
+
+  let html = '';
+  if (skill) html += row('Target Skill', skill);
+  if (fatigue) html += row('Fatigue Method', fatigue);
+  if (reps || dur || rec) {
+    const parts = [reps && `${reps} reps`, dur && `${dur}`, rec && `rest: ${rec}`].filter(Boolean).join(' · ');
+    html += row('Block Format', parts);
+  }
+  if (cue) html += row('Focus Cue', `<span class="cue-badge">${cue}</span>`);
+  if (std) html += row('Success = ', std);
+  rows.innerHTML = html;
+  saveState();
+}
+
+function row(label, val) {
+  return `<div class="card-row"><span class="card-label">${label}</span><span class="card-value">${val}</span></div>`;
+}
+
+// ─── Session log ─────────────────────────────────────────────────
+const SESSIONS_PER_WEEK = 3;
+const WEEKS = 4;
+
+function buildSessions() {
+  for (let w = 1; w <= WEEKS; w++) {
+    const container = document.getElementById(`sessions-week${w}`);
+    container.innerHTML = '';
+    for (let s = 1; s <= SESSIONS_PER_WEEK; s++) {
+      container.appendChild(buildSessionBlock(w, s));
+    }
+  }
+}
+
+function buildSessionBlock(week, session) {
+  const id = `w${week}s${session}`;
+  const div = document.createElement('div');
+  div.className = 'session-block';
+  div.innerHTML = `
+    <div class="session-header">
+      <span class="session-label">Session ${session}</span>
+      <input type="text" class="session-date" id="date-${id}" placeholder="Date" style="width:120px;font-size:12px;padding:4px 8px;background:var(--mid);border-color:transparent" oninput="saveState()">
+    </div>
+    <div class="rating-group">
+      <div class="rating-label">Technique Quality — did mechanics hold under fatigue?</div>
+      <div class="stars" id="tech-${id}">
+        ${[1,2,3,4,5].map(n => `<button class="star-btn" onclick="rate('tech','${id}',${n})" title="${n}/5">${n}</button>`).join('')}
+      </div>
+      <div class="rating-legend"><span>1 = Broke down completely</span><span>5 = Held like fresh</span></div>
+    </div>
+    <div class="rating-group">
+      <div class="rating-label">Attention Quality — did you use your focus cue?</div>
+      <div class="stars" id="focus-${id}">
+        ${[1,2,3,4,5].map(n => `<button class="star-btn" onclick="rate('focus','${id}',${n})" title="${n}/5">${n}</button>`).join('')}
+      </div>
+      <div class="rating-legend"><span>1 = Went to survival mode</span><span>5 = Cue held every rep</span></div>
+    </div>
+    <div class="field" style="margin-bottom:0">
+      <label>Notes / observations</label>
+      <textarea id="notes-${id}" placeholder="What changed between rep 1 and rep 5? Did anything surprise you?" style="min-height:48px" oninput="saveState()"></textarea>
+    </div>
+  `;
+  return div;
+}
+
+const ratings = {};
+
+function rate(type, id, val) {
+  const key = `${type}-${id}`;
+  ratings[key] = val;
+  const container = document.getElementById(`${type}-${id}`);
+  container.querySelectorAll('.star-btn').forEach((btn, i) => {
+    btn.classList.remove('selected-tech', 'selected-focus');
+    if (i < val) btn.classList.add(type === 'tech' ? 'selected-tech' : 'selected-focus');
+  });
+  updateAverages();
+  saveState();
+}
+
+function updateAverages() {
+  let techSum = 0, focusSum = 0, techCount = 0, focusCount = 0, weeksSet = new Set();
+  for (let w = 1; w <= WEEKS; w++) {
+    let weekHasData = false;
+    for (let s = 1; s <= SESSIONS_PER_WEEK; s++) {
+      const id = `w${w}s${s}`;
+      if (ratings[`tech-${id}`]) { techSum += ratings[`tech-${id}`]; techCount++; weekHasData = true; }
+      if (ratings[`focus-${id}`]) { focusSum += ratings[`focus-${id}`]; focusCount++; }
+    }
+    if (weekHasData) weeksSet.add(w);
+  }
+  const avgT = techCount ? (techSum / techCount).toFixed(1) : '—';
+  const avgF = focusCount ? (focusSum / focusCount).toFixed(1) : '—';
+
+  document.getElementById('avgTech').textContent = avgT;
+  document.getElementById('avgFocus').textContent = avgF;
+  document.getElementById('totalSessions').textContent = techCount;
+  document.getElementById('weeksActive').textContent = weeksSet.size;
+  document.getElementById('barTech').style.width = avgT !== '—' ? `${(parseFloat(avgT)/5)*100}%` : '0%';
+  document.getElementById('barFocus').style.width = avgF !== '—' ? `${(parseFloat(avgF)/5)*100}%` : '0%';
+
+  updateInsight(parseFloat(avgT), parseFloat(avgF), techCount);
+}
+
+function updateInsight(avgT, avgF, count) {
+  const box = document.getElementById('insightBox');
+  if (count === 0) { box.innerHTML = 'Log your first session to see your progress insight here.'; return; }
+
+  let msg = '';
+  if (count < 3) {
+    msg = `<strong>${count} session${count > 1 ? 's' : ''} logged.</strong> Keep going — you need 5+ sessions before patterns emerge. Your cue is: "<em>${document.getElementById('focusCue').value || 'not set yet'}</em>" — say it out loud before each rep.`;
+  } else if (avgF > avgT + 0.5) {
+    msg = `<strong>Attention is leading technique</strong> — exactly what should happen early in fatigue training. Your focus cue is working. As the neural pattern encodes, technique scores will catch up. Stay consistent.`;
+  } else if (avgT > avgF + 0.5) {
+    msg = `<strong>Technique is holding, but attention is drifting.</strong> You may be relying on existing motor memory. Try shortening your focus cue to a single word — something you can fire instantly even when your mind is foggy.`;
+  } else if (avgT >= 4 && avgF >= 4) {
+    msg = `<strong>Both scores are high — time to increase the challenge.</strong> Add one more sprint to your fatigue block, or shorten recovery time. The protocol should always feel like it's at the edge of your capacity.`;
+  } else if (avgT < 2.5 || avgF < 2.5) {
+    msg = `<strong>Scores are low — that's honest data, not failure.</strong> The fatigue may be too deep, or the skill reps too many. Try fewer reps per block (3–4) with longer recovery. Build the pattern before you push the load.`;
+  } else {
+    msg = `<strong>Building steadily.</strong> Technique: ${avgT}/5 · Attention: ${avgF}/5 across ${count} sessions. The gap between your "fresh" standard and your "fatigued" standard is narrowing. This is the work.`;
+  }
+  box.innerHTML = msg;
+}
+
+// ─── Tab switching ────────────────────────────────────────────────
+function switchWeek(n, el) {
+  document.querySelectorAll('.week-panel').forEach(p => p.classList.remove('visible'));
+  document.querySelectorAll('.week-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`week${n}`).classList.add('visible');
+  el.classList.add('active');
+}
+
+// ─── Persistence ──────────────────────────────────────────────────
+function saveState() {
+  try {
+    const state = {
+      sport: document.getElementById('sportSelect').value,
+      skill: document.getElementById('targetSkill').value,
+      fatigue: document.getElementById('fatigueMethod').value,
+      reps: document.getElementById('repsPerBlock').value,
+      dur: document.getElementById('skillDuration').value,
+      rec: document.getElementById('recovery').value,
+      cue: document.getElementById('focusCue').value,
+      std: document.getElementById('successStandard').value,
+      reflect1: document.getElementById('reflect1').value,
+      reflect2: document.getElementById('reflect2').value,
+      reflect3: document.getElementById('reflect3').value,
+      reflect4: document.getElementById('reflect4').value,
+      ratings: { ...ratings },
+      dates: {}, notes: {}
+    };
+    for (let w = 1; w <= WEEKS; w++) {
+      for (let s = 1; s <= SESSIONS_PER_WEEK; s++) {
+        const id = `w${w}s${s}`;
+        state.dates[id] = document.getElementById(`date-${id}`)?.value || '';
+        state.notes[id] = document.getElementById(`notes-${id}`)?.value || '';
+      }
+    }
+    localStorage.setItem('tqe_ep8_protocol', JSON.stringify(state));
+  } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('tqe_ep8_protocol');
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    if (s.sport) { document.getElementById('sportSelect').value = s.sport; onSportChange(); }
+    if (s.skill) document.getElementById('targetSkill').value = s.skill;
+    if (s.fatigue) document.getElementById('fatigueMethod').value = s.fatigue;
+    if (s.reps) document.getElementById('repsPerBlock').value = s.reps;
+    if (s.dur) document.getElementById('skillDuration').value = s.dur;
+    if (s.rec) document.getElementById('recovery').value = s.rec;
+    if (s.cue) document.getElementById('focusCue').value = s.cue;
+    if (s.std) document.getElementById('successStandard').value = s.std;
+    if (s.reflect1) document.getElementById('reflect1').value = s.reflect1;
+    if (s.reflect2) document.getElementById('reflect2').value = s.reflect2;
+    if (s.reflect3) document.getElementById('reflect3').value = s.reflect3;
+    if (s.reflect4) document.getElementById('reflect4').value = s.reflect4;
+    if (s.ratings) {
+      Object.entries(s.ratings).forEach(([key, val]) => {
+        ratings[key] = val;
+        const [type, id] = key.split(/-(.+)/);
+        const container = document.getElementById(`${type}-${id}`);
+        if (container) {
+          container.querySelectorAll('.star-btn').forEach((btn, i) => {
+            if (i < val) btn.classList.add(type === 'tech' ? 'selected-tech' : 'selected-focus');
+          });
+        }
+      });
+    }
+    if (s.dates) {
+      Object.entries(s.dates).forEach(([id, val]) => {
+        const el = document.getElementById(`date-${id}`);
+        if (el) el.value = val;
+      });
+    }
+    if (s.notes) {
+      Object.entries(s.notes).forEach(([id, val]) => {
+        const el = document.getElementById(`notes-${id}`);
+        if (el) el.value = val;
+      });
+    }
+    updateCard();
+    updateAverages();
+  } catch(e) {}
+}
+
+function clearAll() {
+  if (!confirm('Clear all logged data and start fresh?')) return;
+  localStorage.removeItem('tqe_ep8_protocol');
+  Object.keys(ratings).forEach(k => delete ratings[k]);
+  location.reload();
+}
+
+// ─── Init ─────────────────────────────────────────────────────────
+buildSessions();
+loadState();
+</script>
+</body>
+</html>
