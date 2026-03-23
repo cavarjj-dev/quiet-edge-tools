@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4-Step System Builder — The Quiet Edge</title>
+<style>
+  :root {
+    --orange: #E8630A;
+    --orange-light: #F4A261;
+    --dark: #0f1117;
+    --card: #1a1d27;
+    --border: #2e3245;
+    --text: #e8eaf0;
+    --muted: #8890a8;
+    --success: #3ecf8e;
+    --accent: #f4c430;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px 16px 60px;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 36px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .channel-tag {
+    display: inline-block;
+    background: var(--orange);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  h1 span { color: var(--orange); }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
+  .quote-bar {
+    background: linear-gradient(135deg, rgba(232,99,10,0.15), rgba(244,162,97,0.08));
+    border-left: 3px solid var(--orange);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 24px 0 0;
+    font-style: italic;
+    color: var(--orange-light);
+    font-size: 15px;
+  }
+
+  .section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .step-badge {
+    background: var(--orange);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  h2 {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .hint {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    margin-bottom: 6px;
+    margin-top: 14px;
+  }
+
+  label:first-of-type { margin-top: 0; }
+
+  input[type="text"], textarea, select {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 15px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+  }
+
+  input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: var(--orange);
+  }
+
+  textarea { min-height: 72px; }
+
+  .days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .day-cell {
+    text-align: center;
+  }
+
+  .day-label {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .day-toggle {
+    width: 100%;
+    height: 44px;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .day-toggle.active {
+    border-color: var(--success);
+    background: rgba(62, 207, 142, 0.12);
+    color: var(--success);
+  }
+
+  .day-toggle:hover { border-color: var(--orange-light); }
+
+  .tracker-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 14px;
+  }
+
+  .tracker-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tracker-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: middle;
+  }
+
+  .tracker-table tr:last-child td { border-bottom: none; }
+
+  .check-btn {
+    background: transparent;
+    border: 2px solid var(--border);
+    color: var(--muted);
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+
+  .check-btn.checked {
+    border-color: var(--success);
+    background: rgba(62, 207, 142, 0.12);
+    color: var(--success);
+  }
+
+  .check-btn:hover { border-color: var(--orange-light); }
+
+  .mini-input {
+    width: 60px;
+    text-align: center;
+    padding: 6px 8px;
+    font-size: 13px;
+  }
+
+  .energy-dots {
+    display: flex;
+    gap: 4px;
+  }
+
+  .energy-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .energy-dot.lit { background: var(--accent); border-color: var(--accent); }
+
+  .stats-bar {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .stat-card {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--orange);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-number.green { color: var(--success); }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+
+  .identity-block {
+    background: linear-gradient(135deg, rgba(244,196,48,0.08), rgba(232,99,10,0.06));
+    border: 1px solid rgba(244,196,48,0.25);
+    border-radius: 10px;
+    padding: 18px;
+    margin-top: 16px;
+  }
+
+  .identity-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  .identity-input {
+    font-size: 17px;
+    font-weight: 600;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid rgba(244,196,48,0.3);
+    border-radius: 0;
+    color: var(--text);
+    padding: 4px 0;
+  }
+
+  .identity-input:focus { border-bottom-color: var(--accent); }
+
+  .power-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .power-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+
+  .power-icon { font-size: 22px; margin-bottom: 6px; }
+
+  .power-title {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .power-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .reflection-item {
+    background: rgba(255,255,255,0.03);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+
+  .reflection-q {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .action-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 13px 28px;
+    border-radius: 10px;
+    border: none;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-primary {
+    background: var(--orange);
+    color: white;
+    flex: 1;
+  }
+
+  .btn-primary:hover { background: #d4570a; }
+
+  .btn-secondary {
+    background: rgba(255,255,255,0.07);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover { background: rgba(255,255,255,0.12); }
+
+  .footer {
+    text-align: center;
+    margin-top: 32px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .footer a { color: var(--orange-light); text-decoration: none; }
+
+  /* ── PRINT STYLES ── */
+  @media print {
+    body {
+      background: white;
+      color: #111;
+      padding: 0.5in;
+    }
+
+    .container { max-width: 100%; }
+
+    .no-print, .action-row { display: none !important; }
+
+    .section {
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      page-break-inside: avoid;
+      margin-bottom: 14px;
+    }
+
+    .header { border-bottom: 2px solid #111; }
+    h1 { color: #111; }
+    h1 span { color: #E8630A; }
+    h2 { color: #111; }
+
+    .quote-bar {
+      background: #fff8f0;
+      border-left: 3px solid #E8630A;
+      color: #555;
+    }
+
+    label { color: #555; }
+
+    input[type="text"], textarea {
+      background: #f9f9f9;
+      border: 1px solid #ccc;
+      color: #111;
+    }
+
+    .day-toggle, .check-btn {
+      border-color: #aaa;
+      color: #555;
+    }
+
+    .day-toggle.active { background: #e8f9ef; border-color: #3ecf8e; }
+    .check-btn.checked { background: #e8f9ef; border-color: #3ecf8e; }
+
+    .stat-card { background: #f5f5f5; }
+    .stat-number { color: #E8630A; }
+    .stat-number.green { color: #2a9d6a; }
+    .stat-label { color: #666; }
+
+    .power-card { background: #f9f9f9; border-color: #ddd; }
+    .power-title { color: #111; }
+    .power-desc { color: #555; }
+
+    .identity-block { background: #fffdf0; border-color: #e8c933; }
+    .identity-label { color: #a07800; }
+    .identity-input { color: #111; border-bottom-color: #c8a800; }
+
+    .reflection-item { background: #f9f9f9; }
+    .reflection-q { color: #111; }
+
+    .hint, .channel-tag { display: none; }
+
+    .tracker-table th { color: #555; }
+    .tracker-table td { color: #111; }
+
+    .mini-input { background: #f0f0f0; color: #111; border-color: #ccc; }
+
+    .energy-dot { border-color: #aaa; }
+    .energy-dot.lit { background: #e8b200; border-color: #e8b200; }
+
+    .footer { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="channel-tag">The Quiet Edge — Stage 3</div>
+    <h1>4-Step <span>System Builder</span></h1>
+    <p class="subtitle">Ep. 9: Systems Beat Motivation</p>
+    <p class="subtitle" style="color: var(--muted); font-size:13px; margin-top:4px;">Build one automatic training habit — then watch it compound.</p>
+    <div class="quote-bar">
+      "Motivation is a spark. Systems are the fuel."
+    </div>
+  </div>
+
+  <!-- Step 1: Non-Negotiable -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-badge">1</div>
+      <h2>Identify Your Non-Negotiable</h2>
+    </div>
+    <p class="hint">A non-negotiable is the single action that, done consistently, moves you forward. Not the dream session — the baseline rep. Start with one skill area only.</p>
+
+    <label>My target skill area</label>
+    <input type="text" id="skillArea" placeholder="e.g. dribbling, shot mechanics, mental prep, conditioning…">
+
+    <label>If I could only do ONE thing for this skill every day, it would be:</label>
+    <textarea id="oneAction" placeholder="Be specific — not 'practice more' but 'do 100 dribble reps with weak hand'"></textarea>
+
+    <label>Why this action? What does it build or protect?</label>
+    <textarea id="whyAction" placeholder="e.g. My weak hand is the thing holding me back in games under pressure…"></textarea>
+
+    <div class="identity-block" style="margin-top:18px;">
+      <div class="identity-label">Identity Statement</div>
+      <p style="font-size:13px; color: var(--muted); margin-bottom:10px;">Finish this sentence. Read it before every session.</p>
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <span style="font-size:17px; font-weight:600; color: var(--accent);">"I'm someone who</span>
+        <input type="text" class="identity-input" id="identityStatement" placeholder="does this work every day, no matter what" style="flex:1; min-width:200px;">
+        <span style="font-size:17px; font-weight:600; color: var(--accent);">"</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Schedule -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-badge">2</div>
+      <h2>Schedule It — Remove the Decision</h2>
+    </div>
+    <p class="hint">A system without a schedule is just an intention. Once the time is locked, you stop deciding whether to train — you just go.</p>
+
+    <label>This system fires on these days</label>
+    <div class="days-grid">
+      <div class="day-cell"><div class="day-label">Mon</div><button class="day-toggle" onclick="toggleDay(this)">○</button></div>
+      <div class="day-cell"><div class="day-label">Tue</div><button class="day-toggle" onclick="toggleDay(this)">○</button></div>
+      <div class="day-cell"><div class="day-label">Wed</div><button class="day-toggle" onclick="toggleDay(this)">○</button></div>
+      <div class="day-cell"><div class="day-label">Thu</div><button class="day-toggle" onclick="toggleDay(this)">○</button></div>
+      <div class="day-cell"><div class="day-label">Fri</div><button class="day-toggle" onclick="toggleDay(this)">○</button></div>
+      <div class="day-cell"><div class="day-label">Sat</div><button class="day-toggle" onclick="toggleDay(this)">○</button></div>
+      <div class="day-cell"><div class="day-label">Sun</div><button class="day-toggle" onclick="toggleDay(this)">○</button></div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px;">
+      <div>
+        <label>Specific time</label>
+        <input type="text" id="scheduleTime" placeholder="e.g. 6:30am, right after school…">
+      </div>
+      <div>
+        <label>Specific location</label>
+        <input type="text" id="scheduleLocation" placeholder="e.g. driveway, school gym, bedroom floor…">
+      </div>
+    </div>
+
+    <label>What I will do for exactly <input type="text" id="duration" style="width:60px; display:inline-block; padding:4px 8px; font-size:14px;" placeholder="__"> minutes:</label>
+    <textarea id="sessionDetails" placeholder="Write out the exact reps, sets, or drill sequence so there's zero thinking required…"></textarea>
+
+    <label>Friction remover — what can I set up in advance?</label>
+    <input type="text" id="frictionRemover" placeholder="e.g. shoes by door, gear already packed, playlist ready, alarm labeled 'SYSTEM'…">
+  </div>
+
+  <!-- Step 3: Start Small -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-badge">3</div>
+      <h2>Start Smaller Than You Think</h2>
+    </div>
+    <p class="hint">Your minimum viable session (MVS) is what you commit to even on your worst day — exhausted, busy, low energy. If you do only this, the day still counts.</p>
+
+    <label>My minimum viable session (MVS)</label>
+    <input type="text" id="mvs" placeholder="e.g. 10 minutes, 50 reps, one run-through of my pre-game routine…">
+
+    <p style="font-size:13px; color: var(--muted); margin-top:14px; line-height:1.5;">
+      <strong style="color:var(--orange-light);">Why this works:</strong> A small system you follow 7/7 beats a big system you follow 3/7. The MVS protects your streak on hard days — and most days you'll exceed it once you've started.
+    </p>
+  </div>
+
+  <!-- Step 4: 7-Day Tracker -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-badge">4</div>
+      <h2>7-Day Consistency Tracker</h2>
+    </div>
+    <p class="hint">The goal this week is simple: show up. Not the best session — just the session. Check the box for each day you completed at least your MVS.</p>
+
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-number green" id="streakCount">0</div>
+        <div class="stat-label">Days Completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="streakPct">0%</div>
+        <div class="stat-label">Consistency Rate</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="avgEnergy">—</div>
+        <div class="stat-label">Avg Energy</div>
+      </div>
+    </div>
+
+    <table class="tracker-table">
+      <thead>
+        <tr>
+          <th>Day</th>
+          <th>Showed Up</th>
+          <th>Duration (min)</th>
+          <th>Energy (1–5)</th>
+          <th>One Word</th>
+        </tr>
+      </thead>
+      <tbody id="trackerBody">
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 4 Powers -->
+  <div class="section">
+    <div class="section-header">
+      <div style="font-size:20px;">⚡</div>
+      <h2>The 4 Powers of Your System</h2>
+    </div>
+    <div class="power-grid">
+      <div class="power-card">
+        <div class="power-icon">🌧️</div>
+        <div class="power-title">Bad-Day Proof</div>
+        <div class="power-desc">Zero motivation? System still fires. Your worst day is still a training day.</div>
+      </div>
+      <div class="power-card">
+        <div class="power-icon">🆔</div>
+        <div class="power-title">Builds Identity</div>
+        <div class="power-desc">"I'm someone who does this work" — more powerful than any motivational video.</div>
+      </div>
+      <div class="power-card">
+        <div class="power-icon">📈</div>
+        <div class="power-title">Compounds Over Time</div>
+        <div class="power-desc">Small consistent actions → massive results over months and years.</div>
+      </div>
+      <div class="power-card">
+        <div class="power-icon">🧠</div>
+        <div class="power-title">Saves Mental Energy</div>
+        <div class="power-desc">No daily decision fatigue. The schedule decides. You just execute.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reflection -->
+  <div class="section">
+    <div class="section-header">
+      <div style="font-size:20px;">🪞</div>
+      <h2>End-of-Week Reflection</h2>
+    </div>
+
+    <div class="reflection-item">
+      <div class="reflection-q">1. On your lowest-energy day — did you still show up? What did that feel like afterward?</div>
+      <textarea id="r1" placeholder="Write what happened on your hardest day this week…"></textarea>
+    </div>
+
+    <div class="reflection-item">
+      <div class="reflection-q">2. Did your energy level affect your output the way you expected? What did you notice?</div>
+      <textarea id="r2" placeholder="Sometimes low energy = surprisingly good sessions. What did you observe?"></textarea>
+    </div>
+
+    <div class="reflection-item">
+      <div class="reflection-q">3. What's ONE thing you'd adjust in your system for next week?</div>
+      <textarea id="r3" placeholder="Timing, location, duration, the action itself — what would make this more automatic?"></textarea>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="action-row no-print">
+    <button class="btn btn-secondary" onclick="resetAll()">Clear All</button>
+    <button class="btn btn-primary" onclick="window.print()">⬇ Download / Print PDF</button>
+  </div>
+
+  <div class="footer">
+    <p>The Quiet Edge — Stage 3: Skill Acquisition</p>
+    <p style="margin-top:4px;"><a href="https://tinyurl.com/54tzjeku" target="_blank">Athlete Listening Guide</a> · <a href="https://www.youtube.com/@TheQuietEdge" target="_blank">YouTube Channel</a></p>
+  </div>
+
+</div>
+
+<script>
+  // Day toggle
+  function toggleDay(btn) {
+    btn.classList.toggle('active');
+    btn.textContent = btn.classList.contains('active') ? '✓' : '○';
+  }
+
+  // Build tracker rows
+  const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  const tbody = document.getElementById('trackerBody');
+
+  days.forEach((day, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="font-weight:600; font-size:13px;">${day}</td>
+      <td><button class="check-btn" data-index="${i}" onclick="toggleCheck(this)">○</button></td>
+      <td><input type="text" class="mini-input" data-dur="${i}" placeholder="—" style="width:70px;"></td>
+      <td>
+        <div class="energy-dots" data-energy="${i}">
+          ${[1,2,3,4,5].map(n=>`<div class="energy-dot" data-val="${n}" onclick="setEnergy(this)"></div>`).join('')}
+        </div>
+      </td>
+      <td><input type="text" data-note="${i}" placeholder="e.g. solid, tired, focused…" style="font-size:13px;"></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  function toggleCheck(btn) {
+    btn.classList.toggle('checked');
+    btn.textContent = btn.classList.contains('checked') ? '✓' : '○';
+    updateStats();
+  }
+
+  function setEnergy(dot) {
+    const group = dot.closest('.energy-dots');
+    const val = parseInt(dot.dataset.val);
+    group.querySelectorAll('.energy-dot').forEach((d,i) => {
+      d.classList.toggle('lit', i < val);
+    });
+    updateStats();
+  }
+
+  function updateStats() {
+    const checks = document.querySelectorAll('.check-btn.checked');
+    const count = checks.length;
+    document.getElementById('streakCount').textContent = count;
+    document.getElementById('streakPct').textContent = Math.round((count / 7) * 100) + '%';
+
+    // Avg energy from checked days
+    let total = 0, energyCount = 0;
+    document.querySelectorAll('.check-btn').forEach((btn, i) => {
+      if (btn.classList.contains('checked')) {
+        const group = document.querySelectorAll('[data-energy]')[i];
+        const lit = group.querySelectorAll('.energy-dot.lit').length;
+        if (lit > 0) { total += lit; energyCount++; }
+      }
+    });
+    document.getElementById('avgEnergy').textContent = energyCount > 0 ? (total / energyCount).toFixed(1) : '—';
+  }
+
+  function resetAll() {
+    if (!confirm('Clear everything and start fresh?')) return;
+    document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+    document.querySelectorAll('.day-toggle').forEach(btn => {
+      btn.classList.remove('active');
+      btn.textContent = '○';
+    });
+    document.querySelectorAll('.check-btn').forEach(btn => {
+      btn.classList.remove('checked');
+      btn.textContent = '○';
+    });
+    document.querySelectorAll('.energy-dot').forEach(d => d.classList.remove('lit'));
+    updateStats();
+  }
+</script>
+</body>
+</html>
