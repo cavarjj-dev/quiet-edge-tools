@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practice Quality Checker — The Quiet Edge (Parent Edition)</title>
+<style>
+  :root {
+    --teal: #5fb3ac;
+    --teal-dark: #3d8a84;
+    --teal-light: #d4f0ee;
+    --amber: #d4791a;
+    --bg: #f7f9f9;
+    --white: #ffffff;
+    --text: #1a2e2d;
+    --text-muted: #5a7070;
+    --border: #c8e0de;
+    --radius: 10px;
+    --shadow: 0 2px 12px rgba(63, 138, 132, 0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .header {
+    background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%);
+    color: white;
+    padding: 36px 32px 28px;
+    border-radius: var(--radius) var(--radius) 0 0;
+    margin-bottom: 0;
+  }
+
+  .header .label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 8px;
+  }
+
+  .header h1 {
+    font-size: 26px;
+    font-weight: normal;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+
+  .header .subtitle {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    opacity: 0.85;
+  }
+
+  .intro {
+    background: var(--white);
+    border-left: 4px solid var(--teal);
+    padding: 20px 24px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: none;
+    padding: 28px 32px;
+  }
+
+  .card + .card {
+    border-top: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--teal-dark);
+    margin-bottom: 6px;
+  }
+
+  .card h2 {
+    font-size: 19px;
+    font-weight: normal;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+
+  .card p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-muted);
+    margin-bottom: 18px;
+  }
+
+  /* Practice selector */
+  .practice-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .practice-tab {
+    flex: 1;
+    padding: 10px 6px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    cursor: pointer;
+    text-align: center;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    color: var(--text-muted);
+    transition: all 0.2s;
+  }
+
+  .practice-tab.active {
+    border-color: var(--teal);
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    font-weight: 600;
+  }
+
+  .practice-tab:hover:not(.active) {
+    border-color: var(--teal);
+    color: var(--teal-dark);
+  }
+
+  /* Element checks */
+  .element-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .element-item {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: var(--bg);
+  }
+
+  .element-item.checked {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+
+  .element-item.missed {
+    border-color: #e8b87a;
+    background: #fdf6ed;
+  }
+
+  .element-checkbox {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+
+  .element-item.checked .element-checkbox {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: white;
+  }
+
+  .element-item.missed .element-checkbox {
+    background: #e8b87a;
+    border-color: #d4791a;
+    color: white;
+  }
+
+  .element-text strong {
+    display: block;
+    font-size: 14px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 600;
+    margin-bottom: 3px;
+    color: var(--text);
+  }
+
+  .element-text span {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* Toggle buttons for element */
+  .toggle-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .toggle-btn {
+    padding: 5px 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    background: white;
+    color: var(--text-muted);
+    transition: all 0.15s;
+  }
+
+  .toggle-btn.yes { border-color: var(--teal); color: var(--teal-dark); }
+  .toggle-btn.no  { border-color: #d4791a; color: #a05a10; }
+  .toggle-btn.unsure { border-color: #a0b0b0; color: #607070; }
+
+  .toggle-btn.selected-yes  { background: var(--teal);  border-color: var(--teal);  color: white; font-weight: 600; }
+  .toggle-btn.selected-no   { background: #e8b87a; border-color: #d4791a; color: #5a2e00; font-weight: 600; }
+  .toggle-btn.selected-unsure { background: #c0d0d0; border-color: #8090a0; color: #2a3a3a; font-weight: 600; }
+
+  /* Question section */
+  .question-block {
+    margin-bottom: 20px;
+  }
+
+  .question-block label {
+    display: block;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .question-block textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Georgia', serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
+    resize: vertical;
+    min-height: 70px;
+    line-height: 1.6;
+  }
+
+  .question-block textarea:focus {
+    outline: none;
+    border-color: var(--teal);
+    background: white;
+  }
+
+  /* Score card */
+  .score-card {
+    background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+    color: white;
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 20px;
+    display: none;
+  }
+
+  .score-card.visible { display: block; }
+
+  .score-header {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 8px;
+  }
+
+  .score-number {
+    font-size: 52px;
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .score-label {
+    font-size: 16px;
+    opacity: 0.9;
+    margin-bottom: 16px;
+  }
+
+  .score-bar-container {
+    background: rgba(255,255,255,0.25);
+    border-radius: 4px;
+    height: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+
+  .score-bar {
+    height: 100%;
+    background: white;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+  }
+
+  .score-interpretation {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    opacity: 0.95;
+  }
+
+  /* Conversation starters */
+  .starters-section {
+    display: none;
+  }
+
+  .starters-section.visible { display: block; }
+
+  .starter-item {
+    padding: 14px 18px;
+    border-left: 3px solid var(--teal);
+    background: var(--teal-light);
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .starter-item .starter-why {
+    display: block;
+    font-style: normal;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .starter-item.amber {
+    border-left-color: var(--amber);
+    background: #fdf6ed;
+  }
+
+  /* Action button */
+  .btn-primary {
+    display: inline-block;
+    padding: 13px 28px;
+    background: var(--teal);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .btn-primary:hover { background: var(--teal-dark); }
+
+  .btn-secondary {
+    display: inline-block;
+    padding: 10px 20px;
+    background: white;
+    color: var(--teal-dark);
+    border: 1px solid var(--teal);
+    border-radius: 8px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    text-align: center;
+  }
+
+  .btn-secondary:hover { background: var(--teal-light); }
+
+  /* Download button */
+  .download-bar {
+    background: white;
+    border: 1px solid var(--border);
+    border-top: none;
+    padding: 16px 32px;
+    border-radius: 0 0 var(--radius) var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .download-bar p {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .btn-download {
+    padding: 9px 22px;
+    background: var(--teal-dark);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+
+  .btn-download:hover { background: var(--text); }
+
+  .footer-note {
+    text-align: center;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 20px;
+    opacity: 0.7;
+  }
+
+  /* Print styles */
+  @media print {
+    body { padding: 0; background: white; }
+    .container { max-width: 100%; }
+    .download-bar, .btn-primary, .btn-secondary, .practice-tabs { display: none !important; }
+    .card, .intro, .header { border: none; box-shadow: none; }
+    .score-card { background: #3d8a84 !important; -webkit-print-color-adjust: exact; }
+    .toggle-btn { display: none; }
+    .footer-note { display: none; }
+    * { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="label">The Quiet Edge · Stage 3 · Parent Edition · EP1</div>
+    <h1>Practice Quality Checker</h1>
+    <div class="subtitle">Are you recognizing the right things after practice?</div>
+  </div>
+
+  <div class="intro">
+    The research on deliberate practice is clear: <strong>volume alone doesn't build expertise.</strong> Four specific elements separate skill-building sessions from activity accumulation — and as a parent, the questions you ask after practice signal which ones you value. This tool helps you see what you're currently noticing, and gives you better questions to start using today.
+  </div>
+
+  <!-- Step 1: Select practice -->
+  <div class="card">
+    <div class="section-label">Step 1</div>
+    <h2>Select a recent practice to evaluate</h2>
+    <p>Pick one of your child's last three practices. You'll assess what you observed or heard about it.</p>
+
+    <div class="practice-tabs">
+      <div class="practice-tab active" onclick="selectPractice(0, this)">Most Recent<br><small style="font-weight:400; font-size:11px;">Practice 1</small></div>
+      <div class="practice-tab" onclick="selectPractice(1, this)">Practice<br><small style="font-weight:400; font-size:11px;">2 sessions ago</small></div>
+      <div class="practice-tab" onclick="selectPractice(2, this)">Practice<br><small style="font-weight:400; font-size:11px;">3 sessions ago</small></div>
+    </div>
+  </div>
+
+  <!-- Step 2: 4 elements -->
+  <div class="card">
+    <div class="section-label">Step 2</div>
+    <h2>Which elements were present?</h2>
+    <p>For each of the 4 markers of deliberate practice, indicate what you observed or heard about from your child. Be honest — "Unsure" is a useful data point too.</p>
+
+    <div class="element-grid">
+      <div class="element-item" id="el-0">
+        <div class="element-checkbox" id="cb-0">&#9679;</div>
+        <div class="element-text">
+          <strong>Full Attention</strong>
+          <span>Focused and engaged — not distracted, not just going through the motions. Mental presence, not just physical presence.</span>
+          <div class="toggle-row">
+            <button class="toggle-btn yes" onclick="setElement(0, 'yes', this)">&#10003; Yes</button>
+            <button class="toggle-btn no" onclick="setElement(0, 'no', this)">&#10007; Not really</button>
+            <button class="toggle-btn unsure" onclick="setElement(0, 'unsure', this)">~ Unsure</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="element-item" id="el-1">
+        <div class="element-checkbox" id="cb-1">&#9679;</div>
+        <div class="element-text">
+          <strong>Working on Weaknesses</strong>
+          <span>Practicing what's hard — the parts they struggle with — not just repeating what they're already good at. There was visible struggle or frustration.</span>
+          <div class="toggle-row">
+            <button class="toggle-btn yes" onclick="setElement(1, 'yes', this)">&#10003; Yes</button>
+            <button class="toggle-btn no" onclick="setElement(1, 'no', this)">&#10007; Not really</button>
+            <button class="toggle-btn unsure" onclick="setElement(1, 'unsure', this)">~ Unsure</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="element-item" id="el-2">
+        <div class="element-checkbox" id="cb-2">&#9679;</div>
+        <div class="element-text">
+          <strong>Getting Feedback</strong>
+          <span>Received specific correction or input — from a coach, video review, or their own self-awareness. Not just general praise or generic encouragement.</span>
+          <div class="toggle-row">
+            <button class="toggle-btn yes" onclick="setElement(2, 'yes', this)">&#10003; Yes</button>
+            <button class="toggle-btn no" onclick="setElement(2, 'no', this)">&#10007; Not really</button>
+            <button class="toggle-btn unsure" onclick="setElement(2, 'unsure', this)">~ Unsure</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="element-item" id="el-3">
+        <div class="element-checkbox" id="cb-3">&#9679;</div>
+        <div class="element-text">
+          <strong>Making Adjustments</strong>
+          <span>After getting feedback, they tried something differently. Not just repeating the same thing — they made an actual change in approach or execution.</span>
+          <div class="toggle-row">
+            <button class="toggle-btn yes" onclick="setElement(3, 'yes', this)">&#10003; Yes</button>
+            <button class="toggle-btn no" onclick="setElement(3, 'no', this)">&#10007; Not really</button>
+            <button class="toggle-btn unsure" onclick="setElement(3, 'unsure', this)">~ Unsure</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3: Post-practice questions -->
+  <div class="card">
+    <div class="section-label">Step 3</div>
+    <h2>What did you say after practice?</h2>
+    <p>Write the first thing you actually said to your child after this practice ended (in the car, walking out, at dinner — whatever came first). Don't edit it for how you wish you'd responded.</p>
+
+    <div class="question-block">
+      <label>What I actually said:</label>
+      <textarea id="actual-question" placeholder='e.g. "How long was practice?" or "You looked tired out there" or "Good job today"'></textarea>
+    </div>
+
+    <div class="question-block">
+      <label>Was your comment focused on… (select one)</label>
+      <div class="toggle-row" style="margin-top: 0;">
+        <button class="toggle-btn" id="focus-volume" onclick="setFocus('volume', this)" style="padding: 8px 16px; border-radius: 6px;">Time / Effort / Attendance</button>
+        <button class="toggle-btn" id="focus-quality" onclick="setFocus('quality', this)" style="padding: 8px 16px; border-radius: 6px;">What they worked on or improved</button>
+        <button class="toggle-btn" id="focus-neither" onclick="setFocus('neither', this)" style="padding: 8px 16px; border-radius: 6px;">Something else</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calculate -->
+  <div class="card">
+    <button class="btn-primary" onclick="calculate()">See My Results &amp; Conversation Starters</button>
+    <button class="btn-secondary" onclick="resetAll()">Start Over</button>
+  </div>
+
+  <!-- Score card (hidden until calculated) -->
+  <div class="score-card" id="score-card">
+    <div class="score-header">Your Practice Quality Score</div>
+    <div class="score-number" id="score-number">0</div>
+    <div class="score-label" id="score-label">of 4 deliberate practice elements present</div>
+    <div class="score-bar-container">
+      <div class="score-bar" id="score-bar" style="width:0%"></div>
+    </div>
+    <div class="score-interpretation" id="score-interpretation"></div>
+  </div>
+
+  <!-- Conversation starters -->
+  <div class="card starters-section" id="starters-section">
+    <div class="section-label">Conversation Starters For You</div>
+    <h2 id="starters-title">Questions matched to what was missing</h2>
+    <p id="starters-intro"></p>
+    <div id="starters-list"></div>
+  </div>
+
+  <!-- Language audit result -->
+  <div class="card starters-section" id="language-section">
+    <div class="section-label">Your Post-Practice Language</div>
+    <h2 id="language-title">What your question signals to your athlete</h2>
+    <p id="language-body"></p>
+  </div>
+
+  <!-- Download bar -->
+  <div class="download-bar" id="download-bar">
+    <p>Save or print your results for future reference.</p>
+    <button class="btn-download" onclick="window.print()">&#8595; Download as PDF</button>
+  </div>
+
+</div>
+
+<div class="footer-note">The Quiet Edge · Stage 3: Skill Acquisition · Parent Edition<br>Based on Ericsson et al. (1993) and Ericsson &amp; Pool (2016)</div>
+
+<script>
+  const elements = ['', '', '', ''];
+  let focusType = '';
+
+  function selectPractice(idx, btn) {
+    document.querySelectorAll('.practice-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function setElement(idx, val, btn) {
+    elements[idx] = val;
+    const row = btn.closest('.toggle-row');
+    row.querySelectorAll('.toggle-btn').forEach(b => {
+      b.className = b.className.replace(/selected-\w+/, '');
+    });
+    if (val === 'yes')    btn.classList.add('selected-yes');
+    if (val === 'no')     btn.classList.add('selected-no');
+    if (val === 'unsure') btn.classList.add('selected-unsure');
+  }
+
+  function setFocus(val, btn) {
+    focusType = val;
+    document.querySelectorAll('#focus-volume, #focus-quality, #focus-neither').forEach(b => {
+      b.className = b.className.replace(/selected-\w+/, '');
+    });
+    if (val === 'volume')  btn.classList.add('selected-no');
+    if (val === 'quality') btn.classList.add('selected-yes');
+    if (val === 'neither') btn.classList.add('selected-unsure');
+  }
+
+  const elementNames = ['Full Attention', 'Working on Weaknesses', 'Getting Feedback', 'Making Adjustments'];
+
+  const starterBank = {
+    0: [ // Full attention missing
+      { q: '"Did practice feel challenging today, or more like going through the motions?"', why: 'Opens a conversation about mental engagement without leading the answer.' },
+      { q: '"Was there a moment today where you really had to concentrate?"', why: 'Helps your athlete notice what full attention actually feels like.' }
+    ],
+    1: [ // Working on weaknesses missing
+      { q: '"Is there one thing Coach has you working on that still feels hard?"', why: 'Normalizes struggle and signals that difficulty is the point — not a problem.' },
+      { q: '"What part of your game do you feel like you want to get better at?"', why: 'Invites athlete-ownership of the weakness, rather than parent-identified criticism.' }
+    ],
+    2: [ // Getting feedback missing
+      { q: '"Did Coach give you any specific tips today?"', why: 'Opens a door to process feedback out loud — which deepens it.' },
+      { q: '"Did you notice anything about your own mechanics or decision-making during practice?"', why: 'Builds internal feedback habits when external feedback wasn\'t present.' }
+    ],
+    3: [ // Making adjustments missing
+      { q: '"Did you try something differently today based on what Coach said last time?"', why: 'Connects feedback from previous sessions to today\'s practice — the adjustment loop.' },
+      { q: '"Was there a moment where you changed your approach mid-drill?"', why: 'Highlights in-practice adjustments as something worth noticing and praising.' }
+    ]
+  };
+
+  const volumeStarters = [
+    { q: '"What did you spend the most time working on today?"', why: 'Shifts from how long → what was worked on.', type: 'teal' },
+    { q: '"What\'s one thing you want to be better at before the next practice?"', why: 'Forward-facing and skill-focused — not volume-based.', type: 'teal' }
+  ];
+
+  function calculate() {
+    const yesCount = elements.filter(e => e === 'yes').length;
+    const noCount  = elements.filter(e => e === 'no').length;
+    const unsureCount = elements.filter(e => e === 'unsure').length;
+    const missing = elements.map((e, i) => e !== 'yes' ? i : -1).filter(i => i >= 0);
+
+    // Score display
+    const scoreCard = document.getElementById('score-card');
+    scoreCard.classList.add('visible');
+    document.getElementById('score-number').textContent = yesCount;
+    document.getElementById('score-bar').style.width = (yesCount / 4 * 100) + '%';
+
+    let interpretation = '';
+    if (yesCount === 4) {
+      document.getElementById('score-label').textContent = 'of 4 elements — Outstanding deliberate practice session';
+      interpretation = 'All four elements were present. That is a genuinely high-quality practice. Your job now is to make sure your post-practice conversation reinforces exactly what made it deliberate — not just that it was "good."';
+    } else if (yesCount === 3) {
+      document.getElementById('score-label').textContent = 'of 4 elements — Strong quality practice';
+      interpretation = 'Strong session. One element was absent or unclear. The conversation starters below can help you draw out what may have been happening in that area — or open a productive dialogue if it genuinely wasn\'t there.';
+    } else if (yesCount === 2) {
+      document.getElementById('score-label').textContent = 'of 4 elements — Activity with some quality moments';
+      interpretation = 'Some deliberate practice elements were present, but the session was partially activity-based. This is common — and fixable through the questions you ask. Use the starters below to begin surfacing what was missing.';
+    } else {
+      document.getElementById('score-label').textContent = 'of 4 elements — Mostly activity-based session';
+      interpretation = 'This session was likely more activity than skill development. That\'s useful to know — not as a judgment, but as a signal. The conversation starters below aren\'t about criticizing what happened. They\'re about beginning to build the habit of noticing quality.';
+    }
+    if (unsureCount > 0) {
+      interpretation += ` You marked "Unsure" on ${unsureCount} element${unsureCount > 1 ? 's' : ''} — which often means those aspects weren\'t visible or discussed. That\'s worth exploring.`;
+    }
+    document.getElementById('score-interpretation').textContent = interpretation;
+
+    // Conversation starters
+    const startersSection = document.getElementById('starters-section');
+    startersSection.classList.add('visible');
+
+    let starterHTML = '';
+    const missedNames = missing.map(i => elementNames[i]);
+
+    if (missing.length === 0) {
+      document.getElementById('starters-title').textContent = 'Reinforce what worked';
+      document.getElementById('starters-intro').textContent = 'All elements were present. Now your job is to make sure your child knows you noticed the right things — not just "good practice."';
+      starterHTML += `<div class="starter-item">"I heard you were working on [specific skill] today — did you feel like you made any progress on that?"<span class="starter-why">Reinforces quality-focused effort, not just attendance.</span></div>`;
+      starterHTML += `<div class="starter-item">"Was there a moment in practice that felt harder than usual? Those are usually the most useful moments."<span class="starter-why">Labels struggle as valuable — builds deliberate practice mindset.</span></div>`;
+    } else {
+      document.getElementById('starters-title').textContent = 'Questions matched to what was missing: ' + missedNames.join(', ');
+      document.getElementById('starters-intro').textContent = 'These questions open a conversation about the elements that were unclear or absent. They\'re not interrogations — they\'re invitations.';
+      missing.forEach(idx => {
+        starterBank[idx].forEach(s => {
+          starterHTML += `<div class="starter-item">${s.q}<span class="starter-why">${s.why}</span></div>`;
+        });
+      });
+    }
+
+    document.getElementById('starters-list').innerHTML = starterHTML;
+
+    // Language audit
+    const langSection = document.getElementById('language-section');
+    langSection.classList.add('visible');
+    let langTitle = '', langBody = '', langExtra = '';
+
+    if (focusType === 'volume') {
+      langTitle = 'Your comment was focused on time, effort, or attendance';
+      langBody = 'That\'s the default for most parents — and it\'s not harmful. But over time, praising effort and attendance (rather than what was worked on) teaches your athlete that showing up and working hard is what you value most. That can actually create resistance to deliberate, focused practice, because it doesn\'t feel rewarding to struggle with weaknesses when "working hard" is already getting recognized.';
+      langExtra = 'Try replacing one volume-based comment this week with a quality-focused one:';
+      volumeStarters.forEach(s => {
+        langExtra += `<div class="starter-item" style="margin-top:8px;">${s.q}<span class="starter-why">${s.why}</span></div>`;
+      });
+    } else if (focusType === 'quality') {
+      langTitle = 'Your comment was focused on what they worked on or improved';
+      langBody = 'You\'re already signaling that quality matters. That\'s meaningful. The next step is to get specific — instead of "good practice," try naming the specific element you noticed. That level of specificity makes the recognition land differently.';
+    } else if (focusType === 'neither') {
+      langTitle = 'Your comment was about something else';
+      langBody = 'That\'s fine — not every post-practice moment needs to be about skill development. But if this is the typical pattern (neutral or unrelated comments after practice), there\'s a low-cost opportunity here. One specific, quality-focused question per practice costs nothing and signals what you value.';
+    } else {
+      langTitle = 'Post-practice language matters more than it seems';
+      langBody = 'The question you ask first tells your athlete what you were watching for — and what you think matters. Over hundreds of car rides home, that signals whether you value hours or improvement, attendance or deliberate work.';
+    }
+
+    document.getElementById('language-title').textContent = langTitle;
+    document.getElementById('language-body').innerHTML = '<p>' + langBody + '</p>' + (langExtra ? '<p style="margin-top:12px; font-family: Helvetica Neue, Arial, sans-serif; font-size:13px; font-weight:600; color:#3d8a84;">' + langExtra + '</p>' : '');
+
+    // Scroll to results
+    scoreCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function resetAll() {
+    for (let i = 0; i < 4; i++) {
+      elements[i] = '';
+      document.querySelectorAll('#el-' + i + ' .toggle-btn').forEach(b => {
+        b.className = b.className.replace(/selected-\w+/, '');
+      });
+    }
+    focusType = '';
+    document.getElementById('actual-question').value = '';
+    document.querySelectorAll('#focus-volume, #focus-quality, #focus-neither').forEach(b => {
+      b.className = b.className.replace(/selected-\w+/, '');
+    });
+    document.getElementById('score-card').classList.remove('visible');
+    document.getElementById('starters-section').classList.remove('visible');
+    document.getElementById('language-section').classList.remove('visible');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
