@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Training Load Audit — The Quiet Edge | Parent Edition</title>
+<style>
+  :root {
+    --teal: #5fb3ac;
+    --teal-dark: #3d8f89;
+    --teal-light: #d0ecea;
+    --amber: #e8a84c;
+    --text: #1a1a2e;
+    --text-muted: #5a6278;
+    --bg: #f7fafa;
+    --card: #ffffff;
+    --border: #d8edec;
+    --warning: #e8a84c;
+    --danger: #e05c5c;
+    --success: #4caf8a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  .page-wrapper {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #3d8f89 0%, #5fb3ac 60%, #7ec8c2 100%);
+    color: white;
+    padding: 36px 32px 28px;
+    border-radius: 16px;
+    margin-bottom: 28px;
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+  .header p {
+    font-size: 14px;
+    opacity: 0.9;
+    max-width: 520px;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    background: rgba(255,255,255,0.25);
+    border-radius: 4px;
+    height: 4px;
+    margin-top: 20px;
+  }
+  .progress-fill {
+    background: white;
+    height: 4px;
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  /* Section cards */
+  .section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 28px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(95,179,172,0.08);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .section-number {
+    background: var(--teal);
+    color: white;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--teal-dark);
+  }
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* Form elements */
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .field-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 520px) {
+    .input-row { grid-template-columns: 1fr; }
+  }
+
+  input[type="number"], select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+    transition: border-color 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  input[type="number"]:focus, select:focus {
+    outline: none;
+    border-color: var(--teal);
+    background: white;
+  }
+
+  /* Checkbox items */
+  .check-group {
+    margin-bottom: 20px;
+  }
+  .check-group-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--teal-dark);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--teal-light);
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+    user-select: none;
+  }
+  .check-item:hover { background: var(--teal-light); }
+  .check-item.checked { background: var(--teal-light); }
+
+  .check-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    accent-color: var(--teal);
+    cursor: pointer;
+  }
+  .check-item-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.45;
+  }
+
+  /* Radio / scale items */
+  .scale-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .scale-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+  }
+  .scale-option input[type="radio"] { accent-color: var(--teal); cursor: pointer; }
+  .scale-option span { font-size: 12px; color: var(--text-muted); }
+
+  .radio-group { margin-bottom: 12px; }
+  .radio-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .radio-item:hover { background: var(--teal-light); }
+  .radio-item input[type="radio"] { margin-top: 2px; accent-color: var(--teal); cursor: pointer; flex-shrink: 0; }
+  .radio-item span { font-size: 14px; color: var(--text); }
+
+  /* Load summary display */
+  .load-summary {
+    background: var(--teal-light);
+    border: 1px solid var(--teal);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--teal-dark);
+    display: none;
+  }
+  .load-summary strong { font-size: 16px; }
+
+  /* Divider */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 20px 0;
+  }
+
+  /* CTA button */
+  .btn-calculate {
+    width: 100%;
+    background: var(--teal);
+    color: white;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    letter-spacing: 0.3px;
+    margin-top: 8px;
+  }
+  .btn-calculate:hover { background: var(--teal-dark); }
+  .btn-calculate:active { transform: scale(0.98); }
+
+  /* Results card */
+  .results-card {
+    display: none;
+    border-radius: 16px;
+    padding: 32px 28px;
+    margin-top: 24px;
+    border: 2px solid;
+  }
+  .results-card.appropriate {
+    background: #f0faf6;
+    border-color: var(--success);
+  }
+  .results-card.borderline {
+    background: #fff8ed;
+    border-color: var(--warning);
+  }
+  .results-card.overloaded {
+    background: #fef2f2;
+    border-color: var(--danger);
+  }
+
+  .result-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .appropriate .result-badge { background: #d4f0e4; color: #2d7a57; }
+  .borderline .result-badge { background: #fde9c0; color: #8a5a00; }
+  .overloaded .result-badge { background: #fdd8d8; color: #8a2020; }
+
+  .result-headline {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+  .result-summary {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .action-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .action-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  .action-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .appropriate .action-icon { background: #d4f0e4; }
+  .borderline .action-icon { background: #fde9c0; }
+  .overloaded .action-icon { background: #fdd8d8; }
+
+  .pressure-note {
+    margin-top: 18px;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    display: none;
+  }
+  .pressure-note strong { color: var(--text); }
+
+  /* Download button */
+  .btn-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    color: var(--teal-dark);
+    border: 1.5px solid var(--teal);
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.15s;
+  }
+  .btn-download:hover { background: var(--teal-light); }
+
+  /* Footer */
+  .footer {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+  .footer a { color: var(--teal); text-decoration: none; }
+
+  /* Print styles */
+  @media print {
+    body { background: white; font-size: 12pt; }
+    .page-wrapper { max-width: 100%; padding: 0; }
+    .header { background: #5fb3ac !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-radius: 0; }
+    .section { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+    .btn-calculate, .btn-download, .progress-bar, .footer { display: none !important; }
+    .results-card { display: block !important; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-eyebrow">The Quiet Edge · Parent Edition · Stage 3</div>
+    <h1>Training Load Audit</h1>
+    <p>Is your child's training schedule building toward development — or quietly burning it out? This 5-minute self-assessment helps you see the full picture.</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <!-- Section 1: Weekly Load Calculator -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <div>
+        <div class="section-title">Weekly Training Load</div>
+        <div class="section-subtitle">Count everything: team practices, private lessons, conditioning, open gym, games, and tournaments</div>
+      </div>
+    </div>
+
+    <div class="input-row">
+      <div>
+        <label for="trainingDays">Training / competition days per week</label>
+        <input type="number" id="trainingDays" min="0" max="7" placeholder="e.g. 5" oninput="updateLoadSummary()">
+      </div>
+      <div>
+        <label for="trainingHours">Average session length (hours)</label>
+        <input type="number" id="trainingHours" min="0" max="5" step="0.5" placeholder="e.g. 1.5" oninput="updateLoadSummary()">
+      </div>
+    </div>
+
+    <div class="input-row">
+      <div>
+        <label for="restDays">Full rest days (zero sport activity)</label>
+        <input type="number" id="restDays" min="0" max="7" placeholder="e.g. 2" oninput="updateLoadSummary()">
+      </div>
+      <div>
+        <label for="athleteAge">Athlete's age</label>
+        <select id="athleteAge" onchange="updateLoadSummary()">
+          <option value="">Select age range</option>
+          <option value="under10">Under 10</option>
+          <option value="10-12">10–12</option>
+          <option value="13-15">13–15</option>
+          <option value="16plus">16+</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="load-summary" id="loadSummary"></div>
+  </div>
+
+  <!-- Section 2: Warning Sign Checklist -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <div>
+        <div class="section-title">Warning Sign Audit</div>
+        <div class="section-subtitle">Check any signs you've noticed in your child in the past 2–4 weeks. Be honest — these are easy to explain away.</div>
+      </div>
+    </div>
+
+    <div class="check-group">
+      <div class="check-group-label">Physical Signs</div>
+      <label class="check-item" id="item-w1">
+        <input type="checkbox" class="warning-check" onchange="onWarningChange(this, 'item-w1')">
+        <span class="check-item-text">Persistent fatigue that doesn't resolve with a night of sleep</span>
+      </label>
+      <label class="check-item" id="item-w2">
+        <input type="checkbox" class="warning-check" onchange="onWarningChange(this, 'item-w2')">
+        <span class="check-item-text">Recurring minor injuries or soreness that doesn't fully heal between sessions</span>
+      </label>
+      <label class="check-item" id="item-w3">
+        <input type="checkbox" class="warning-check" onchange="onWarningChange(this, 'item-w3')">
+        <span class="check-item-text">Performance declining despite the same or more training</span>
+      </label>
+    </div>
+
+    <div class="check-group">
+      <div class="check-group-label">Psychological & Behavioral Signs</div>
+      <label class="check-item" id="item-w4">
+        <input type="checkbox" class="warning-check" onchange="onWarningChange(this, 'item-w4')">
+        <span class="check-item-text">Increased irritability or emotional volatility around practices or games</span>
+      </label>
+      <label class="check-item" id="item-w5">
+        <input type="checkbox" class="warning-check" onchange="onWarningChange(this, 'item-w5')">
+        <span class="check-item-text">Reluctance or resistance to going to practice (dragging feet, making excuses)</span>
+      </label>
+      <label class="check-item" id="item-w6">
+        <input type="checkbox" class="warning-check" onchange="onWarningChange(this, 'item-w6')">
+        <span class="check-item-text">Loss of enthusiasm for a sport they previously loved</span>
+      </label>
+      <label class="check-item" id="item-w7">
+        <input type="checkbox" class="warning-check" onchange="onWarningChange(this, 'item-w7')">
+        <span class="check-item-text">Sleep disruption — difficulty sleeping OR sleeping significantly more than usual</span>
+      </label>
+      <label class="check-item" id="item-w8">
+        <input type="checkbox" class="warning-check" onchange="onWarningChange(this, 'item-w8')">
+        <span class="check-item-text">Withdrawal from teammates, coaches, or family after practices or games</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Section 3: Parent Pressure Patterns -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <div>
+        <div class="section-title">Your Pressure Patterns</div>
+        <div class="section-subtitle">These forces shape your scheduling decisions more than you may realize. There are no right answers — only honest ones.</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 22px;">
+      <label>Financial pressure: "We're paying a lot for this — we need to maximize it."</label>
+      <span class="field-hint">How much does your investment drive pressure to push for more training?</span>
+      <div class="scale-row">
+        <label class="scale-option"><input type="radio" name="financialPressure" value="1" class="pressure-radio" onchange="onPressureChange()"><span>1 — None</span></label>
+        <label class="scale-option"><input type="radio" name="financialPressure" value="2" class="pressure-radio" onchange="onPressureChange()"><span>2</span></label>
+        <label class="scale-option"><input type="radio" name="financialPressure" value="3" class="pressure-radio" onchange="onPressureChange()"><span>3 — Some</span></label>
+        <label class="scale-option"><input type="radio" name="financialPressure" value="4" class="pressure-radio" onchange="onPressureChange()"><span>4</span></label>
+        <label class="scale-option"><input type="radio" name="financialPressure" value="5" class="pressure-radio" onchange="onPressureChange()"><span>5 — A lot</span></label>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div style="margin-bottom: 22px;">
+      <label>Social comparison: When other families train more, what's your reaction?</label>
+      <div class="radio-group">
+        <label class="radio-item">
+          <input type="radio" name="comparison" value="low" class="pressure-radio" onchange="onPressureChange()">
+          <span>Mild awareness — doesn't change my thinking much</span>
+        </label>
+        <label class="radio-item">
+          <input type="radio" name="comparison" value="medium" class="pressure-radio" onchange="onPressureChange()">
+          <span>Some anxiety — I wonder if we're falling behind</span>
+        </label>
+        <label class="radio-item">
+          <input type="radio" name="comparison" value="high" class="pressure-radio" onchange="onPressureChange()">
+          <span>Significant pressure — I often adjust our schedule based on what others are doing</span>
+        </label>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div>
+      <label>How does your child typically respond when you tell them about an upcoming practice or training session?</label>
+      <div class="radio-group">
+        <label class="radio-item">
+          <input type="radio" name="childResponse" value="eager" class="pressure-radio" onchange="onPressureChange()">
+          <span>Eager or neutral — generally looks forward to it</span>
+        </label>
+        <label class="radio-item">
+          <input type="radio" name="childResponse" value="sometimes" class="pressure-radio" onchange="onPressureChange()">
+          <span>Mixed — enthusiastic sometimes, reluctant other times</span>
+        </label>
+        <label class="radio-item">
+          <input type="radio" name="childResponse" value="reluctant" class="pressure-radio" onchange="onPressureChange()">
+          <span>Often reluctant — I have to push them to go most of the time</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calculate button -->
+  <button class="btn-calculate" onclick="calculateResults()">
+    Calculate My Training Load Rating →
+  </button>
+
+  <!-- Results card -->
+  <div class="results-card" id="resultsCard">
+    <div class="result-badge" id="resultBadge"></div>
+    <div class="result-headline" id="resultHeadline"></div>
+    <div class="result-summary" id="resultSummary"></div>
+    <ul class="action-list" id="actionList"></ul>
+    <div class="pressure-note" id="pressureNote"></div>
+    <button class="btn-download" onclick="window.print()">
+      ⬇ Download / Save as PDF
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p><strong>The Quiet Edge</strong> · Evidence-Based Mental Skills for Youth Athletes & Parents</p>
+    <p style="margin-top:4px">Based on research by Ericsson et al. (1993), Schmidt & Lee (2014), Deci & Ryan (2000)</p>
+    <p style="margin-top:8px"><a href="https://www.youtube.com/@TheQuietEdge" target="_blank">Watch on YouTube</a> · Stage 3: Skill Acquisition Series</p>
+  </div>
+
+</div>
+
+<script>
+// Age-based training recommendations (days/week, hours/week)
+const ageGuidelines = {
+  'under10': { maxDays: 4, maxHoursWeek: 6,  label: 'Under 10' },
+  '10-12':   { maxDays: 5, maxHoursWeek: 8,  label: '10–12' },
+  '13-15':   { maxDays: 6, maxHoursWeek: 12, label: '13–15' },
+  '16plus':  { maxDays: 6, maxHoursWeek: 16, label: '16+' },
+};
+
+function updateLoadSummary() {
+  const days = parseFloat(document.getElementById('trainingDays').value) || 0;
+  const hours = parseFloat(document.getElementById('trainingHours').value) || 0;
+  const restDays = parseFloat(document.getElementById('restDays').value);
+  const ageKey = document.getElementById('athleteAge').value;
+  const summary = document.getElementById('loadSummary');
+  const fill = document.getElementById('progressFill');
+
+  if (!days && !hours) { summary.style.display = 'none'; return; }
+
+  const totalHours = (days * hours).toFixed(1);
+  let guidelineNote = '';
+  if (ageKey && ageGuidelines[ageKey]) {
+    const g = ageGuidelines[ageKey];
+    guidelineNote = ` | Guideline for age ${g.label}: ≤${g.maxDays} days, ≤${g.maxHoursWeek} hrs/week`;
+  }
+
+  summary.style.display = 'block';
+  summary.innerHTML = `<strong>${totalHours} hrs/week across ${days} training day${days !== 1 ? 's' : ''}</strong>${ageKey ? guidelineNote : ''}${!isNaN(restDays) ? ` | ${restDays} rest day${restDays !== 1 ? 's' : ''}` : ''}`;
+
+  updateProgress();
+}
+
+function onWarningChange(cb, itemId) {
+  document.getElementById(itemId).classList.toggle('checked', cb.checked);
+  updateProgress();
+}
+
+function onPressureChange() { updateProgress(); }
+
+function updateProgress() {
+  const days = parseFloat(document.getElementById('trainingDays').value) || 0;
+  const hours = parseFloat(document.getElementById('trainingHours').value) || 0;
+  const warnings = document.querySelectorAll('.warning-check:checked').length;
+  const pressures = document.querySelectorAll('.pressure-radio:checked').length;
+  const hasAge = document.getElementById('athleteAge').value !== '';
+
+  let pct = 0;
+  if (days > 0) pct += 15;
+  if (hours > 0) pct += 15;
+  if (hasAge) pct += 10;
+  pct += Math.min(warnings * 4, 32);   // up to 32%
+  pct += Math.min(pressures * 9, 28);  // up to 28%
+
+  document.getElementById('progressFill').style.width = Math.min(pct, 100) + '%';
+}
+
+function calculateResults() {
+  const days = parseFloat(document.getElementById('trainingDays').value) || 0;
+  const hours = parseFloat(document.getElementById('trainingHours').value) || 0;
+  const restDays = parseFloat(document.getElementById('restDays').value);
+  const ageKey = document.getElementById('athleteAge').value;
+  const totalHours = days * hours;
+  const warnings = document.querySelectorAll('.warning-check:checked').length;
+
+  const financialPressure = parseInt(document.querySelector('input[name="financialPressure"]:checked')?.value || 1);
+  const comparison = document.querySelector('input[name="comparison"]:checked')?.value || 'low';
+  const childResponse = document.querySelector('input[name="childResponse"]:checked')?.value || 'eager';
+
+  // Calculate load score
+  let loadScore = 0;
+
+  if (ageKey) {
+    const g = ageGuidelines[ageKey];
+    if (days > g.maxDays) loadScore += 2;
+    else if (days === g.maxDays) loadScore += 1;
+    if (totalHours > g.maxHoursWeek * 1.2) loadScore += 2;
+    else if (totalHours > g.maxHoursWeek) loadScore += 1;
+  } else {
+    // Without age, use general thresholds
+    if (days >= 7) loadScore += 3;
+    else if (days >= 6) loadScore += 2;
+    else if (days >= 5) loadScore += 1;
+  }
+
+  // Rest days
+  if (!isNaN(restDays)) {
+    if (restDays === 0) loadScore += 3;
+    else if (restDays === 1) loadScore += 1;
+  }
+
+  // Warning signs score
+  loadScore += warnings;
+
+  // Child response modifier
+  if (childResponse === 'reluctant') loadScore += 2;
+  else if (childResponse === 'sometimes') loadScore += 1;
+
+  // Pressure flags (separate — shown in note, not main score)
+  const pressureFlags = [];
+  if (financialPressure >= 4) pressureFlags.push('financial pressure');
+  if (comparison === 'high') pressureFlags.push('social comparison');
+  if (childResponse === 'reluctant') pressureFlags.push('child reluctance');
+
+  // Determine result tier
+  let tier;
+  if (loadScore <= 2) tier = 'appropriate';
+  else if (loadScore <= 5) tier = 'borderline';
+  else tier = 'overloaded';
+
+  const results = {
+    appropriate: {
+      badge: '✓ Appropriate Load',
+      headline: 'Your child\'s training load appears to be in a healthy range.',
+      summary: 'Based on what you\'ve reported, the weekly training volume and warning sign profile suggest your child has enough recovery time for adaptation to occur. This is the zone where performance actually improves — not from more hours, but from quality reps followed by sufficient rest.',
+      actions: [
+        { icon: '📋', text: 'Continue monitoring for warning signs — especially at the start of a new competitive season when volume often spikes.' },
+        { icon: '💬', text: 'Ask your child periodically how their body feels and how much they\'re enjoying their sport. That enjoyment is a performance signal.' },
+        { icon: '📅', text: 'Protect rest days proactively — don\'t let "optional" sessions fill them in gradually over the season.' },
+        { icon: '🌱', text: 'Quality of training matters more than quantity. A focused 90-minute session produces more adaptation than a fatigued 3-hour one.' },
+      ]
+    },
+    borderline: {
+      badge: '⚠ Borderline — Monitor Closely',
+      headline: 'Some signals suggest your child may be approaching overload.',
+      summary: 'The combination of training volume and warning signs you\'ve reported puts your child in a yellow zone — not clearly overtrained, but close enough to warrant a closer look. At this stage, a small reduction in volume often produces a noticeable improvement in performance, mood, and enjoyment.',
+      actions: [
+        { icon: '📉', text: 'Consider reducing training volume by 10–20% for 2–3 weeks and track whether the warning signs improve.' },
+        { icon: '🛌', text: 'Add at least one full, non-negotiable rest day per week — no practices, no skill work, no conditioning.' },
+        { icon: '🗣️', text: 'Have an honest conversation with your child\'s coach about current load. Good coaches welcome this conversation.' },
+        { icon: '📊', text: 'Track warning signs weekly. If 3+ are present consistently after 2 weeks, move toward a structured recovery week.' },
+        { icon: '💡', text: 'The body doesn\'t adapt during training — it adapts during recovery. Protecting rest is training, not skipping it.' },
+      ]
+    },
+    overloaded: {
+      badge: '🛑 Overloaded — Time to Recalibrate',
+      headline: 'The signs point to overtraining. More is producing less.',
+      summary: 'Based on training volume, warning signs, and behavioral patterns, your child\'s schedule is likely exceeding their adaptive capacity. This is the zone where more training produces worse outcomes — not because your child lacks grit, but because the body\'s adaptation cycle is broken without sufficient recovery.',
+      actions: [
+        { icon: '🔴', text: 'Consider scheduling a structured recovery week immediately — significantly reduced volume or full rest for 5–7 days.' },
+        { icon: '🩺', text: 'If physical warning signs are prominent (recurring injuries, persistent fatigue), consult a pediatrician or sports medicine professional.' },
+        { icon: '📞', text: 'Talk with their coach directly. Share what you\'ve observed. Most coaches don\'t want to overtrain athletes — they may not know what you\'re seeing.' },
+        { icon: '📅', text: 'After the recovery week, rebuild the schedule with at least 2 full rest days per week built in, not negotiated away.' },
+        { icon: '❤️', text: 'Reconnect with why your child plays. Burnout happens when sport stops being a choice and starts being an obligation. Let them have input into the schedule.' },
+      ]
+    }
+  };
+
+  const r = results[tier];
+  const card = document.getElementById('resultsCard');
+  card.className = 'results-card ' + tier;
+  card.style.display = 'block';
+
+  document.getElementById('resultBadge').textContent = r.badge;
+  document.getElementById('resultHeadline').textContent = r.headline;
+  document.getElementById('resultSummary').textContent = r.summary;
+
+  const list = document.getElementById('actionList');
+  list.innerHTML = '';
+  r.actions.forEach(a => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="action-icon">${a.icon}</span><span>${a.text}</span>`;
+    list.appendChild(li);
+  });
+
+  // Pressure note
+  const pressureNote = document.getElementById('pressureNote');
+  if (pressureFlags.length > 0) {
+    pressureNote.style.display = 'block';
+    pressureNote.innerHTML = `<strong>One more thing:</strong> Your responses flagged ${pressureFlags.join(' and ')} as active forces shaping your scheduling decisions. These pressures are real — and they're worth naming. The research is clear: children whose parents make training decisions based on what other families are doing or on sunk financial costs are at higher burnout risk, regardless of their actual talent or drive. The antidote is to anchor decisions to your child's signals — not external benchmarks.`;
+  } else {
+    pressureNote.style.display = 'none';
+  }
+
+  document.getElementById('progressFill').style.width = '100%';
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>
