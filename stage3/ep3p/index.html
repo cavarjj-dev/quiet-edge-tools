@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sideline Self-Check — Parent Edition | The Quiet Edge</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal:      #5fb3ac;
+    --teal-dark: #3d8e87;
+    --teal-bg:   #edf7f6;
+    --amber:     #d4865a;
+    --amber-light: #fdf3ec;
+    --dark:      #1a1a2e;
+    --gray:      #555e6b;
+    --light:     #f5f5f5;
+    --white:     #ffffff;
+    --radius:    10px;
+    --shadow:    0 2px 12px rgba(0,0,0,0.10);
+  }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--light);
+    color: var(--dark);
+    line-height: 1.65;
+    font-size: 16px;
+  }
+
+  /* ── Layout ── */
+  .wrapper {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 60%, #7ecdc6 100%);
+    border-radius: var(--radius);
+    padding: 36px 32px 28px;
+    color: var(--white);
+    margin-bottom: 32px;
+  }
+  .header .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .header p {
+    font-size: 14px;
+    opacity: 0.88;
+    max-width: 500px;
+  }
+
+  /* ── Intro Card ── */
+  .intro-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 28px;
+    border-left: 4px solid var(--teal);
+    box-shadow: var(--shadow);
+  }
+  .intro-card h2 { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: var(--teal-dark); }
+  .intro-card p  { font-size: 14px; color: var(--gray); }
+
+  /* ── Section Label ── */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 32px 0 16px;
+  }
+  .section-label .num {
+    background: var(--teal);
+    color: var(--white);
+    font-size: 13px;
+    font-weight: 800;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-label h2 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 22px 26px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+  .card-question {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .card-sub {
+    font-size: 12.5px;
+    color: var(--gray);
+    margin-bottom: 14px;
+    margin-top: -10px;
+  }
+
+  /* ── Slider dimension ── */
+  .dimension { margin-bottom: 20px; }
+  .dimension:last-child { margin-bottom: 0; }
+  .dim-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    gap: 8px;
+  }
+  .dim-name { font-size: 14px; font-weight: 600; color: var(--dark); flex: 1; }
+  .dim-score {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--teal);
+    min-width: 24px;
+    text-align: right;
+  }
+  .dim-ends {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--gray);
+    margin-top: 5px;
+  }
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 4px;
+    background: linear-gradient(to right, var(--teal) 0%, var(--teal) 50%, #ddd 50%, #ddd 100%);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--teal-dark);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    cursor: pointer;
+  }
+
+  /* ── Radio options ── */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 2px solid #e8e8e8;
+    transition: border-color 0.15s, background 0.15s;
+    font-size: 14px;
+    color: var(--dark);
+  }
+  .option-label:hover { border-color: var(--teal); background: var(--teal-bg); }
+  .option-label input[type=radio] { margin-top: 2px; accent-color: var(--teal); flex-shrink: 0; }
+  .option-label.selected { border-color: var(--teal); background: var(--teal-bg); }
+
+  /* ── Text area ── */
+  textarea {
+    width: 100%;
+    min-height: 80px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--dark);
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  textarea:focus { border-color: var(--teal); }
+
+  /* ── Submit button ── */
+  .submit-wrap { text-align: center; margin: 36px 0 24px; }
+  .btn-primary {
+    background: var(--teal);
+    color: var(--white);
+    border: none;
+    padding: 15px 42px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(95,179,172,0.4);
+    transition: background 0.2s, transform 0.1s;
+    letter-spacing: 0.3px;
+  }
+  .btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); }
+
+  /* ── Results ── */
+  #results { display: none; }
+  .profile-card {
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    color: var(--white);
+  }
+  .profile-card.coach    { background: linear-gradient(135deg, #c0392b, #e74c3c); }
+  .profile-card.guide    { background: linear-gradient(135deg, var(--amber), #e8956b); }
+  .profile-card.supporter { background: linear-gradient(135deg, #2980b9, #5dade2); }
+  .profile-card.champion  { background: linear-gradient(135deg, var(--teal-dark), var(--teal)); }
+
+  .profile-card .profile-type {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 6px;
+  }
+  .profile-card .profile-name {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+  .profile-card p {
+    font-size: 14.5px;
+    opacity: 0.92;
+    line-height: 1.6;
+  }
+
+  /* ── Score bar ── */
+  .score-summary {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 22px 26px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .score-summary h3 { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 13.5px;
+  }
+  .score-row .score-label { min-width: 180px; color: var(--gray); }
+  .score-bar-wrap { flex: 1; height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
+  .score-bar { height: 100%; border-radius: 4px; background: var(--teal); transition: width 0.5s; }
+  .score-row .score-val { min-width: 20px; font-weight: 700; color: var(--teal-dark); text-align: right; }
+
+  /* ── Challenge card ── */
+  .challenge-card {
+    background: var(--amber-light);
+    border-left: 4px solid var(--amber);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .challenge-card h3 { font-size: 14px; font-weight: 700; color: var(--amber); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .challenge-card p  { font-size: 14.5px; color: var(--dark); line-height: 1.6; }
+
+  /* ── Reflection section ── */
+  .reflection-out {
+    background: var(--teal-bg);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .reflection-out h3 { font-size: 14px; font-weight: 700; color: var(--teal-dark); margin-bottom: 12px; }
+  .reflection-item {
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #c4e4e1;
+  }
+  .reflection-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .reflection-item .ri-q { font-size: 12px; font-weight: 700; color: var(--gray); margin-bottom: 4px; }
+  .reflection-item .ri-a { font-size: 14px; color: var(--dark); font-style: italic; }
+
+  /* ── Research note ── */
+  .research-note {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+  .research-note strong { color: var(--dark); }
+
+  /* ── Links ── */
+  .links-block {
+    background: var(--dark);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .links-block p { font-size: 13px; color: #aaa; margin-bottom: 12px; }
+  .links-block a {
+    display: inline-block;
+    color: var(--teal);
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    margin: 0 8px 8px;
+    padding: 6px 14px;
+    border: 1px solid var(--teal);
+    border-radius: 20px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .links-block a:hover { background: var(--teal); color: var(--white); }
+
+  /* ── Print button ── */
+  .print-wrap { text-align: center; margin-top: 8px; }
+  .btn-print {
+    background: transparent;
+    border: 2px solid var(--gray);
+    color: var(--gray);
+    padding: 10px 28px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .btn-print:hover { border-color: var(--dark); color: var(--dark); }
+
+  /* ── Print styles ── */
+  @media print {
+    body { background: white; font-size: 13px; }
+    .wrapper { padding: 0; max-width: 100%; }
+    .header { background: #3d8e87 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .btn-primary, .btn-print, .print-wrap, .submit-wrap { display: none !important; }
+    #form-section { display: none !important; }
+    #results { display: block !important; }
+    .card, .score-summary, .challenge-card, .reflection-out, .research-note { box-shadow: none; border: 1px solid #ddd; }
+    .links-block { display: none; }
+    .profile-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .score-bar { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    a { color: inherit; text-decoration: none; }
+    @page { margin: 0.75in; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="eyebrow">The Quiet Edge · Stage 3 · Ep. 3 · Parent Edition</div>
+    <h1>Sideline Self-Check</h1>
+    <p>Discover your sideline behavior pattern and get a personalized challenge for your next game — based on cognitive load research.</p>
+  </div>
+
+  <!-- Intro -->
+  <div class="intro-card">
+    <h2>Before you begin</h2>
+    <p>Bring a specific, recent game to mind — one where you were present on the sideline. Answer based on what you <em>actually</em> did, not what you intended. This is a starting point, not a report card. There are no wrong answers.</p>
+  </div>
+
+  <!-- FORM -->
+  <div id="form-section">
+
+    <!-- DIMENSION 1 -->
+    <div class="section-label">
+      <div class="num">1</div>
+      <h2>Instruction Frequency</h2>
+    </div>
+    <div class="card">
+      <div class="card-question">How often do you call out game instructions during active play?</div>
+      <div class="card-sub">Examples: "Pass it!", "Move up!", "Watch your positioning!", "Shoot!"</div>
+      <div class="dimension">
+        <div class="dim-label">
+          <span class="dim-name">Your frequency</span>
+          <span class="dim-score" id="d1-val">3</span>
+        </div>
+        <input type="range" min="1" max="5" value="3" id="d1" oninput="updateSlider(1)" />
+        <div class="dim-ends"><span>Constantly — every play</span><span>Rarely or never</span></div>
+      </div>
+    </div>
+
+    <!-- DIMENSION 2 -->
+    <div class="section-label">
+      <div class="num">2</div>
+      <h2>Mistake Reaction</h2>
+    </div>
+    <div class="card">
+      <div class="card-question">What does your reaction look like — verbally and nonverbally — when your athlete makes an error?</div>
+      <div class="card-sub">Think about your face, body, and what you say in the moment or immediately after.</div>
+      <div class="options" id="d2-options">
+        <label class="option-label">
+          <input type="radio" name="d2" value="1" onchange="selectOption('d2',1)" />
+          I audibly react (groan, "oh no!", correction) and my face shows clear disappointment
+        </label>
+        <label class="option-label">
+          <input type="radio" name="d2" value="2" onchange="selectOption('d2',2)" />
+          I stay quiet verbally but my body language shows frustration — head shake, tense posture
+        </label>
+        <label class="option-label">
+          <input type="radio" name="d2" value="3" onchange="selectOption('d2',3)" />
+          I mostly hold it together but slip on bigger mistakes — a wince, a look
+        </label>
+        <label class="option-label">
+          <input type="radio" name="d2" value="4" onchange="selectOption('d2',4)" />
+          I stay neutral most of the time — steady face, relaxed body, wait for the next play
+        </label>
+        <label class="option-label">
+          <input type="radio" name="d2" value="5" onchange="selectOption('d2',5)" />
+          Consistently calm and neutral — my athlete would see the same face after a goal or a turnover
+        </label>
+      </div>
+    </div>
+
+    <!-- DIMENSION 3 -->
+    <div class="section-label">
+      <div class="num">3</div>
+      <h2>Coaching Boundary</h2>
+    </div>
+    <div class="card">
+      <div class="card-question">How clearly do you separate "coaching" (for practice) from "support" (for competition)?</div>
+      <div class="dimension">
+        <div class="dim-label">
+          <span class="dim-name">Your boundary clarity</span>
+          <span class="dim-score" id="d3-val">3</span>
+        </div>
+        <input type="range" min="1" max="5" value="3" id="d3" oninput="updateSlider(3)" />
+        <div class="dim-ends"><span>I coach during games — it's still helpful</span><span>Practice = coaching. Games = support only.</span></div>
+      </div>
+    </div>
+
+    <!-- DIMENSION 4 -->
+    <div class="section-label">
+      <div class="num">4</div>
+      <h2>Presence Quality</h2>
+    </div>
+    <div class="card">
+      <div class="card-question">In the moment, what is your sideline presence mostly about?</div>
+      <div class="options" id="d4-options">
+        <label class="option-label">
+          <input type="radio" name="d4" value="1" onchange="selectOption('d4',1)" />
+          Helping them correct what I'm seeing — pointing out opportunities and mistakes
+        </label>
+        <label class="option-label">
+          <input type="radio" name="d4" value="2" onchange="selectOption('d4',2)" />
+          Mostly watching, but I step in when I feel they need direction
+        </label>
+        <label class="option-label">
+          <input type="radio" name="d4" value="3" onchange="selectOption('d4',3)" />
+          Balanced — sometimes directing, sometimes just being there
+        </label>
+        <label class="option-label">
+          <input type="radio" name="d4" value="4" onchange="selectOption('d4',4)" />
+          Mostly supportive — cheering, calm presence, one brief word if needed
+        </label>
+        <label class="option-label">
+          <input type="radio" name="d4" value="5" onchange="selectOption('d4',5)" />
+          Fully supportive — I'm there for them to see, not for them to hear
+        </label>
+      </div>
+    </div>
+
+    <!-- DIMENSION 5 -->
+    <div class="section-label">
+      <div class="num">5</div>
+      <h2>Co-Parenting Alignment</h2>
+    </div>
+    <div class="card">
+      <div class="card-question">If another adult (co-parent, grandparent, partner) attends games — how aligned are you on sideline behavior?</div>
+      <div class="options" id="d5-options">
+        <label class="option-label">
+          <input type="radio" name="d5" value="1" onchange="selectOption('d5',1)" />
+          We respond very differently — it creates conflicting messages for my athlete
+        </label>
+        <label class="option-label">
+          <input type="radio" name="d5" value="2" onchange="selectOption('d5',2)" />
+          We're different but haven't really discussed it
+        </label>
+        <label class="option-label">
+          <input type="radio" name="d5" value="3" onchange="selectOption('d5',3)" />
+          Mostly aligned — similar instincts but no formal agreement
+        </label>
+        <label class="option-label">
+          <input type="radio" name="d5" value="4" onchange="selectOption('d5',4)" />
+          We've talked about it and we're on the same page
+        </label>
+        <label class="option-label">
+          <input type="radio" name="d5" value="5" onchange="selectOption('d5',5)" />
+          N/A — I'm typically the only adult present at games
+        </label>
+      </div>
+    </div>
+
+    <!-- Reflection Prompts -->
+    <div class="section-label">
+      <div class="num">6</div>
+      <h2>Quick Reflections <span style="font-weight:400;font-size:14px;color:var(--gray)">(Optional — but worth it)</span></h2>
+    </div>
+    <div class="card">
+      <div class="card-question">When your athlete looks over at you during a tough moment, what do you think they see?</div>
+      <textarea id="r1" placeholder="Write freely — no wrong answers…"></textarea>
+    </div>
+    <div class="card">
+      <div class="card-question">What were the first words you said in the car ride home after their last game?</div>
+      <textarea id="r2" placeholder="Try to recall the actual words, not the intention…"></textarea>
+    </div>
+    <div class="card">
+      <div class="card-question">If you said nothing on the sideline for an entire game — what would be the hardest part?</div>
+      <textarea id="r3" placeholder="Be honest with yourself here…"></textarea>
+    </div>
+
+    <div class="submit-wrap">
+      <button class="btn-primary" onclick="showResults()">See My Sideline Profile →</button>
+    </div>
+
+  </div><!-- /form-section -->
+
+  <!-- RESULTS -->
+  <div id="results">
+
+    <div id="profile-card-container"></div>
+
+    <div class="score-summary">
+      <h3>Your Dimension Scores</h3>
+      <div class="score-row">
+        <span class="score-label">Instruction Frequency</span>
+        <div class="score-bar-wrap"><div class="score-bar" id="bar-d1" style="width:0%"></div></div>
+        <span class="score-val" id="sv-d1"></span>
+      </div>
+      <div class="score-row">
+        <span class="score-label">Mistake Reaction</span>
+        <div class="score-bar-wrap"><div class="score-bar" id="bar-d2" style="width:0%"></div></div>
+        <span class="score-val" id="sv-d2"></span>
+      </div>
+      <div class="score-row">
+        <span class="score-label">Coaching Boundary</span>
+        <div class="score-bar-wrap"><div class="score-bar" id="bar-d3" style="width:0%"></div></div>
+        <span class="score-val" id="sv-d3"></span>
+      </div>
+      <div class="score-row">
+        <span class="score-label">Presence Quality</span>
+        <div class="score-bar-wrap"><div class="score-bar" id="bar-d4" style="width:0%"></div></div>
+        <span class="score-val" id="sv-d4"></span>
+      </div>
+      <div class="score-row">
+        <span class="score-label">Co-Parenting Alignment</span>
+        <div class="score-bar-wrap"><div class="score-bar" id="bar-d5" style="width:0%"></div></div>
+        <span class="score-val" id="sv-d5"></span>
+      </div>
+    </div>
+
+    <div id="challenge-container"></div>
+
+    <div id="reflection-container"></div>
+
+    <div class="research-note">
+      <strong>Why this matters:</strong> Research by Beilock & Carr (2001) shows that well-learned motor skills execute best automatically — when athletes "just play." Sideline instruction forces conscious re-engagement with movements the athlete has already trained, causing hesitation and degraded performance. Separately, Smoll & Smith (2002) found that a parent's nonverbal reactions (not just words) are the primary predictor of competitive anxiety in youth athletes. Your presence is always communicating — the question is what.
+    </div>
+
+    <div class="links-block">
+      <p>Watch the full episode → The Quiet Edge, Stage 3 Ep. 3 (Parent Edition)</p>
+      <a href="https://www.youtube.com/@TheQuietEdge" target="_blank">YouTube Channel</a>
+      <a href="https://tinyurl.com/5dcm9b9d" target="_blank">Parent Listening Guide</a>
+      <a href="https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep3p/" target="_blank">Share This Tool</a>
+    </div>
+
+    <div class="print-wrap">
+      <button class="btn-print" onclick="window.print()">Download as PDF</button>
+    </div>
+
+  </div><!-- /results -->
+
+</div><!-- /wrapper -->
+
+<script>
+  var scores = { d1: 3, d2: 0, d3: 3, d4: 0, d5: 0 };
+
+  function updateSlider(dim) {
+    var el = document.getElementById('d' + dim);
+    var val = parseInt(el.value);
+    scores['d' + dim] = val;
+    document.getElementById('d' + dim + '-val').textContent = val;
+    var pct = ((val - 1) / 4) * 100;
+    el.style.background = 'linear-gradient(to right, var(--teal) 0%, var(--teal) ' + pct + '%, #ddd ' + pct + '%, #ddd 100%)';
+  }
+
+  function selectOption(dim, val) {
+    scores[dim] = val;
+    var opts = document.querySelectorAll('#' + dim + '-options .option-label');
+    opts.forEach(function(o, i) { o.classList.toggle('selected', i === val - 1); });
+  }
+
+  function showResults() {
+    // Validate radio groups
+    var radios = ['d2', 'd4', 'd5'];
+    for (var i = 0; i < radios.length; i++) {
+      if (!scores[radios[i]]) {
+        alert('Please answer all questions before seeing your results.');
+        return;
+      }
+    }
+
+    var total = scores.d1 + scores.d2 + scores.d3 + scores.d4 + scores.d5;
+
+    // Profile
+    var profile;
+    if (total <= 11) {
+      profile = {
+        cls: 'coach',
+        type: 'Your Sideline Pattern',
+        name: 'The Active Sideline Coach',
+        desc: "You're deeply invested in your athlete's success — that's real. But your sideline voice is adding load during competition, not reducing it. Research on cognitive load shows athletes performing trained skills at capacity can't effectively process new instructions mid-play. Your next move isn't to care less. It's to redirect that energy into your presence, your calm, and your post-game conversations."
+      };
+    } else if (total <= 17) {
+      profile = {
+        cls: 'guide',
+        type: 'Your Sideline Pattern',
+        name: 'The Well-Intentioned Guide',
+        desc: "You're aware — and that's already meaningful. You hold back more than you used to, but certain moments still pull you in (a close score, a clear opportunity, a mistake that's happened before). The challenge for you isn't whether to engage — it's building the habit of staying quiet precisely when it feels hardest to."
+      };
+    } else if (total <= 22) {
+      profile = {
+        cls: 'supporter',
+        type: 'Your Sideline Pattern',
+        name: 'The Aware Supporter',
+        desc: "You've done real work on your sideline presence. Your athlete mostly sees a calm face and a supportive body. There are still edges — maybe a wince after a turnover, or a brief instruction that slips out. The work at this stage is refinement: bringing your nonverbal presence in line with your intention, and locking in one final habit shift."
+      };
+    } else {
+      profile = {
+        cls: 'champion',
+        type: 'Your Sideline Pattern',
+        name: 'The Sideline Champion',
+        desc: "Your athlete has something rare: a sideline presence that doesn't add noise. You've internalized what research confirms — that your job during competition is to communicate steady belief, not instruction. Keep this standard, share the approach with other parents in your community, and invest your coaching energy where it belongs: in post-game conversations and practice context."
+      };
+    }
+
+    document.getElementById('profile-card-container').innerHTML =
+      '<div class="profile-card ' + profile.cls + '">' +
+      '<div class="profile-type">' + profile.type + '</div>' +
+      '<div class="profile-name">' + profile.name + '</div>' +
+      '<p>' + profile.desc + '</p>' +
+      '</div>';
+
+    // Score bars
+    var dims = ['d1','d2','d3','d4','d5'];
+    dims.forEach(function(d) {
+      var pct = ((scores[d] - 1) / 4) * 100;
+      document.getElementById('bar-' + d).style.width = pct + '%';
+      document.getElementById('sv-' + d).textContent = scores[d] + '/5';
+    });
+
+    // Challenge — based on lowest scoring dimension
+    var minScore = 6, minDim = '';
+    dims.forEach(function(d) {
+      if (scores[d] < minScore) { minScore = scores[d]; minDim = d; }
+    });
+
+    var challenges = {
+      d1: {
+        title: 'Next-Game Challenge: The Silent Play Count',
+        text: 'For your next game, set a personal rule: zero instructions during active play. Cheer after the play ends — not during it. After the game, note how many times you caught yourself wanting to call something out. That number is data, not failure.'
+      },
+      d2: {
+        title: 'Next-Game Challenge: The Mirror Check',
+        text: 'Before the game, set an intention for your face: steady, neutral, the same expression you\'d hold during a neutral moment. When your athlete makes an error, consciously relax your jaw and shoulders. Practice this once in training before bringing it to a game.'
+      },
+      d3: {
+        title: 'Next-Game Challenge: The Practice Pledge',
+        text: 'Before the next game, say out loud (to yourself or your athlete): "Today I\'m a fan, not a coach." Coaching is for practice — where your athlete has processing capacity and no stakes. Repeat this as a mantra when the urge to instruct appears during play.'
+      },
+      d4: {
+        title: 'Next-Game Challenge: The Presence Statement',
+        text: 'Write one sentence before the game that captures what you want your sideline presence to communicate — without words. For example: "I believe in you no matter what happens out there." Then ask yourself after the game: did my presence communicate that?'
+      },
+      d5: {
+        title: 'Next-Game Challenge: The Pre-Game Alignment Conversation',
+        text: 'Before the next game, have a 2-minute conversation with the other adult present. Agree on one shared sideline rule — for example: "We both stay quiet during play. One word of encouragement between plays is fine." Written or verbal — whatever sticks best for both of you.'
+      }
+    };
+
+    var ch = challenges[minDim] || challenges.d1;
+    document.getElementById('challenge-container').innerHTML =
+      '<div class="challenge-card">' +
+      '<h3>' + ch.title + '</h3>' +
+      '<p>' + ch.text + '</p>' +
+      '</div>';
+
+    // Reflections
+    var r1 = document.getElementById('r1').value.trim();
+    var r2 = document.getElementById('r2').value.trim();
+    var r3 = document.getElementById('r3').value.trim();
+    var hasReflections = r1 || r2 || r3;
+
+    if (hasReflections) {
+      var html = '<div class="reflection-out"><h3>Your Reflections</h3>';
+      if (r1) html += '<div class="reflection-item"><div class="ri-q">When your athlete looks over at you, what do they see?</div><div class="ri-a">' + escHtml(r1) + '</div></div>';
+      if (r2) html += '<div class="reflection-item"><div class="ri-q">First words after the last game:</div><div class="ri-a">' + escHtml(r2) + '</div></div>';
+      if (r3) html += '<div class="reflection-item"><div class="ri-q">If you said nothing all game — what would be hardest?</div><div class="ri-a">' + escHtml(r3) + '</div></div>';
+      html += '</div>';
+      document.getElementById('reflection-container').innerHTML = html;
+    }
+
+    // Show results
+    document.getElementById('form-section').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // Init slider backgrounds
+  updateSlider(1);
+  updateSlider(3);
+</script>
+</body>
+</html>
