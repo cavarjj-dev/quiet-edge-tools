@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calm Sideline Protocol Card Builder — The Quiet Edge</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: #f4f6f5;
+    color: #1a2a27;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* ── Brand Colors ── */
+  :root {
+    --teal: #5fb3ac;
+    --teal-dark: #3d8c86;
+    --teal-light: #e8f5f4;
+    --amber: #d4873a;
+    --dark: #1a2a27;
+    --gray: #6b7c78;
+    --light: #f4f6f5;
+    --white: #ffffff;
+    --border: #c5dbd8;
+  }
+
+  /* ── Layout ── */
+  .page-wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    padding: 36px 24px 28px;
+    background: linear-gradient(135deg, #1a2a27 0%, #2d4a45 50%, #3d6b63 100%);
+    border-radius: 12px;
+    margin-bottom: 32px;
+  }
+  .header .channel-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-size: 24px;
+    font-weight: normal;
+    color: var(--white);
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    font-style: italic;
+  }
+
+  /* ── Section Cards ── */
+  .card {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .card h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--teal-dark);
+    margin-bottom: 14px;
+  }
+  .card h3 {
+    font-size: 18px;
+    font-weight: normal;
+    color: var(--dark);
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+  .card p {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--gray);
+    margin-bottom: 12px;
+  }
+
+  /* ── Step Indicator ── */
+  .steps {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    justify-content: center;
+  }
+  .step-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+  .step-dot.active { background: var(--teal); }
+  .step-dot.done { background: var(--teal-dark); }
+
+  /* ── Questions ── */
+  .question-block {
+    margin-bottom: 22px;
+  }
+  .question-block label {
+    display: block;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--dark);
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  .question-block .note {
+    font-size: 12px;
+    color: var(--gray);
+    font-style: italic;
+    margin-bottom: 8px;
+    font-weight: normal;
+  }
+
+  /* ── Radio Options ── */
+  .radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .radio-option {
+    display: none;
+  }
+  .radio-option + label {
+    display: inline-block;
+    padding: 8px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    color: var(--gray);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: normal;
+  }
+  .radio-option:checked + label {
+    border-color: var(--teal);
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    font-weight: bold;
+  }
+
+  /* ── Text inputs ── */
+  textarea, input[type="text"] {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: 'Georgia', serif;
+    font-size: 14px;
+    color: var(--dark);
+    background: var(--light);
+    resize: vertical;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  textarea:focus, input[type="text"]:focus {
+    border-color: var(--teal);
+    background: var(--white);
+  }
+
+  /* ── Protocol Sections ── */
+  .protocol-section {
+    border-left: 3px solid var(--teal);
+    padding-left: 18px;
+    margin-bottom: 28px;
+  }
+  .protocol-section h4 {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--teal-dark);
+    margin-bottom: 8px;
+  }
+  .protocol-section .phase-title {
+    font-size: 17px;
+    font-weight: normal;
+    color: var(--dark);
+    margin-bottom: 10px;
+  }
+  .protocol-section .phase-goal {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: var(--gray);
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+
+  /* ── Script Options ── */
+  .script-options {
+    background: var(--teal-light);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .script-options p {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: var(--teal-dark);
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .script-option-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 9px 12px;
+    margin-bottom: 6px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    background: var(--white);
+    font-family: 'Georgia', serif;
+    font-size: 13px;
+    color: var(--dark);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-style: italic;
+  }
+  .script-option-btn:hover {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+  .script-option-btn:last-child { margin-bottom: 0; }
+
+  /* ── Divider ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-block;
+    padding: 13px 28px;
+    border-radius: 6px;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .btn-primary {
+    background: var(--teal);
+    color: var(--white);
+  }
+  .btn-primary:hover { background: var(--teal-dark); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--teal-dark);
+    border: 1.5px solid var(--teal);
+  }
+  .btn-secondary:hover { background: var(--teal-light); }
+  .btn-print {
+    background: var(--amber);
+    color: var(--white);
+    width: 100%;
+    text-align: center;
+    padding: 16px;
+    font-size: 15px;
+    border-radius: 8px;
+    margin-top: 8px;
+  }
+  .btn-print:hover { opacity: 0.9; }
+
+  .btn-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  /* ── Result Screen ── */
+  .result-profile {
+    background: linear-gradient(135deg, #1a2a27 0%, #2d4a45 100%);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 24px;
+    text-align: center;
+    color: var(--white);
+  }
+  .result-profile .profile-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 8px;
+  }
+  .result-profile .profile-name {
+    font-size: 26px;
+    font-weight: normal;
+    margin-bottom: 8px;
+  }
+  .result-profile .profile-desc {
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  /* ── Protocol Card (output) ── */
+  .protocol-card {
+    background: var(--white);
+    border: 2px solid var(--teal);
+    border-radius: 12px;
+    padding: 28px 30px;
+    margin-bottom: 20px;
+  }
+  .protocol-card .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .protocol-card .card-header h3 {
+    font-size: 15px;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    color: var(--teal-dark);
+    letter-spacing: 0.5px;
+  }
+  .protocol-card .card-header .card-tag {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--teal);
+    border: 1px solid var(--teal);
+    padding: 3px 8px;
+    border-radius: 10px;
+  }
+  .protocol-item {
+    margin-bottom: 20px;
+  }
+  .protocol-item .phase-badge {
+    display: inline-block;
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--white);
+    background: var(--teal-dark);
+    padding: 3px 10px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+  }
+  .protocol-item .commitment-text {
+    font-size: 15px;
+    color: var(--dark);
+    line-height: 1.5;
+    padding: 10px 14px;
+    background: var(--teal-light);
+    border-radius: 6px;
+    font-style: italic;
+  }
+  .protocol-item .trigger-note {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: var(--gray);
+    margin-top: 6px;
+    padding-left: 4px;
+  }
+
+  /* ── Reminder Box ── */
+  .reminder-box {
+    background: var(--teal-light);
+    border-left: 4px solid var(--teal);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 18px;
+    margin: 20px 0;
+  }
+  .reminder-box p {
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    color: var(--teal-dark);
+    line-height: 1.5;
+    margin: 0;
+  }
+  .reminder-box strong {
+    font-weight: bold;
+    color: var(--dark);
+  }
+
+  /* ── Hidden ── */
+  .hidden { display: none !important; }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: var(--gray);
+    padding-top: 16px;
+  }
+
+  /* ─────────────────────────────────────────
+     PRINT STYLES
+  ───────────────────────────────────────── */
+  @media print {
+    @page { size: letter; margin: 0.75in 0.75in; }
+
+    body { background: white; color: #000; font-size: 12pt; }
+    .page-wrap { max-width: 100%; padding: 0; }
+
+    /* Hide everything except the protocol card + result profile */
+    .header,
+    .steps,
+    .card:not(.print-card),
+    .btn-row,
+    .btn-print,
+    .no-print,
+    .footer { display: none !important; }
+
+    .print-card {
+      display: block !important;
+      box-shadow: none;
+      border: 1px solid #ccc;
+      break-inside: avoid;
+    }
+    .result-profile {
+      background: #1a2a27 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .protocol-card {
+      border: 1.5pt solid #5fb3ac;
+      break-inside: avoid;
+    }
+    .protocol-item .commitment-text {
+      background: #e8f5f4 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .phase-badge {
+      background: #3d8c86 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .reminder-box {
+      background: #e8f5f4 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      border-left: 4pt solid #5fb3ac;
+    }
+    .print-footer {
+      display: block !important;
+      text-align: center;
+      font-size: 9pt;
+      color: #888;
+      margin-top: 24pt;
+      font-family: Arial, sans-serif;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- Header -->
+  <div class="header no-print">
+    <div class="channel-label">The Quiet Edge — Parent Edition</div>
+    <h1>Calm Sideline Protocol<br>Card Builder</h1>
+    <div class="subtitle">Build your personalized Before / During / After game-day plan</div>
+  </div>
+
+  <!-- Step dots -->
+  <div class="steps no-print" id="stepDots">
+    <div class="step-dot active" id="dot1"></div>
+    <div class="step-dot" id="dot2"></div>
+    <div class="step-dot" id="dot3"></div>
+    <div class="step-dot" id="dot4"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       STEP 1: Quick Self-Check
+  ════════════════════════════════════ -->
+  <div class="card no-print" id="step1">
+    <h2>Step 1 of 4 — Quick Self-Check</h2>
+    <h3>How do you typically show up on the sideline?</h3>
+    <p>Answer 4 quick questions. Your answers personalize your game-day card — there are no wrong responses.</p>
+
+    <div class="divider"></div>
+
+    <!-- Q1 -->
+    <div class="question-block">
+      <label>During a game, how often do you give specific instructions to your athlete?
+        <span class="note">(e.g., "Move your feet," "Look up," "Get back on defense")</span>
+      </label>
+      <div class="radio-group">
+        <input type="radio" class="radio-option" name="q1" id="q1a" value="rarely">
+        <label for="q1a">Rarely or never</label>
+        <input type="radio" class="radio-option" name="q1" id="q1b" value="sometimes">
+        <label for="q1b">Sometimes — specific moments</label>
+        <input type="radio" class="radio-option" name="q1" id="q1c" value="often">
+        <label for="q1c">Often — I can't help it</label>
+        <input type="radio" class="radio-option" name="q1" id="q1d" value="constant">
+        <label for="q1d">Frequently throughout the game</label>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question-block">
+      <label>How does your expression or body language change when your athlete makes a mistake?</label>
+      <div class="radio-group">
+        <input type="radio" class="radio-option" name="q2" id="q2a" value="stable">
+        <label for="q2a">Stays calm — I stay neutral</label>
+        <input type="radio" class="radio-option" name="q2" id="q2b" value="slight">
+        <label for="q2b">Slight reaction — brief, then recovers</label>
+        <input type="radio" class="radio-option" name="q2" id="q2c" value="visible">
+        <label for="q2c">Visible — my athlete probably notices</label>
+        <input type="radio" class="radio-option" name="q2" id="q2d" value="strong">
+        <label for="q2d">Strong — I feel frustrated and it shows</label>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-block">
+      <label>What typically happens in the first 10 minutes after a difficult game?</label>
+      <div class="radio-group">
+        <input type="radio" class="radio-option" name="q3" id="q3a" value="wait">
+        <label for="q3a">I give them space first</label>
+        <input type="radio" class="radio-option" name="q3" id="q3b" value="mixed">
+        <label for="q3b">Mix of encouragement and feedback</label>
+        <input type="radio" class="radio-option" name="q3" id="q3c" value="debrief">
+        <label for="q3c">I start the debrief conversation</label>
+        <input type="radio" class="radio-option" name="q3" id="q3d" value="vent">
+        <label for="q3d">I express my frustration honestly</label>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-block">
+      <label>When your athlete doesn't apply something you've coached them on, you typically feel:</label>
+      <div class="radio-group">
+        <input type="radio" class="radio-option" name="q4" id="q4a" value="patient">
+        <label for="q4a">Patient — it takes time</label>
+        <input type="radio" class="radio-option" name="q4" id="q4b" value="curious">
+        <label for="q4b">Curious — I wonder what's blocking them</label>
+        <input type="radio" class="radio-option" name="q4" id="q4c" value="frustrated">
+        <label for="q4c">Frustrated — we've worked on this</label>
+        <input type="radio" class="radio-option" name="q4" id="q4d" value="urgent">
+        <label for="q4d">Urgent — I need to address it now</label>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <span></span>
+      <button class="btn btn-primary" onclick="goToStep2()">Next →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       STEP 2: Before Protocol
+  ════════════════════════════════════ -->
+  <div class="card hidden no-print" id="step2">
+    <h2>Step 2 of 4 — Before Competition</h2>
+    <h3>What will you say in the last 60 seconds before they take the field?</h3>
+    <p>The goal is a brief, calm handoff — transferring ownership to your athlete so they walk onto the field focused on competing, not managing your expectations.</p>
+
+    <div class="divider"></div>
+
+    <div class="script-options">
+      <p>Suggested scripts — click to use, or write your own below:</p>
+      <button class="script-option-btn" onclick="useScript('before', this)">"Go compete. I love watching you play — whatever happens."</button>
+      <button class="script-option-btn" onclick="useScript('before', this)">"What's one thing you want to focus on today? Go do that."</button>
+      <button class="script-option-btn" onclick="useScript('before', this)">"Have fun out there. I'm just here to cheer you on."</button>
+      <button class="script-option-btn" onclick="useScript('before', this)">"You've put in the work. Trust it."</button>
+    </div>
+
+    <div class="question-block">
+      <label>Your Before commitment — what you'll say:</label>
+      <textarea id="before_script" rows="3" placeholder="Write what feels authentic to you..."></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goToStep(1)">← Back</button>
+      <button class="btn btn-primary" onclick="goToStep(3)">Next →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       STEP 3: During + After Protocol
+  ════════════════════════════════════ -->
+  <div class="card hidden no-print" id="step3">
+    <h2>Step 3 of 4 — During &amp; After</h2>
+
+    <!-- DURING -->
+    <div class="protocol-section">
+      <h4>Phase</h4>
+      <div class="phase-title">During Competition</div>
+      <p class="phase-goal">Goal: Supportive presence — not silence through gritted teeth, but genuine permission for them to compete without managing your emotions.</p>
+
+      <div class="question-block">
+        <label>What is your biggest trigger during a game?
+          <span class="note">The moment you feel the strongest urge to instruct, correct, or react.</span>
+        </label>
+        <div class="radio-group">
+          <input type="radio" class="radio-option" name="trigger" id="ta" value="repeated mistakes">
+          <label for="ta">Repeated mistakes</label>
+          <input type="radio" class="radio-option" name="trigger" id="tb" value="poor decisions">
+          <label for="tb">Decisions I disagree with</label>
+          <input type="radio" class="radio-option" name="trigger" id="tc" value="visible frustration">
+          <label for="tc">Their visible frustration</label>
+          <input type="radio" class="radio-option" name="trigger" id="td" value="high-stakes moments">
+          <label for="td">High-stakes moments</label>
+          <input type="radio" class="radio-option" name="trigger" id="te" value="effort concerns">
+          <label for="te">Perceived lack of effort</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <label>When that trigger hits, your During commitment:</label>
+        <div class="script-options">
+          <p>Suggested responses:</p>
+          <button class="script-option-btn" onclick="useScript('during', this)">"Take a breath. Redirect to the next thing they do right."</button>
+          <button class="script-option-btn" onclick="useScript('during', this)">"Unclench my hands. Remind myself: they are competing, not performing for me."</button>
+          <button class="script-option-btn" onclick="useScript('during', this)">"Stay quiet. Cheer the effort — not the outcome."</button>
+          <button class="script-option-btn" onclick="useScript('during', this)">"Look at my athlete's face, not the scoreboard."</button>
+        </div>
+        <textarea id="during_script" rows="3" placeholder="What will you do instead of instructing..."></textarea>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- AFTER -->
+    <div class="protocol-section">
+      <h4>Phase</h4>
+      <div class="phase-title">After Competition</div>
+      <p class="phase-goal">Goal: Space first, then conversation only when they're ready. The first words you say set the emotional tone for how they process the game.</p>
+
+      <div class="question-block">
+        <label>How long will you wait before bringing up the game?</label>
+        <div class="radio-group">
+          <input type="radio" class="radio-option" name="wait_time" id="wa" value="until they bring it up">
+          <label for="wa">Until they bring it up</label>
+          <input type="radio" class="radio-option" name="wait_time" id="wb" value="at least 30 minutes">
+          <label for="wb">At least 30 minutes</label>
+          <input type="radio" class="radio-option" name="wait_time" id="wc" value="after we get home">
+          <label for="wc">After we're home and settled</label>
+          <input type="radio" class="radio-option" name="wait_time" id="wd" value="the next day if needed">
+          <label for="wd">Next day if they need space</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <label>Your first words — what you'll say immediately after the game:</label>
+        <div class="script-options">
+          <p>Suggested first words:</p>
+          <button class="script-option-btn" onclick="useScript('after', this)">"I love watching you compete."</button>
+          <button class="script-option-btn" onclick="useScript('after', this)">"Good effort out there. How are you feeling?"</button>
+          <button class="script-option-btn" onclick="useScript('after', this)">"[Hug or hand on shoulder] — let them lead the conversation."</button>
+          <button class="script-option-btn" onclick="useScript('after', this)">"What do you need right now — food, quiet, or talk?"</button>
+        </div>
+        <textarea id="after_script" rows="3" placeholder="Your first words after the final whistle..."></textarea>
+      </div>
+
+      <div class="question-block">
+        <label>Before offering any feedback, you'll ask:</label>
+        <input type="text" id="ask_first" placeholder='e.g., "Do you want to talk about the game, or just decompress first?"'>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goToStep(2)">← Back</button>
+      <button class="btn btn-primary" onclick="buildCard()">Build My Card →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       STEP 4: OUTPUT CARD
+  ════════════════════════════════════ -->
+  <div id="step4" class="hidden">
+
+    <!-- Profile block (screen + print) -->
+    <div class="result-profile print-card" id="profileBlock">
+      <div class="profile-label">Your Sideline Profile</div>
+      <div class="profile-name" id="profileName">Calm Anchor</div>
+      <div class="profile-desc" id="profileDesc">You default to supportive presence. Your focus this week: sustaining that calm through your specific trigger moments.</div>
+    </div>
+
+    <!-- Protocol Card (screen + print) -->
+    <div class="protocol-card print-card" id="cardOutput">
+      <div class="card-header">
+        <h3>My Calm Sideline Protocol</h3>
+        <span class="card-tag">The Quiet Edge</span>
+      </div>
+
+      <div class="protocol-item">
+        <div class="phase-badge">Before</div>
+        <div class="commitment-text" id="out_before">—</div>
+      </div>
+
+      <div class="protocol-item">
+        <div class="phase-badge">During</div>
+        <div class="commitment-text" id="out_during">—</div>
+        <div class="trigger-note" id="out_trigger_note"></div>
+      </div>
+
+      <div class="protocol-item">
+        <div class="phase-badge">After</div>
+        <div class="commitment-text" id="out_after">—</div>
+        <div class="trigger-note" id="out_ask_first"></div>
+      </div>
+    </div>
+
+    <!-- Reminder box -->
+    <div class="reminder-box print-card">
+      <p><strong>Remember:</strong> Volume doesn't equal impact. When you stay calm, you allow your athlete to use what they've trained. Your calm presence is the most powerful support you can give them.</p>
+    </div>
+
+    <!-- This week's challenge -->
+    <div class="card print-card" id="challengeCard">
+      <h2>This Week's Challenge</h2>
+      <h3 id="weeklyChallenge">Pick one competition. Hold to your Before/During/After protocol. Then ask your athlete: "Do you want instructions during games, or just cheering?" Their answer is the authority.</h3>
+    </div>
+
+    <!-- Print button (screen only) -->
+    <button class="btn btn-print no-print" onclick="window.print()">
+      Download / Print My Protocol Card
+    </button>
+
+    <!-- Reset button -->
+    <div class="btn-row no-print" style="margin-top: 16px; justify-content: center;">
+      <button class="btn btn-secondary" onclick="resetTool()">Start Over</button>
+    </div>
+
+    <!-- Print footer (hidden on screen) -->
+    <div class="print-footer hidden">
+      The Quiet Edge — Parent Edition &nbsp;|&nbsp; theQuietEdge.com &nbsp;|&nbsp; Stage 3: Skill Acquisition
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer no-print">
+    <p>The Quiet Edge — Parent Edition &nbsp;·&nbsp; Stage 3: Skill Acquisition</p>
+    <p style="margin-top:4px;">Based on research by Mageau &amp; Vallerand (2003), Gottman &amp; DeClaire (1997), and Gross (2002)</p>
+  </div>
+
+</div><!-- /page-wrap -->
+
+<script>
+// ── State ──
+let answers = {};
+
+// ── Navigation ──
+function goToStep2() {
+  collectStep1();
+  goToStep(2);
+}
+
+function goToStep(n) {
+  [1,2,3,4].forEach(i => {
+    const el = document.getElementById('step' + i);
+    if (el) el.classList.add('hidden');
+  });
+  const next = document.getElementById('step' + n);
+  if (next) next.classList.remove('hidden');
+  updateDots(n);
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function updateDots(active) {
+  for (let i = 1; i <= 4; i++) {
+    const dot = document.getElementById('dot' + i);
+    if (!dot) continue;
+    dot.classList.remove('active', 'done');
+    if (i < active) dot.classList.add('done');
+    else if (i === active) dot.classList.add('active');
+  }
+}
+
+// ── Script injection ──
+function useScript(field, btn) {
+  const text = btn.innerText.replace(/^"|"$/g, '');
+  if (field === 'before') document.getElementById('before_script').value = text;
+  else if (field === 'during') document.getElementById('during_script').value = text;
+  else if (field === 'after') document.getElementById('after_script').value = text;
+}
+
+// ── Collect answers ──
+function collectStep1() {
+  ['q1','q2','q3','q4'].forEach(q => {
+    const sel = document.querySelector(`input[name="${q}"]:checked`);
+    answers[q] = sel ? sel.value : '';
+  });
+}
+
+// ── Profile logic ──
+function getProfile() {
+  let score = 0;
+  const weights = {
+    q1: { rarely: 0, sometimes: 1, often: 2, constant: 3 },
+    q2: { stable: 0, slight: 1, visible: 2, strong: 3 },
+    q3: { wait: 0, mixed: 1, debrief: 2, vent: 3 },
+    q4: { patient: 0, curious: 1, frustrated: 2, urgent: 3 }
+  };
+  ['q1','q2','q3','q4'].forEach(q => {
+    score += (weights[q][answers[q]] || 0);
+  });
+
+  if (score <= 2) return {
+    name: 'Calm Anchor',
+    desc: 'You default to supportive presence — your athlete competes without managing your reactions. Your focus this week: sustain that calm through your toughest trigger moments.',
+    challenge: 'This week, stay fully present and silent for the first 5 minutes after one game — even a win. Notice how your athlete fills the silence.'
+  };
+  if (score <= 5) return {
+    name: 'Selective Instructor',
+    desc: 'You pull back most of the time, but specific moments pull you into coaching mode. You know the line — the work is holding it when it matters most.',
+    challenge: 'Identify your specific trigger from Step 3. At your next game, give yourself one rule: when that trigger fires, take one breath and redirect to cheering only.'
+  };
+  if (score <= 8) return {
+    name: 'Active Director',
+    desc: 'Your instinct is to help by instructing — and you\'re watching closely enough to see what\'s needed. The shift: trusting that the most helpful thing you can give them is space to problem-solve.',
+    challenge: 'This week: one competition where you commit to zero instructions during play. After the game, ask your athlete how it felt before you share anything.'
+  };
+  return {
+    name: 'Pressure Source',
+    desc: 'Right now your sideline presence adds weight instead of support — and you likely already sense this. The hardest truth in the video is also the most freeing one: this is fixable, and you\'ve already started by being here.',
+    challenge: 'This week: Before the next game, ask your athlete directly — "Do you want me to give you instructions during the game, or just cheer?" Their answer, whatever it is, becomes your rule.'
+  };
+}
+
+// ── Build Card ──
+function buildCard() {
+  // Collect remaining answers
+  const triggerEl = document.querySelector('input[name="trigger"]:checked');
+  const waitEl = document.querySelector('input[name="wait_time"]:checked');
+  answers.trigger = triggerEl ? triggerEl.value : 'certain moments';
+  answers.wait = waitEl ? waitEl.value : 'until they\'re ready';
+
+  const before = document.getElementById('before_script').value.trim() || '"Go compete. I love watching you play."';
+  const during = document.getElementById('during_script').value.trim() || 'Take a breath. Redirect to the next thing they do right.';
+  const after = document.getElementById('after_script').value.trim() || '"I love watching you compete."';
+  const askFirst = document.getElementById('ask_first').value.trim() || '"Do you want to talk about the game, or just unwind first?"';
+
+  // Profile
+  const profile = getProfile();
+  document.getElementById('profileName').textContent = profile.name;
+  document.getElementById('profileDesc').textContent = profile.desc;
+
+  // Card output
+  document.getElementById('out_before').textContent = before;
+  document.getElementById('out_during').textContent = during;
+  document.getElementById('out_trigger_note').textContent = 'My trigger: ' + answers.trigger + ' — this is when I hold the protocol.';
+  document.getElementById('out_after').textContent = after + (answers.wait ? '  ·  Wait: ' + answers.wait + '.' : '');
+  document.getElementById('out_ask_first').textContent = 'Before any feedback, I ask: ' + askFirst;
+  document.getElementById('weeklyChallenge').textContent = profile.challenge;
+
+  goToStep(4);
+}
+
+// ── Reset ──
+function resetTool() {
+  answers = {};
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  ['before_script','during_script','after_script'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('ask_first').value = '';
+  goToStep(1);
+}
+</script>
+</body>
+</html>
