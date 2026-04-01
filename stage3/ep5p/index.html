@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post-Game Conversation Scorer — The Quiet Edge</title>
+<style>
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #5fb3ac;
+    --teal-dark: #3d8f89;
+    --teal-light: #e8f5f4;
+    --amber: #d4875a;
+    --text: #1a1a2e;
+    --text-muted: #5a5a72;
+    --bg: #fafaf8;
+    --card: #ffffff;
+    --border: #dde8e7;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(63,143,137,0.10);
+  }
+
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    font-size: 16px;
+    padding: 0;
+  }
+
+  /* ===== LAYOUT ===== */
+  .page-wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    text-align: center;
+    padding: 36px 24px 32px;
+    background: linear-gradient(135deg, #3d8f89 0%, #5fb3ac 60%, #7fcbc4 100%);
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+    color: white;
+  }
+  .header .channel-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: normal;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .header .subtitle {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    opacity: 0.88;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* ===== INTRO CARD ===== */
+  .intro-card {
+    background: var(--teal-light);
+    border-left: 4px solid var(--teal);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+  .intro-card strong { color: var(--text); }
+
+  /* ===== SECTION HEADERS ===== */
+  .section-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--teal-dark);
+    margin-bottom: 6px;
+  }
+  h2 {
+    font-size: 22px;
+    font-weight: normal;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .section-desc {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  /* ===== GAME TABS ===== */
+  .game-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .game-tab {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .game-tab:hover { border-color: var(--teal); color: var(--teal-dark); }
+  .game-tab.active {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: white;
+  }
+
+  .game-panel { display: none; }
+  .game-panel.active { display: block; }
+
+  /* ===== DIMENSION CARDS ===== */
+  .dimension-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+  .dimension-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .dimension-number {
+    width: 32px;
+    height: 32px;
+    background: var(--teal);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .dimension-title {
+    font-size: 17px;
+    font-weight: normal;
+    color: var(--text);
+    flex: 1;
+  }
+  .dimension-subtitle {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .option-label:hover { border-color: var(--teal); background: var(--teal-light); }
+  .option-label input[type="radio"] { display: none; }
+  .option-label.selected {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+  .option-label.selected .option-dot { background: var(--teal); }
+
+  .option-dot {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: background 0.18s;
+  }
+  .option-text { flex: 1; }
+  .option-score {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    white-space: nowrap;
+    margin-top: 2px;
+    font-family: 'Arial', sans-serif;
+  }
+  .option-label.selected .option-score { color: var(--teal-dark); }
+
+  /* Score indicators on labels */
+  .score-1 .option-dot { border-color: #e07070; }
+  .score-1.selected { background: #fff5f5; border-color: #e07070; }
+  .score-1.selected .option-dot { background: #e07070; }
+  .score-1.selected .option-score { color: #b84040; }
+  .score-2 .option-dot { border-color: #d4a042; }
+  .score-2.selected { background: #fffbf0; border-color: #d4a042; }
+  .score-2.selected .option-dot { background: #d4a042; }
+  .score-2.selected .option-score { color: #a07020; }
+  .score-3 .option-dot { border-color: var(--teal); }
+
+  /* ===== GAME SCORE BAR ===== */
+  .game-score-bar {
+    background: var(--teal-light);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: 'Arial', sans-serif;
+  }
+  .game-score-label { font-size: 13px; color: var(--text-muted); }
+  .game-score-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--teal-dark);
+    min-width: 48px;
+    text-align: center;
+  }
+  .game-score-bar-track {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .game-score-bar-fill {
+    height: 100%;
+    background: var(--teal);
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  /* ===== SCORE SECTION ===== */
+  .score-section {
+    margin-top: 40px;
+  }
+  .score-button {
+    width: 100%;
+    padding: 18px 24px;
+    background: var(--teal);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Arial', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .score-button:hover { background: var(--teal-dark); }
+
+  /* ===== RESULTS ===== */
+  .results-panel {
+    display: none;
+    margin-top: 32px;
+  }
+  .results-panel.visible { display: block; }
+
+  .result-header {
+    background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%);
+    color: white;
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 28px 28px 24px;
+    text-align: center;
+  }
+  .result-header .total-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 8px;
+  }
+  .result-header .total-score {
+    font-size: 52px;
+    font-weight: normal;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .result-header .total-max {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    opacity: 0.75;
+  }
+  .result-header .tier-label {
+    margin-top: 14px;
+    font-size: 22px;
+    font-weight: normal;
+  }
+
+  .result-body {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    padding: 28px;
+  }
+
+  .tier-description {
+    font-family: 'Arial', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .game-breakdown {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .game-breakdown h3 {
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+  .game-scores-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .game-score-chip {
+    background: var(--teal-light);
+    border-radius: 8px;
+    padding: 14px 12px;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+  }
+  .game-score-chip .chip-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+  .game-score-chip .chip-val { font-size: 22px; color: var(--teal-dark); font-weight: 700; }
+  .game-score-chip .chip-max { font-size: 11px; color: var(--text-muted); }
+
+  .redirects h3 {
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+  .redirect-item {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    padding: 14px 16px;
+    background: var(--teal-light);
+    border-radius: 8px;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+  }
+  .redirect-item .redirect-icon { font-size: 18px; flex-shrink: 0; }
+  .redirect-item .redirect-text { flex: 1; line-height: 1.45; }
+  .redirect-item strong { display: block; color: var(--text); margin-bottom: 2px; }
+  .redirect-item span { color: var(--text-muted); }
+
+  .next-game-box {
+    margin-top: 24px;
+    padding: 20px;
+    background: #fff8f0;
+    border: 1px solid #f0d0b0;
+    border-radius: var(--radius);
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .next-game-box .ng-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 8px;
+  }
+  .next-game-box p { color: var(--text); }
+
+  /* ===== PRINT BUTTON ===== */
+  .print-btn {
+    display: block;
+    margin: 32px auto 0;
+    padding: 14px 32px;
+    background: white;
+    color: var(--teal-dark);
+    border: 2px solid var(--teal);
+    border-radius: var(--radius);
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .print-btn:hover { background: var(--teal-light); }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ===== PRINT ===== */
+  @media print {
+    body { background: white; font-size: 13px; }
+    .page-wrap { padding: 0; max-width: 100%; }
+    .header { background: #3d8f89 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .print-btn, .score-button { display: none !important; }
+    .game-tabs { display: none; }
+    .game-panel { display: block !important; }
+    .results-panel { display: block !important; }
+    .dimension-card { break-inside: avoid; box-shadow: none; }
+    .result-header { background: #3d8f89 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    @page { margin: 0.75in; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="channel-label">The Quiet Edge · Parent Edition · Stage 3</div>
+    <h1>Where Is My Focus After the Game?</h1>
+    <div class="subtitle">Score your last 3 post-game conversations across 5 dimensions — and see whether you're reinforcing process or outcome.</div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro-card">
+    <strong>How this works:</strong> Think about the last 3 competitions your athlete participated in. For each one, score yourself on 5 dimensions of your post-game behavior. You'll get a total score and specific redirects based on where your focus is landing. <em>Be honest — this is for you, not anyone else.</em>
+  </div>
+
+  <!-- GAME TABS -->
+  <div class="section-label">Your last 3 competitions</div>
+  <h2>Score Each Post-Game Conversation</h2>
+  <p class="section-desc">Select a game below, then rate yourself on each dimension. Move through all three for your total score.</p>
+
+  <div class="game-tabs">
+    <button class="game-tab active" onclick="switchGame(0)">Game 1 (Most Recent)</button>
+    <button class="game-tab" onclick="switchGame(1)">Game 2</button>
+    <button class="game-tab" onclick="switchGame(2)">Game 3 (Oldest)</button>
+  </div>
+
+  <!-- GAME PANELS -->
+  <div id="game-0" class="game-panel active"></div>
+  <div id="game-1" class="game-panel"></div>
+  <div id="game-2" class="game-panel"></div>
+
+  <!-- SCORE BUTTON -->
+  <div class="score-section">
+    <button class="score-button" onclick="calculateScore()">See My Results →</button>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results" class="results-panel">
+    <div class="result-header">
+      <div class="total-label">Your Total Score</div>
+      <div class="total-score" id="total-display">—</div>
+      <div class="total-max">out of 45</div>
+      <div class="tier-label" id="tier-label-display"></div>
+    </div>
+    <div class="result-body">
+      <p class="tier-description" id="tier-desc"></p>
+      <div class="game-breakdown">
+        <h3>Game Breakdown</h3>
+        <div class="game-scores-grid" id="game-scores-grid"></div>
+      </div>
+      <div class="redirects" id="redirects-section"></div>
+      <div class="next-game-box" id="next-game-box"></div>
+    </div>
+    <button class="print-btn" onclick="window.print()">⬇ Download / Print These Results</button>
+  </div>
+
+  <div class="footer">
+    The Quiet Edge — Parent Edition &nbsp;·&nbsp; Based on Achievement Motivation Theory (Nicholls, 1989) and Self-Determination Theory (Deci &amp; Ryan, 2000)<br>
+    Free resource for parents of youth athletes. Not for redistribution.
+  </div>
+</div>
+
+<script>
+// ===== DATA =====
+const dimensions = [
+  {
+    id: 'first_question',
+    title: 'The First Question or Comment',
+    subtitle: 'What did you say or ask immediately after the game?',
+    options: [
+      { score: 1, text: 'I asked about the result or commented on what went wrong — wins/losses, mistakes, or what the team should have done differently.' },
+      { score: 2, text: 'I asked a general "how\'d it go?" or mostly stayed quiet — I didn\'t bring up the result, but I also didn\'t open a process conversation.' },
+      { score: 3, text: 'I asked about something specific they did — execution, effort, a moment I noticed, or whether they had fun.' }
+    ]
+  },
+  {
+    id: 'emotional_reaction',
+    title: 'My Emotional Reaction Was Visible',
+    subtitle: 'Would your athlete describe your mood after this game as tied to the result?',
+    options: [
+      { score: 1, text: 'Yes — I was visibly disappointed after a loss or significantly more energized after a win. My athlete could clearly read how I felt about the outcome.' },
+      { score: 2, text: 'Somewhat — I tried to stay neutral, but I was quieter or shorter than usual. My mood probably shifted, even if I didn\'t say much.' },
+      { score: 3, text: 'No — my energy and engagement were roughly the same regardless of the result. I showed interest in them, not the scoreboard.' }
+    ]
+  },
+  {
+    id: 'topics_emphasized',
+    title: 'Topics I Emphasized in the Conversation',
+    subtitle: 'What did most of the post-game conversation actually cover?',
+    options: [
+      { score: 1, text: 'Mostly outcome-related: the result, mistakes, what went wrong, playing time, comparisons to other players, or what the coach did.' },
+      { score: 2, text: 'Mixed — some outcome topics came up but we also touched on effort or execution at some point during the conversation.' },
+      { score: 3, text: 'Mostly process-related: what they executed, what they learned, their effort level, something they can take into the next practice.' }
+    ]
+  },
+  {
+    id: 'conversation_split',
+    title: 'How the Conversation Was Split',
+    subtitle: 'Roughly what percentage of the conversation was about process vs. outcome?',
+    options: [
+      { score: 1, text: 'Outcome-heavy (60%+ on results, mistakes, comparisons, or external evaluation of performance).' },
+      { score: 2, text: 'Roughly even — about half on outcomes and half on execution, effort, or learning.' },
+      { score: 3, text: 'Process-heavy (60%+ on execution quality, effort, learning, or what they want to work on next).' }
+    ]
+  },
+  {
+    id: 'tone',
+    title: 'The Tone I Set',
+    subtitle: 'How would your athlete describe the feeling of the conversation?',
+    options: [
+      { score: 1, text: '"Evaluative" — it felt like a debrief or review where I was assessing how well they played. They were being judged, not heard.' },
+      { score: 2, text: '"Neutral" — I didn\'t put pressure on them, but the conversation didn\'t really land anywhere meaningful. It stayed surface-level.' },
+      { score: 3, text: '"Curious and supportive" — I was interested in their experience, not their performance rating. They left the conversation feeling supported.' }
+    ]
+  }
+];
+
+const tiers = [
+  {
+    min: 5, max: 14,
+    label: 'Outcome-Focused',
+    color: '#c0392b',
+    desc: 'Your post-game behavior is primarily communicating outcome evaluation — and your athlete is likely reading this clearly, even when you don\'t say anything explicit. This doesn\'t mean you\'re a bad parent; it means your attention is wired toward results the way most parents in competitive environments are. The good news: this is a behavior pattern, not a personality trait. It can change with practice. Start with one dimension.'
+  },
+  {
+    min: 15, max: 25,
+    label: 'Mixed Signals',
+    color: '#d4a042',
+    desc: 'You\'re sending a mixed message — sometimes process-focused, sometimes outcome-focused, depending on the game. Your athlete doesn\'t know which version of you they\'re going to get after a competition. That unpredictability can create anxiety of its own. The work here isn\'t eliminating outcome awareness — it\'s creating consistency. Your athlete needs to know that your emotional presence and your questions are the same regardless of the scoreboard.'
+  },
+  {
+    min: 26, max: 35,
+    label: 'Mostly Process-Focused',
+    color: '#5fb3ac',
+    desc: 'You\'re already showing up with a mostly process-focused orientation after games. Your athlete is receiving a consistent signal that effort, execution, and learning matter more than results. The refinement now is in the details — the moments where outcome still sneaks in (a visible reaction, a question that reveals your focus). Keep reading the redirects below to identify where your last three games had the most drift.'
+  },
+  {
+    min: 36, max: 45,
+    label: 'Strong Process Orientation',
+    color: '#3d8f89',
+    desc: 'Your post-game behavior is consistently reinforcing what drives development. Your athlete is getting a clear, stable signal that process — execution, effort, learning, enjoyment — is what matters to you. This doesn\'t mean you\'re perfect; it means your defaults are well-calibrated. The next step is making this explicit — naming it for your athlete so they understand the framework you\'re working from, not just experiencing it.'
+  }
+];
+
+const redirectMap = {
+  first_question: {
+    1: { icon: '💬', label: 'First Question', text: 'Try leading with something you observed: "I noticed you had a tough moment in the second half — how did that feel?" or "What was one thing you executed the way you\'ve been working on it?" This opens a process conversation without forcing it.' },
+    2: { icon: '💬', label: 'First Question', text: 'Neutral isn\'t bad — but it can become a missed moment. Try one specific, curious question about their experience: "What was the hardest decision you made out there today?"' }
+  },
+  emotional_reaction: {
+    1: { icon: '😶', label: 'Emotional Reaction', text: 'Your emotional presence is data your athlete is constantly reading. Before you say anything post-game, give yourself 90 seconds in the car alone — or at the sideline — to regulate. Walk in with your face set to "I\'m glad to see you," not "I\'m evaluating what just happened."' },
+    2: { icon: '😶', label: 'Emotional Reaction', text: 'If you notice yourself pulling back after a loss, that silence communicates more than words. A simple "good to see you" with normal eye contact resets the signal.' }
+  },
+  topics_emphasized: {
+    1: { icon: '🗣️', label: 'Topics Emphasized', text: 'When outcome topics dominate, try a redirect question at the first outcome statement: "Okay — and what did you feel like you executed well in that moment?" You don\'t need to avoid outcomes entirely; you need to balance them with execution.' },
+    2: { icon: '🗣️', label: 'Topics Emphasized', text: 'You\'re already mixing it up — make the process side more intentional. End every post-game conversation with one learning-focused statement or question.' }
+  },
+  conversation_split: {
+    1: { icon: '⚖️', label: 'Conversation Split', text: 'Use the 3:1 rule as a starting point — for every outcome topic that comes up, redirect to 3 process topics before the conversation closes. It doesn\'t have to be perfect; it just has to shift the ratio.' },
+    2: { icon: '⚖️', label: 'Conversation Split', text: 'You\'re at 50/50 — try ending conversations on a process note rather than an outcome note. What you close on is what lands with them.' }
+  },
+  tone: {
+    1: { icon: '🤝', label: 'Conversation Tone', text: 'Evaluative tone comes through posture, pauses, and sequence — not just words. Try replacing assessment language ("you should have", "you didn\'t") with curious language ("what was going through your mind when...", "what would you do differently?"). Curiosity replaces judgment without dismissing what happened.' },
+    2: { icon: '🤝', label: 'Conversation Tone', text: 'Surface-level conversations feel safe but don\'t build connection. Add one real question that shows you were watching them — not the scoreboard. "What moment are you most proud of from today?" opens something most post-game conversations skip entirely.' }
+  }
+};
+
+// ===== STATE =====
+const selections = [
+  { first_question: null, emotional_reaction: null, topics_emphasized: null, conversation_split: null, tone: null },
+  { first_question: null, emotional_reaction: null, topics_emphasized: null, conversation_split: null, tone: null },
+  { first_question: null, emotional_reaction: null, topics_emphasized: null, conversation_split: null, tone: null }
+];
+let activeGame = 0;
+
+// ===== BUILD UI =====
+function buildGamePanel(gameIndex) {
+  const panel = document.getElementById(`game-${gameIndex}`);
+  const gameLabel = gameIndex === 0 ? 'Most Recent Game' : gameIndex === 1 ? 'Game 2' : 'Game 3 (Oldest)';
+  let html = `<div style="font-family:Arial,sans-serif;font-size:12px;color:#5a5a72;margin-bottom:18px;padding:10px 14px;background:#f5f5f0;border-radius:8px;">Scoring: <strong style="color:#c0392b;">1 = Outcome Focus</strong> &nbsp;·&nbsp; <strong style="color:#d4a042;">2 = Neutral/Mixed</strong> &nbsp;·&nbsp; <strong style="color:#3d8f89;">3 = Process Focus</strong></div>`;
+
+  dimensions.forEach((dim, dIdx) => {
+    html += `<div class="dimension-card">
+      <div class="dimension-header">
+        <div class="dimension-number">${dIdx + 1}</div>
+        <div>
+          <div class="dimension-title">${dim.title}</div>
+          <div class="dimension-subtitle">${dim.subtitle}</div>
+        </div>
+      </div>
+      <div class="options-grid">`;
+    dim.options.forEach(opt => {
+      const scoreClass = `score-${opt.score}`;
+      const scoreLabels = { 1: 'Outcome Focus', 2: 'Neutral/Mixed', 3: 'Process Focus' };
+      html += `<label class="option-label ${scoreClass}" id="g${gameIndex}-${dim.id}-${opt.score}">
+        <input type="radio" name="g${gameIndex}-${dim.id}" value="${opt.score}" onchange="selectOption(${gameIndex}, '${dim.id}', ${opt.score})">
+        <div class="option-dot"></div>
+        <div class="option-text">${opt.text}</div>
+        <div class="option-score">${opt.score} — ${scoreLabels[opt.score]}</div>
+      </label>`;
+    });
+    html += `</div></div>`;
+  });
+
+  // Game score bar
+  html += `<div class="game-score-bar">
+    <div class="game-score-label">Game ${gameIndex + 1} score</div>
+    <div class="game-score-value" id="gscore-${gameIndex}">—</div>
+    <div class="game-score-bar-track"><div class="game-score-bar-fill" id="gbar-${gameIndex}"></div></div>
+    <div style="font-family:Arial,sans-serif;font-size:12px;color:#5a5a72">/ 15</div>
+  </div>`;
+
+  panel.innerHTML = html;
+}
+
+function switchGame(idx) {
+  activeGame = idx;
+  document.querySelectorAll('.game-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+  document.querySelectorAll('.game-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
+}
+
+function selectOption(gameIndex, dimId, score) {
+  selections[gameIndex][dimId] = score;
+
+  // Update visual selection state
+  dimensions.forEach(dim => {
+    if (dim.id !== dimId) return;
+    dim.options.forEach(opt => {
+      const el = document.getElementById(`g${gameIndex}-${dim.id}-${opt.score}`);
+      if (el) el.classList.toggle('selected', opt.score === score);
+    });
+  });
+
+  updateGameScore(gameIndex);
+}
+
+function updateGameScore(gameIndex) {
+  const vals = Object.values(selections[gameIndex]).filter(v => v !== null);
+  if (vals.length === 0) return;
+  const sum = vals.reduce((a, b) => a + b, 0);
+  const el = document.getElementById(`gscore-${gameIndex}`);
+  const bar = document.getElementById(`gbar-${gameIndex}`);
+  if (el) el.textContent = sum;
+  if (bar) bar.style.width = `${((sum) / 15) * 100}%`;
+}
+
+function getGameScore(gameIndex) {
+  const vals = Object.values(selections[gameIndex]).filter(v => v !== null);
+  return vals.reduce((a, b) => a + b, 0);
+}
+
+function calculateScore() {
+  const gameTotals = [getGameScore(0), getGameScore(1), getGameScore(2)];
+  const total = gameTotals.reduce((a, b) => a + b, 0);
+
+  const tier = tiers.find(t => total >= t.min && total <= t.max) || tiers[0];
+
+  document.getElementById('total-display').textContent = total;
+  document.getElementById('tier-label-display').textContent = tier.label;
+  document.getElementById('result-header') && (document.querySelector('.result-header').style.background = `linear-gradient(135deg, ${tier.color}cc, ${tier.color})`);
+  document.getElementById('tier-desc').textContent = tier.desc;
+
+  // Game breakdown chips
+  const grid = document.getElementById('game-scores-grid');
+  grid.innerHTML = gameTotals.map((s, i) => `
+    <div class="game-score-chip">
+      <div class="chip-label">Game ${i + 1}</div>
+      <div class="chip-val">${s || '—'}</div>
+      <div class="chip-max">/ 15</div>
+    </div>
+  `).join('');
+
+  // Find lowest-scoring dimensions across all 3 games for redirects
+  const dimScores = {};
+  dimensions.forEach(dim => {
+    dimScores[dim.id] = [0, 1, 2].map(g => selections[g][dim.id] || 0).reduce((a, b) => a + b, 0);
+  });
+  const sortedDims = Object.entries(dimScores).sort((a, b) => a[1] - b[1]);
+  const weakestDims = sortedDims.slice(0, 3).filter(([, v]) => v < 7);
+
+  const redirectsSection = document.getElementById('redirects-section');
+  if (weakestDims.length > 0) {
+    let html = '<h3>Your Specific Redirects</h3>';
+    weakestDims.forEach(([dimId]) => {
+      // Find the most common low score for this dimension
+      const scores = [0, 1, 2].map(g => selections[g][dimId]).filter(v => v !== null);
+      const avgScore = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 1;
+      const rScore = Math.min(avgScore, 2);
+      const redirect = redirectMap[dimId]?.[rScore];
+      if (redirect) {
+        html += `<div class="redirect-item">
+          <div class="redirect-icon">${redirect.icon}</div>
+          <div class="redirect-text"><strong>${redirect.label}</strong><span>${redirect.text}</span></div>
+        </div>`;
+      }
+    });
+    redirectsSection.innerHTML = html;
+  } else {
+    redirectsSection.innerHTML = '<h3>Your Pattern</h3><p style="font-family:Arial,sans-serif;font-size:14px;color:#5a5a72;">Your scores are consistently process-focused across all three games. The next step is making your framework explicit to your athlete — name what you\'re doing so they understand the intent, not just the behavior.</p>';
+  }
+
+  // Next game commit
+  const lowestDim = sortedDims[0];
+  const dimObj = dimensions.find(d => d.id === lowestDim[0]);
+  document.getElementById('next-game-box').innerHTML = `
+    <div class="ng-label">Before Your Next Game</div>
+    <p>Your biggest gap is in <strong>${dimObj?.title}</strong>. Choose one specific behavior change to focus on for the next competition — just one. Trying to fix everything at once rarely holds. After that game, come back and score yourself on this dimension specifically.</p>
+  `;
+
+  const results = document.getElementById('results');
+  results.classList.add('visible');
+  results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ===== INIT =====
+[0, 1, 2].forEach(i => buildGamePanel(i));
+</script>
+</body>
+</html>
