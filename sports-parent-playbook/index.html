@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Sports Parent Playbook — The Quiet Edge</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" />
+  <style>
+    :root {
+      --bg:        #0b0e14;
+      --surface:   #141820;
+      --surface2:  #1c2230;
+      --border:    rgba(255,255,255,0.08);
+      --teal:      #5fb3ac;
+      --teal-dim:  rgba(95,179,172,0.15);
+      --teal-glow: rgba(95,179,172,0.06);
+      --text:      #f0f2f5;
+      --text-dim:  #8a94a8;
+      --text-muted:#5a6275;
+      --orange:    #f5834a;
+      --green:     #4caf82;
+      --radius:    14px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    a { color: var(--teal); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Layout ── */
+    .container      { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+    .container-wide { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Nav ── */
+    .nav {
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(11,14,20,0.96);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    .nav-logo { font-size: 1rem; font-weight: 700; color: var(--text); }
+    .nav-logo span { color: var(--teal); }
+    .nav-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--teal);
+      background: var(--teal-dim);
+      border: 1px solid rgba(95,179,172,0.25);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .nav-print {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-print:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 72px 24px 56px;
+      text-align: center;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(95,179,172,0.08) 0%, transparent 70%);
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--teal);
+      background: var(--teal-dim);
+      border: 1px solid rgba(95,179,172,0.2);
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+    .hero h1 span { color: var(--teal); }
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      max-width: 600px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat-num {
+      display: block;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--teal);
+    }
+    .hero-stat-label {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+
+    /* ── How to use ── */
+    .how-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .how-section h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .how-grid {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .how-step {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      flex: 1;
+      min-width: 200px;
+      max-width: 240px;
+      text-align: left;
+    }
+    .how-step-num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .how-step p { font-size: 0.9rem; color: var(--text-dim); }
+
+    /* ── Start Here ── */
+    .start-here {
+      padding: 64px 24px;
+    }
+    .section-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .section-eyebrow::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .section-h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .section-sub {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      margin-bottom: 32px;
+    }
+    .start-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .start-card {
+      background: linear-gradient(135deg, var(--surface) 0%, rgba(95,179,172,0.06) 100%);
+      border: 1px solid rgba(95,179,172,0.3);
+      border-radius: var(--radius);
+      padding: 24px;
+      position: relative;
+    }
+    .start-card-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--teal);
+      color: var(--bg);
+      font-size: 0.8rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+    .start-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .start-card .why {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .start-card .time-badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--teal);
+      background: var(--teal-dim);
+      padding: 2px 10px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+    .btn-tool {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--teal);
+      color: var(--bg);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 9px 18px;
+      border-radius: 8px;
+      transition: opacity 0.2s;
+    }
+    .btn-tool:hover { opacity: 0.88; text-decoration: none; }
+
+    /* ── Module sections ── */
+    .module-section { padding: 64px 24px; border-top: 1px solid var(--border); }
+    .module-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    .module-icon-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: var(--teal-dim);
+      border: 1px solid rgba(95,179,172,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .module-title-block {}
+    .module-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .module-title { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .module-sub { font-size: 0.9rem; color: var(--text-dim); margin-top: 4px; }
+
+    .tool-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 20px;
+      align-items: start;
+      transition: border-color 0.2s;
+    }
+    .tool-card:hover { border-color: rgba(95,179,172,0.3); }
+
+    .tool-num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .tool-body {}
+    .tool-badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .badge {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 2px 9px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+    }
+    .badge-stage2  { background: rgba(245,131,74,0.12); color: #f5834a; border-color: rgba(245,131,74,0.2); }
+    .badge-stage3  { background: rgba(95,179,172,0.12); color: var(--teal); border-color: rgba(95,179,172,0.2); }
+    .badge-interactive { background: rgba(76,175,130,0.12); color: var(--green); border-color: rgba(76,175,130,0.2); }
+    .badge-guide       { background: var(--surface2); color: var(--text-muted); border-color: var(--border); }
+
+    .tool-name { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .tool-desc { font-size: 0.87rem; color: var(--text-dim); margin-bottom: 8px; line-height: 1.55; }
+    .tool-when {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-bottom: 12px;
+    }
+    .tool-evidence {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: var(--surface2);
+      border-radius: 6px;
+      padding: 6px 10px;
+      border-left: 2px solid var(--teal);
+      margin-bottom: 0;
+    }
+
+    .tool-action {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-end;
+    }
+    .btn-open {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--teal);
+      color: var(--bg);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 9px 16px;
+      border-radius: 8px;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+    .btn-open:hover { opacity: 0.88; text-decoration: none; }
+    .btn-open-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 8px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .btn-open-secondary:hover {
+      border-color: rgba(255,255,255,0.2);
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    /* ── Bonus section ── */
+    .bonus-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 64px 24px;
+    }
+    .bonus-section .module-icon-wrap {
+      background: rgba(245,131,74,0.1);
+      border-color: rgba(245,131,74,0.2);
+    }
+
+    /* ── What's next ── */
+    .next-section {
+      padding: 72px 24px 80px;
+      text-align: center;
+    }
+    .next-section h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .next-section p {
+      color: var(--text-dim);
+      max-width: 520px;
+      margin: 0 auto 36px;
+    }
+    .next-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .next-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      text-align: left;
+    }
+    .next-card-icon { font-size: 1.8rem; margin-bottom: 14px; }
+    .next-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .next-card p { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 16px; line-height: 1.5; }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .footer-logo { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .footer-logo span { color: var(--teal); }
+    .footer p { font-size: 0.82rem; color: var(--text-muted); }
+
+    /* ── Print styles ── */
+    @media print {
+      body { background: #fff; color: #111; font-size: 11pt; }
+      .nav, .nav-print, .how-section, .next-section, .footer { display: none !important; }
+      .hero { background: none; padding: 24px 0 20px; }
+      .hero h1 { color: #111; font-size: 22pt; }
+      .hero h1 span { color: #2a8c85; }
+      .hero-sub, .hero-stat-label { color: #555; }
+      .hero-stat-num { color: #2a8c85; }
+      .hero-eyebrow { background: #e8f5f4; color: #2a8c85; border: 1px solid #2a8c85; }
+      .module-section, .bonus-section { background: #fff; border-top: 1px solid #ddd; padding: 28px 0; }
+      .module-title { color: #111; }
+      .module-sub, .tool-desc, .tool-when { color: #555; }
+      .module-icon-wrap { background: #e8f5f4; }
+      .module-tag { color: #888; }
+      .tool-card {
+        background: #fff;
+        border: 1px solid #ddd;
+        margin-bottom: 12px;
+        page-break-inside: avoid;
+        grid-template-columns: auto 1fr;
+        gap: 16px;
+      }
+      .tool-action { display: none; }
+      .tool-num { background: #eee; border-color: #ccc; color: #555; }
+      .tool-name { color: #111; }
+      .tool-evidence { background: #f5f5f5; border-left: 2px solid #2a8c85; color: #555; }
+      .badge-stage2  { background: #fff3ee; color: #c85a20; border-color: #f5834a; }
+      .badge-stage3  { background: #e8f5f4; color: #2a8c85; border-color: #2a8c85; }
+      .badge-interactive { background: #edfaf3; color: #2a7a54; border-color: #4caf82; }
+      .start-card { background: #f9fafb; border: 1px solid #ddd; }
+      .start-card h3, .start-card-num { color: #111; }
+      .start-card-num { background: #2a8c85; }
+      .start-card .why { color: #555; }
+      .start-card .time-badge { background: #e8f5f4; color: #2a8c85; }
+      .btn-tool, .btn-open, .btn-open-secondary { display: none !important; }
+      .section-eyebrow::after { background: #ddd; }
+      a[href]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #888; }
+      .btn-tool::after, .btn-open::after, .btn-open-secondary::after { display: none; }
+    }
+
+    @media (max-width: 680px) {
+      .tool-card { grid-template-columns: auto 1fr; }
+      .tool-action {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .hero-stats { gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav class="nav">
+  <span class="nav-logo">The Quiet Edge <span>Academy</span></span>
+  <span class="nav-badge">Sports Parent Playbook</span>
+  <button class="nav-print" onclick="window.print()">⬇ Save as PDF</button>
+</nav>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">🏅 Complete Parent Resource Library</div>
+    <h1>The Sports Parent<br><span>Playbook</span></h1>
+    <p class="hero-sub">
+      17 research-backed interactive tools organized into a complete system —
+      for before the game, at the sideline, after the game, and at home.
+      Every tool grounded in peer-reviewed sport psychology.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num">17</span>
+        <span class="hero-stat-label">Interactive tools</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">5</span>
+        <span class="hero-stat-label">Modules</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">2</span>
+        <span class="hero-stat-label">Stages covered</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">10–20</span>
+        <span class="hero-stat-label">Min per tool</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── How to use ── -->
+<div class="how-section">
+  <div class="container">
+    <h2>How to use this playbook</h2>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="how-step-num">Step 1</div>
+        <p>Start with the <strong style="color:var(--text)">3 recommended tools below</strong> — they give you your baseline in under an hour.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">Step 2</div>
+        <p>Work through each module <strong style="color:var(--text)">in order</strong>, or jump to whichever situation is most relevant right now.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">Step 3</div>
+        <p>Most tools have a <strong style="color:var(--text)">PDF download</strong> — save or print for easy reference before Saturday's game.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Start Here ── -->
+<div class="start-here">
+  <div class="container">
+    <div class="section-eyebrow">Recommended first</div>
+    <h2 class="section-h2">Start Here — Your First 45 Minutes</h2>
+    <p class="section-sub">These three tools give you a complete picture of your game-day impact. Do them in order.</p>
+    <div class="start-grid">
+
+      <div class="start-card">
+        <div class="start-card-num">1</div>
+        <h3>What's Your Post-Game Script?</h3>
+        <p class="why">Reveals your default response pattern after competition — Instinctive Protector, Performance Manager, or Emotional Coach. Most parents are surprised.</p>
+        <div class="time-badge">15 min · Interactive Assessment</div><br>
+        <a href="https://tinyurl.com/287xe5a7" target="_blank" class="btn-tool">→ Start Here</a>
+      </div>
+
+      <div class="start-card">
+        <div class="start-card-num">2</div>
+        <h3>Sideline Self-Check</h3>
+        <p class="why">Scores your sideline behavior across 5 dimensions. Your silence — or lack of it — is actively shaping how your athlete performs and feels.</p>
+        <div class="time-badge">15 min · Interactive Assessment</div><br>
+        <a href="https://tinyurl.com/24ej26u8" target="_blank" class="btn-tool">→ Open Tool</a>
+      </div>
+
+      <div class="start-card">
+        <div class="start-card-num">3</div>
+        <h3>Game Day Protocol Card</h3>
+        <p class="why">Build your personalized before/during/after game behavior card. Takes what you learned in tools 1 and 2 and turns it into a concrete plan you can use this weekend.</p>
+        <div class="time-badge">15 min · Interactive Assessment</div><br>
+        <a href="https://tinyurl.com/248noz24" target="_blank" class="btn-tool">→ Open Tool</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MODULE 1: BEFORE THE GAME
+═══════════════════════════════════════════════ -->
+<div class="module-section">
+  <div class="container">
+    <div class="module-header">
+      <div class="module-icon-wrap">⏱</div>
+      <div class="module-title-block">
+        <div class="module-tag">Module 1</div>
+        <div class="module-title">Before the Game</div>
+        <div class="module-sub">The 2 hours before competition. How you show up — physically, verbally, and emotionally — directly transmits to your athlete's nervous system.</div>
+      </div>
+    </div>
+    <div class="tool-grid">
+
+      <div class="tool-card">
+        <div class="tool-num">1</div>
+        <div class="tool-body">
+          <div class="tool-badges">
+            <span class="badge badge-stage3">Stage 3</span>
+            <span class="badge badge-interactive">Interactive Assessment</span>
+          </div>
+          <div class="tool-name">Pre-Competition Environment Audit</div>
+          <div class="tool-desc">Score your current pre-competition behaviors across 4 support behaviors and 4 routine disruptors to establish your environment profile. Identifies your single highest-impact disruptor.</div>
+          <div class="tool-when">Use it when: You want to understand what you're actually doing in the hours before competition — and what to stop.</div>
+          <div class="tool-evidence">📚 Cotterill (2010) — pre-performance routines reduce cognitive anxiety. Feldman (2007) — parent emotional arousal transmits to athlete through non-verbal signals.</div>
+        </div>
+        <div class="tool-action">
+          <a href="https://tinyurl.com/2a2fvcuf" target="_blank" class="btn-open">→ Open Tool</a>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">2</div>
+        <div class="tool-body">
+          <div class="tool-badges">
+            <span class="badge badge-stage3">Stage 3</span>
+            <span class="badge badge-interactive">Interactive Assessment</span>
+          </div>
+          <div class="tool-name">Game Day Protocol Card</div>
+          <div class="tool-desc">Build a personalized game day behavior card — what to do, say, and avoid in the Before / During / After windows. Printable and pocket-sized.</div>
+          <div class="tool-when">Use it when: You want to stop winging it on game days and have a concrete behavior plan that keeps you in the support role.</div>
+          <div class="tool-evidence">📚 Beilock & Carr (2001) — verbal coaching during execution disrupts motor programs. Mageau & Vallerand (2003) — autonomy-supportive spacing reduces competitive anxiety.</div>
+        </div>
+        <div class="tool-action">
+          <a href="https://tinyurl.com/248noz24" target="_blank" class="btn-open">→ Open Tool</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MODULE 2: AT THE SIDELINE
+═══════════════════════════════════════════════ -->
+<div class="module-section">
+  <div class="container">
+    <div class="module-header">
+      <div class="module-icon-wrap">👁</div>
+      <div class="module-title-block">
+        <div class="module-tag">Module 2</div>
+        <div class="module-title">At the Sideline</div>
+        <div class="module-sub">Your presence during competition is a performance variable. These tools help you identify your sideline patterns and replace them with behaviors that actually help.</div>
+      </div>
+    </div>
+    <div class="tool-grid">
+
+      <div class="tool-card">
+        <div class="tool-num">3</div>
+        <div class="tool-body">
+          <div class="tool-badges">
+            <span class="badge badge-stage3">Stage 3</span>
+            <span class="badge badge-interactive">Interactive Assessment</span>
+          </div>
+          <div class="tool-name">Sideline Self-Check</div>
+          <div class="tool-desc">A 5-dimension sideline behavior profile — scores your instruction, emotional signaling, body language, reaction to mistakes, and post-play communication. Outputs a personalized sideline challenge.</div>
+          <div class="tool-when">Use it when: You're not sure if your sideline presence is helping or hurting — or you've noticed your athlete's performance drops when you're watching.</div>
+          <div class="tool-evidence">📚 Beilock & Carr (2001) — skill-focused coaching under pressure increases conscious attention, degrades automaticity. Mageau & Vallerand (2003) — autonomy-supportive parenting reduces athlete anxiety.</div>
+        </div>
+        <div class="tool-action">
+          <a href="https://tinyurl.com/24ej26u8" target="_blank" class="btn-open">→ Open Tool</a>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">4</div>
+        <div class="tool-body">
+          <div class="tool-badges">
+            <span class="badge badge-stage2">Stage 2</span>
+            <span class="badge badge-interactive">Interactive Assessment</span>
+          </div>
+          <div class="tool-name">Sideline Reset Audit</div>
+          <div class="tool-desc">8 sideline mistake scenarios — identify your default response pattern (Weight-Adder, Dismisser, or Reset-Supporter) and build a 7-day sideline practice plan with specific language shifts.</div>
+          <div class="tool-when">Use it when: Your athlete makes a mistake during a game and you want to understand and change how you respond in that moment.</div>
+          <div class="tool-evidence">📚 Gottman & DeClaire (1997) — parent emotional response to child mistakes directly shapes emotional regulation skill and resilience.</div>
+        </div>
+        <div class="tool-action">
+          <a href="https://tinyurl.com/2yal3oj5" target="_blank" class="btn-open">→ Open Tool</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MODULE 3: AFTER THE GAME
+═══════════════════════════════════════════════ -->
+<div class="module-section">
+  <div class="container">
+    <div class="module-header">
+      <div class="module-icon-wrap">🚗</div>
+      <div class="module-title-block">
+        <div class="module-tag">Module 3</div>
+        <div class="module-title">After the Game</div>
+        <div class="module-sub">The 20-minute window after competition is the most important interaction you have as a sports parent. What you say — and don't say — shapes your athlete's relationship with competition itself.</div>
+      </div>
+    </div>
+    <div class="tool-grid">
+
+      <div class="tool-card">
+        <div class="tool-num">5</div>
+        <div class="tool-body">
+          <div class="tool-badges">
+            <span class="badge badge-stage2">Stage 2</span>
+            <span class="badge badge-interactive">Interactive Assessment</span>
+          </div>
+          <div class="tool-name">What's Your Post-Game Script?</div>
+          <div class="tool-desc">Reveals your default response pattern — Instinctive Protector, Performance Manager, or Emotional Coach — and provides replacement scripts for each pattern. Most parents are surprised by their result.</div>
+          <div class="tool-when">Use it when: You want to understand your default post-game communication style and what it's actually doing to your athlete's emotional state.</div>
+          <div class="tool-evidence">📚 Brooks (2014) — anxiety reappraisal: how a parent frames their athlete's nervousness determines whether it helps or hinders performance. Lieberman et al. (2007) — affect labeling reduces amygdala activation.</div>
+        </div>
+        <div class="tool-action">
+          <a href="https://tinyurl.com/287xe5a7" target="_blank" class="btn-open">→ Open Tool</a>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">6</div>
+        <div class="tool-body">
+          <div class="tool-badges">
+            <span class="badge badge-stage2">Stage 2</span>
+            <span class="badge badge-interactive">Interactive Assessment</span>
+          </div>
+          <div class="tool-name">What's Your Failure Response Pattern?</div>
+          <div class="tool-desc">Identifies your dominant failure response (Comfort Seeker, Amplifier, or Resilience Coach) and provides a 24-hour Acknowledge → Space → Process → Model protocol for the next setback.</div>
+          <div class="tool-when">Use it when: Your athlete has a bad game, a loss, or a significant mistake and you're not sure how to handle the next 24 hours.</div>
+          <div class="tool-evidence">📚 Gottman & DeClaire (1997) — emotion-coached children recover faster from setbacks. Dweck (2006) — parent attributions after failure shape child identity and motivation.</div>
+        </div>
+        <div class="tool-action">
+          <a href="https://tinyurl.com/25bn3lrp" target="_blank" class="btn-open">→ Open Tool</a>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">7</div>
+        <div class="tool-body">
+          <div class="tool-badges">
+            <span class="badge badge-stage2">Stage 2</span>
+            <span class="badge badge-interactive">Interactive Assessment</span>
+          </div>
+          <div class="tool-name">Post-Game Question Guide</div>
+          <div class="tool-desc">Identifies your post-game communication pattern (Teller, Reassurer, Asker, or Avoider) and teaches the Five Questions Framework that builds athlete self-evaluation rather than dependency on your feedback.</div>
+          <div class="tool-when">Use it when: You notice your athlete waits for your opinion instead of forming their own — or you want to build their internal performance standards.</div>
+          <div class="tool-evidence">📚 Deci & Ryan (2000) — asking vs. telling builds intrinsic motivation and accurate self-evaluation. Zimmerman (2000) — self-evaluation accuracy predicts greater resilience.</div>
+        </div>
+        <div class="tool-action">
+          <a href="https://tinyurl.com/2cajewn5" target="_blank" class="btn-open">→ Open Tool</a>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">8</div>
+        <div class="tool-body">
+          <div class="tool-badges">
+            <span class="badge badge-stage3">Stage 3</span>
+            <span class="badge badge-interactive">Interactive Assessment</span>
+          </div>
+          <div class="tool-name">Post-Game Conversation Self-Scorer</div>
+          <div class="tool-desc">Rate your last 3 post-game conversations across 5 outcome-vs-process dimensions to see where your focus actually lands — including implicit pressure signals like silence, tone, and emotional reactions.</div>
+          <div class="tool-when">Use it when: You think your post-game conversations are supportive but your athlete seems stressed or guarded after games.</div>
+          <div class="tool-evidence">📚 Nicholls (1989) — ego-involving evaluation produces anxiety and fragile confidence. Mageau & Vallerand (2003) — outcome-contingent approval communicates conditional regard.</div>
+        </div>
+        <div class="tool-action">
+          <a href="https://tinyurl.com/29mu2ddq" target="_blank" class="btn-open">→ Open Tool</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MODULE 4: AT HOME
+═══════════════════════════════════════════════ -->
+<div class="module-section">
+  <div class="container">
+    <div class="module-header">
+      <div class="module-icon-wrap">🏠</div>
+      <div class="module-title-block">
+        <div class="module-tag">Module 4</div>
+        <div class="module-title">At Home — Everyday Moments</div>
+        <div class="module-sub">The daily conversations, habits, and language patterns that shape your athlete's mental framework over a whole season — not just on game days.</div>
+      </div>
+    </div>
+    <div class="tool-grid">
+
+      <div class="tool-card">
+        <div class="tool-num">9</div>
+        <div class="tool-body">
+          <div class="tool-badges">
+            <span class="badge badge-stage3">Stage 3</span>
+            <span class="badge badge-interactive">Interactive Assessment</span>
+          </div>
+          <div class="tool-name">Training Load Audit</div>
+          <div class="tool-desc">Calculates your athlete's weekly training load and flags overtraining warning signs across 5 categories. Outputs an Appropriate / Borderline / Overloaded rating with specific action steps.</div>
+          <div class="tool-when">Use it when: Your athlete seems tired, unmotivated, or injury-prone — or you're wondering if "more is more" in their training schedule.</div>
+          <div class="tool-evidence">📚 Ericsson et al. (1993) — volume alone does not predict expertise. Deci & Ryan (2000) — overtraining undermines intrinsic motivation and autonomy.</div>
+        </div>
+        <div class="tool-action">
+          <a href="https://tinyurl.com/269umtjw" target="_blank" class="btn-open">→ Open Tool</a>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">10</div>
+        <div class="tool-body">
+          <div class="tool-badges">
+            <span class="badge badge-stage2">Stage 2</span>
+            <span class="badge badge-interactive">Interactive Assessment</span>
+          </div>
+          <div class="tool-name">The Voice in Their Head — Parent Self-Talk Audit</div>
+          <div class="tool-desc">Audits your sideline self-talk patterns and how they're visible to your athlete. Children learn emotional regulation by observing parent responses under stress. Creates replacement scripts for high-pressure moments.</div>
+          <div class="tool-when">Use it when: You've noticed your athlete picks up on your anxiety, frustration, or disappointment — even when you haven't said anything.</div>
+          <div class="tool-evidence">📚 Bandura (1977) — social learning theory: children learn emotional regulation by observing parent responses under stress. Emotional contagion research confirms parent sideline affect influences athlete anxiety.</div>
+        </div>
+        <div class="tool-action">
+          <a href="https://tinyurl.com/2ddqmstg" target="_blank" class="btn-open">→ Open Tool</a>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">11</div>
+        <div class="tool-body">
+          <div class="tool-badges">
+            <span class="badge badge-stage2">Stage 2</span>
+            <span class="badge badge-interactive">Interactive Assessment</span>
+          </div>
+          <div class="tool-name">Ownership Builds Confidence Toolkit</div>
+          <div class="tool-desc">Identifies where your involvement crosses from support into ownership — and provides a responsibility scaffolding plan that builds athlete independence over time using autonomy-supportive language.</div>
+          <div class="tool-when">Use it when: Your athlete relies on you to handle logistics, decisions, or problems they could handle themselves — or you want to build their independence deliberately.</div>
+          <div class="tool-evidence">📚 Deci & Ryan (2000) — autonomy support predicts intrinsic motivation. Bandura (1997) — overprotective parenting undermines self-efficacy development.</div>
+        </div>
+        <div class="tool-action">
+          <a href="https://tinyurl.com/2cowyaoc" target="_blank" class="btn-open">→ Open Tool</a>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">12</div>
+        <div class="tool-body">
+          <div class="tool-badges">
+            <span class="badge badge-stage2">Stage 2</span>
+            <span class="badge badge-interactive">Interactive Assessment</span>
+          </div>
+          <div class="tool-name">Progress Recognition Toolkit</div>
+          <div class="tool-desc">Distinguishes between trait praise ("you're so talented"), outcome praise ("great game"), and progress recognition ("you held your mechanics under pressure today"). Creates personalized evidence-based recognition scripts.</div>
+          <div class="tool-when">Use it when: Your athlete seems to need your praise to feel good about their performance — or you want to build more durable confidence than wins and losses can provide.</div>
+          <div class="tool-evidence">📚 Dweck (2006) — process praise builds more durable confidence. Mueller & Dweck (1998) — specific process feedback increases persistence after failure.</div>
+        </div>
+        <div class="tool-action">
+          <a href="https://tinyurl.com/2b5532l4" target="_blank" class="btn-open">→ Open Tool</a>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">13</div>
+        <div class="tool-body">
+          <div class="tool-badges">
+            <span class="badge badge-stage2">Stage 2</span>
+            <span class="badge badge-interactive">Interactive Assessment</span>
+          </div>
+          <div class="tool-name">GPS Goal-Builder — Parent Edition</div>
+          <div class="tool-desc">Audits your goal-related language for outcome vs. process orientation and teaches you to facilitate weekly process check-in conversations that build athlete autonomy rather than pressure.</div>
+          <div class="tool-when">Use it when: Conversations about goals feel tense, or your athlete seems to experience goals as pressure rather than direction.</div>
+          <div class="tool-evidence">📚 Locke & Latham (2002) — process goals reduce performance anxiety. Mageau & Vallerand (2003) — collaborative goal conversations build intrinsic motivation.</div>
+        </div>
+        <div class="tool-action">
+          <a href="https://tinyurl.com/26kvhwx9" target="_blank" class="btn-open">→ Open Tool</a>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">14</div>
+        <div class="tool-body">
+          <div class="tool-badges">
+            <span class="badge badge-stage2">Stage 2</span>
+            <span class="badge badge-interactive">Interactive Assessment</span>
+          </div>
+          <div class="tool-name">Am I Effort-First? One-Week Reaction Tracker</div>
+          <div class="tool-desc">A 7-day behavioral tracking log that captures your emotional reactions across game and practice events — and audits your post-competition behaviors for effort vs. result orientation.</div>
+          <div class="tool-when">Use it when: You want to know whether your actual behavior — across a full week, not just your intentions — is effort-focused or result-focused.</div>
+          <div class="tool-evidence">📚 Weiner (1985) — parent effort attributions build child resilience. Mageau & Vallerand (2003) — effort-based feedback in the post-competition window directly reduces athlete anxiety.</div>
+        </div>
+        <div class="tool-action">
+          <a href="https://tinyurl.com/2xmyo2q8" target="_blank" class="btn-open">→ Open Tool</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MODULE 5: TWO-PARENT FAMILIES (BONUS)
+═══════════════════════════════════════════════ -->
+<div class="bonus-section">
+  <div class="container">
+    <div class="module-header">
+      <div class="module-icon-wrap" style="background:rgba(245,131,74,0.1);border-color:rgba(245,131,74,0.2);">🤝</div>
+      <div class="module-title-block">
+        <div class="module-tag">Bonus Module</div>
+        <div class="module-title">For Two-Parent Families</div>
+        <div class="module-sub">When caregivers respond differently to the same situation, the inconsistency itself becomes a stressor for the athlete. These tools align your approach without requiring identical personalities.</div>
+      </div>
+    </div>
+    <div class="tool-grid">
+
+      <div class="tool-card">
+        <div class="tool-num">15</div>
+        <div class="tool-body">
+          <div class="tool-badges">
+            <span class="badge badge-stage2">Stage 2</span>
+            <span class="badge badge-guide">Workbook</span>
+          </div>
+          <div class="tool-name">Parent Alignment Discussion Guide</div>
+          <div class="tool-desc">A structured workbook for two caregivers to align on emotional regulation language, pre/during/post competition approaches, and a shared protocol — without requiring identical personalities.</div>
+          <div class="tool-when">Use it when: You and your co-parent respond differently after games and want a framework for getting on the same page.</div>
+          <div class="tool-evidence">📚 Gottman & DeClaire (1997) — consistent parenting environments reduce child anxiety. Mageau & Vallerand (2003) — autonomy support from both caregivers amplifies intrinsic motivation outcomes.</div>
+        </div>
+        <div class="tool-action">
+          <a href="https://tinyurl.com/sma75c93" target="_blank" class="btn-open">→ Open Guide</a>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">16</div>
+        <div class="tool-body">
+          <div class="tool-badges">
+            <span class="badge badge-stage2">Stage 2</span>
+            <span class="badge badge-interactive">Interactive Assessment</span>
+          </div>
+          <div class="tool-name">Co-Parenting Through Youth Sports</div>
+          <div class="tool-desc">Identifies co-parenting patterns that create emotional inconsistency and provides a unified emotional support protocol — a shared emotional language both caregivers can apply regardless of which one is present.</div>
+          <div class="tool-when">Use it when: Your athlete seems to behave or perform differently depending on which parent is at the game.</div>
+          <div class="tool-evidence">📚 Deci & Ryan (2000) — children need consistent, predictable emotional environments from caregivers to develop secure self-regulation.</div>
+        </div>
+        <div class="tool-action">
+          <a href="https://tinyurl.com/24bpcuc7" target="_blank" class="btn-open">→ Interactive</a>
+          <a href="https://tinyurl.com/5n7rz9d7" target="_blank" class="btn-open-secondary">PDF Version</a>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">17</div>
+        <div class="tool-body">
+          <div class="tool-badges">
+            <span class="badge badge-stage2">Stage 2</span>
+            <span class="badge badge-interactive">Interactive Assessment</span>
+          </div>
+          <div class="tool-name">Multi-Child Family Navigator</div>
+          <div class="tool-desc">Identifies the emotional regulation profile of each child in your household and provides a 4-Step Regulation Support Model (Name → Validate → Teach → Identify) with personalized scripts for each child's emotional style.</div>
+          <div class="tool-when">Use it when: You have more than one athlete-child and each needs different emotional support approaches — without you having to be a different person for each.</div>
+          <div class="tool-evidence">📚 Lieberman et al. (2007) — naming emotions is applied neuroscience. Gottman & DeClaire (1997) — emotion-coaching parents raise children who recover faster from setbacks.</div>
+        </div>
+        <div class="tool-action">
+          <a href="https://tinyurl.com/2bdybzch" target="_blank" class="btn-open">→ Interactive</a>
+          <a href="https://tinyurl.com/5n6vjk4e" target="_blank" class="btn-open-secondary">PDF Version</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── What's Next ── -->
+<div class="next-section">
+  <div class="container">
+    <h2>Keep Going</h2>
+    <p>These tools pair with free video content on The Quiet Edge YouTube channel. Each tool was built from a specific episode — watch the video and the tool clicks differently.</p>
+    <div class="next-grid">
+      <div class="next-card">
+        <div class="next-card-icon">🎯</div>
+        <h3>Personalized Assessment</h3>
+        <p>Take the free 2-minute assessment to get tools ranked by your specific challenge and stage.</p>
+        <a href="https://tinyurl.com/29xuxnps" target="_blank" class="btn-open" style="font-size:0.85rem;">Find My Tools →</a>
+      </div>
+      <div class="next-card">
+        <div class="next-card-icon">📺</div>
+        <h3>YouTube Channel</h3>
+        <p>Every tool in this playbook was built from a video episode. Watch the research behind the tool.</p>
+        <a href="https://www.youtube.com/@TheQuietEdge" target="_blank" class="btn-open" style="font-size:0.85rem;">Watch Free →</a>
+      </div>
+      <div class="next-card">
+        <div class="next-card-icon">🎧</div>
+        <h3>Parent Listening Guide</h3>
+        <p>The companion worksheet to the full Stage 2 Parent series — use it alongside the videos.</p>
+        <a href="https://tinyurl.com/5dcm9b9d" target="_blank" class="btn-open" style="font-size:0.85rem;">Open Guide →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div class="container">
+    <p class="footer-logo">The Quiet Edge <span>Academy</span></p>
+    <p>All resources grounded in peer-reviewed sports psychology research.</p>
+    <p style="margin-top:6px;">© 2026 The Quiet Edge · <a href="https://www.youtube.com/@TheQuietEdge" target="_blank">YouTube</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
