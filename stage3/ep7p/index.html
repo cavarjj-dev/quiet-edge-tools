@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parent Visualization Support Checklist — The Quiet Edge</title>
+<style>
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #1a1a2e;
+    background: #f4f7f6;
+  }
+
+  /* ===== LAYOUT ===== */
+  .page-wrapper {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, #2d6a65 0%, #5fb3ac 100%);
+    color: #fff;
+    padding: 36px 32px 28px;
+    border-radius: 12px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 180px; height: 180px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .header .brand {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-bottom: 8px;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .header .subtitle {
+    font-size: 13.5px;
+    opacity: 0.88;
+    line-height: 1.5;
+  }
+
+  /* ===== INTRO CARD ===== */
+  .intro-card {
+    background: #fff;
+    border-left: 4px solid #5fb3ac;
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 28px;
+    font-size: 14px;
+    color: #334;
+    line-height: 1.65;
+  }
+  .intro-card strong { color: #2d6a65; }
+
+  /* ===== SECTION ===== */
+  .section {
+    background: #fff;
+    border-radius: 10px;
+    padding: 24px 26px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .section-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2d6a65, #5fb3ac);
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a3a37;
+    line-height: 1.3;
+  }
+  .section-desc {
+    font-size: 13px;
+    color: #556;
+    margin-top: 3px;
+    line-height: 1.5;
+  }
+
+  /* ===== ITEMS ===== */
+  .item {
+    border: 1.5px solid #e2eeec;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .item.selected {
+    border-color: #5fb3ac;
+    background: #f0faf9;
+  }
+  .item-text {
+    font-size: 13.5px;
+    color: #2a2a3a;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .freq-options {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .freq-btn {
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1.5px solid #c8dedd;
+    background: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    color: #4a7a75;
+    cursor: pointer;
+    transition: all 0.18s;
+    user-select: none;
+  }
+  .freq-btn:hover {
+    border-color: #5fb3ac;
+    background: #eef8f7;
+  }
+  .freq-btn.active {
+    background: #5fb3ac;
+    border-color: #5fb3ac;
+    color: #fff;
+  }
+
+  /* ===== PROGRESS ===== */
+  .progress-bar-wrap {
+    background: #e2eeec;
+    border-radius: 8px;
+    height: 6px;
+    margin: 18px 0 6px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #2d6a65, #5fb3ac);
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    font-size: 11.5px;
+    color: #789;
+    text-align: right;
+  }
+
+  /* ===== RESULTS ===== */
+  #results-section {
+    display: none;
+    background: #fff;
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+  }
+  .results-header {
+    font-size: 18px;
+    font-weight: 800;
+    color: #1a3a37;
+    margin-bottom: 6px;
+  }
+  .results-subhead {
+    font-size: 13px;
+    color: #667;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+  .result-card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    border-left: 4px solid #5fb3ac;
+  }
+  .result-card.tier-high { border-left-color: #2d8a6a; background: #f0fdf8; }
+  .result-card.tier-mid  { border-left-color: #5fb3ac; background: #f0faf9; }
+  .result-card.tier-low  { border-left-color: #c97c3a; background: #fdf6f0; }
+
+  .result-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .result-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a3a37;
+  }
+  .result-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    color: #fff;
+  }
+  .badge-high { background: #2d8a6a; }
+  .badge-mid  { background: #5fb3ac; }
+  .badge-low  { background: #c97c3a; }
+
+  .result-feedback {
+    font-size: 13px;
+    color: #445;
+    line-height: 1.6;
+  }
+
+  .overall-banner {
+    background: linear-gradient(135deg, #2d6a65 0%, #5fb3ac 100%);
+    color: #fff;
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-bottom: 22px;
+    text-align: center;
+  }
+  .overall-banner .score-num {
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .overall-banner .score-label {
+    font-size: 12px;
+    opacity: 0.85;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .overall-banner .score-message {
+    font-size: 14px;
+    margin-top: 10px;
+    opacity: 0.92;
+    line-height: 1.5;
+  }
+
+  .action-box {
+    background: #f0fdf8;
+    border: 1.5px solid #a8ddd7;
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-top: 16px;
+  }
+  .action-box-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #2d6a65;
+    margin-bottom: 8px;
+  }
+  .action-box ul {
+    padding-left: 18px;
+    font-size: 13px;
+    color: #445;
+    line-height: 1.7;
+  }
+
+  /* ===== BUTTONS ===== */
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 22px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #2d6a65, #5fb3ac);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 13px 28px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-secondary {
+    background: #fff;
+    color: #2d6a65;
+    border: 2px solid #5fb3ac;
+    border-radius: 8px;
+    padding: 11px 22px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: #eef8f7; }
+
+  /* ===== SCIENCE NOTE ===== */
+  .science-note {
+    background: #f4f7f6;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-top: 24px;
+    font-size: 12px;
+    color: #667;
+    line-height: 1.6;
+    border: 1px solid #dde8e7;
+  }
+  .science-note strong { color: #445; }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #8a9;
+    margin-top: 32px;
+    line-height: 1.7;
+  }
+  .footer a { color: #5fb3ac; text-decoration: none; }
+
+  /* ===== PRINT ===== */
+  @media print {
+    body { background: #fff; font-size: 13px; }
+    .page-wrapper { padding: 0; max-width: 100%; }
+    .header { border-radius: 0; }
+    .no-print, .btn-row, #submit-btn { display: none !important; }
+    .section, #results-section { box-shadow: none; break-inside: avoid; }
+    #results-section { display: block !important; }
+    .freq-options { display: none; }
+    .item { border-color: #ccc; }
+    .page-wrapper { padding: 0 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="brand">The Quiet Edge · Parent Edition · Stage 3</div>
+    <h1>Parent Visualization Support Checklist</h1>
+    <div class="subtitle">How consistently are you Validating, Protecting, and Creating the Environment for your athlete's mental practice?</div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro-card">
+    <strong>This isn't a report card.</strong> It's a starting point. Research shows that visualization activates the same neural pathways as physical practice — but only when the conditions are right. As a parent, you are the guardian of those conditions. This checklist helps you see clearly where you're already supporting that, and where one small shift could make a real difference.<br><br>
+    <strong>How to use it:</strong> Answer each item honestly, based on your actual recent behavior — not what you'd like to do. Rate how often each statement is true for you. Takes about 5 minutes.
+  </div>
+
+  <!-- SECTION 1: VALIDATE -->
+  <div class="section" id="section-1">
+    <div class="section-header">
+      <div class="section-icon">✓</div>
+      <div>
+        <div class="section-title">Part 1: Validate — I treat mental practice as real training</div>
+        <div class="section-desc">Does your athlete see that you take their mental preparation seriously?</div>
+      </div>
+    </div>
+
+    <div class="item" data-section="1" data-index="0">
+      <div class="item-text">When my athlete sits quietly before a competition, my first instinct is to leave them alone rather than fill the silence.</div>
+      <div class="freq-options">
+        <button class="freq-btn" data-value="0">Never</button>
+        <button class="freq-btn" data-value="1">Sometimes</button>
+        <button class="freq-btn" data-value="2">Usually</button>
+        <button class="freq-btn" data-value="3">Always</button>
+      </div>
+    </div>
+
+    <div class="item" data-section="1" data-index="1">
+      <div class="item-text">I avoid casual comments that frame visualization as unproductive (e.g., "stop spacing out," "you look nervous," "what are you thinking about?").</div>
+      <div class="freq-options">
+        <button class="freq-btn" data-value="0">Never</button>
+        <button class="freq-btn" data-value="1">Sometimes</button>
+        <button class="freq-btn" data-value="2">Usually</button>
+        <button class="freq-btn" data-value="3">Always</button>
+      </div>
+    </div>
+
+    <div class="item" data-section="1" data-index="2">
+      <div class="item-text">I have said something — even once — that acknowledged mental practice as valuable (e.g., "good idea to take a moment and picture it").</div>
+      <div class="freq-options">
+        <button class="freq-btn" data-value="0">Never</button>
+        <button class="freq-btn" data-value="1">Sometimes</button>
+        <button class="freq-btn" data-value="2">Usually</button>
+        <button class="freq-btn" data-value="3">Always</button>
+      </div>
+    </div>
+
+    <div class="item" data-section="1" data-index="3">
+      <div class="item-text">I believe (and could explain to my athlete) that visualization is backed by neuroscience — not just a "mental trick."</div>
+      <div class="freq-options">
+        <button class="freq-btn" data-value="0">Not really</button>
+        <button class="freq-btn" data-value="1">Starting to</button>
+        <button class="freq-btn" data-value="2">Mostly yes</button>
+        <button class="freq-btn" data-value="3">Absolutely</button>
+      </div>
+    </div>
+
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progress-1"></div></div>
+    <div class="progress-label" id="progress-label-1">0 of 4 answered</div>
+  </div>
+
+  <!-- SECTION 2: PROTECT -->
+  <div class="section" id="section-2">
+    <div class="section-header">
+      <div class="section-icon">🛡</div>
+      <div>
+        <div class="section-title">Part 2: Protect — I guard quiet, uninterrupted time</div>
+        <div class="section-desc">Mental practice needs undisturbed space. Are you the one creating it — or the one filling it?</div>
+      </div>
+    </div>
+
+    <div class="item" data-section="2" data-index="0">
+      <div class="item-text">There is a consistent 10-minute window in our pre-competition routine that is quiet and low-demand for my athlete.</div>
+      <div class="freq-options">
+        <button class="freq-btn" data-value="0">Never</button>
+        <button class="freq-btn" data-value="1">Sometimes</button>
+        <button class="freq-btn" data-value="2">Usually</button>
+        <button class="freq-btn" data-value="3">Always</button>
+      </div>
+    </div>
+
+    <div class="item" data-section="2" data-index="1">
+      <div class="item-text">I keep the car ride quiet (or match my athlete's energy level) rather than filling it with game-day talk, logistics, or encouragement they didn't ask for.</div>
+      <div class="freq-options">
+        <button class="freq-btn" data-value="0">Never</button>
+        <button class="freq-btn" data-value="1">Sometimes</button>
+        <button class="freq-btn" data-value="2">Usually</button>
+        <button class="freq-btn" data-value="3">Always</button>
+      </div>
+    </div>
+
+    <div class="item" data-section="2" data-index="2">
+      <div class="item-text">I avoid scheduling last-minute logistics, conversations, or demands in the final hour before my athlete competes.</div>
+      <div class="freq-options">
+        <button class="freq-btn" data-value="0">Never</button>
+        <button class="freq-btn" data-value="1">Sometimes</button>
+        <button class="freq-btn" data-value="2">Usually</button>
+        <button class="freq-btn" data-value="3">Always</button>
+      </div>
+    </div>
+
+    <div class="item" data-section="2" data-index="3">
+      <div class="item-text">When my athlete is in a pre-competition mental routine (eyes closed, listening to music, quiet warm-up), I resist the urge to interrupt — even with good intentions.</div>
+      <div class="freq-options">
+        <button class="freq-btn" data-value="0">Never</button>
+        <button class="freq-btn" data-value="1">Sometimes</button>
+        <button class="freq-btn" data-value="2">Usually</button>
+        <button class="freq-btn" data-value="3">Always</button>
+      </div>
+    </div>
+
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progress-2"></div></div>
+    <div class="progress-label" id="progress-label-2">0 of 4 answered</div>
+  </div>
+
+  <!-- SECTION 3: CREATE ENVIRONMENT -->
+  <div class="section" id="section-3">
+    <div class="section-header">
+      <div class="section-icon">🌱</div>
+      <div>
+        <div class="section-title">Part 3: Create Environment — I ask, then step back</div>
+        <div class="section-desc">The environment you create is the one your athlete prepares in. Are you asking what they need — and then honoring the answer?</div>
+      </div>
+    </div>
+
+    <div class="item" data-section="3" data-index="0">
+      <div class="item-text">I ask my athlete what they need before a competition, rather than assuming I know.</div>
+      <div class="freq-options">
+        <button class="freq-btn" data-value="0">Never</button>
+        <button class="freq-btn" data-value="1">Sometimes</button>
+        <button class="freq-btn" data-value="2">Usually</button>
+        <button class="freq-btn" data-value="3">Always</button>
+      </div>
+    </div>
+
+    <div class="item" data-section="3" data-index="1">
+      <div class="item-text">When my athlete says they need space or quiet, I give it — without taking it personally or checking in repeatedly.</div>
+      <div class="freq-options">
+        <button class="freq-btn" data-value="0">Never</button>
+        <button class="freq-btn" data-value="1">Sometimes</button>
+        <button class="freq-btn" data-value="2">Usually</button>
+        <button class="freq-btn" data-value="3">Always</button>
+      </div>
+    </div>
+
+    <div class="item" data-section="3" data-index="2">
+      <div class="item-text">My own emotional state before competitions is calm and stable — I'm not adding anxiety or urgency to the environment through my tone, pacing, or body language.</div>
+      <div class="freq-options">
+        <button class="freq-btn" data-value="0">Never</button>
+        <button class="freq-btn" data-value="1">Sometimes</button>
+        <button class="freq-btn" data-value="2">Usually</button>
+        <button class="freq-btn" data-value="3">Always</button>
+      </div>
+    </div>
+
+    <div class="item" data-section="3" data-index="3">
+      <div class="item-text">I stay out of my athlete's mental preparation process — I create the space, but I don't try to direct, guide, or teach the visualization itself.</div>
+      <div class="freq-options">
+        <button class="freq-btn" data-value="0">Never</button>
+        <button class="freq-btn" data-value="1">Sometimes</button>
+        <button class="freq-btn" data-value="2">Usually</button>
+        <button class="freq-btn" data-value="3">Always</button>
+      </div>
+    </div>
+
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progress-3"></div></div>
+    <div class="progress-label" id="progress-label-3">0 of 4 answered</div>
+  </div>
+
+  <!-- SECTION 4: RECOGNIZE -->
+  <div class="section" id="section-4">
+    <div class="section-header">
+      <div class="section-icon">🔍</div>
+      <div>
+        <div class="section-title">Part 4: Recognize — I can tell visualization from worry</div>
+        <div class="section-desc">Both can look like a quiet athlete. Knowing the difference lets you intervene only when it actually helps.</div>
+      </div>
+    </div>
+
+    <div class="item" data-section="4" data-index="0">
+      <div class="item-text">I can recognize signs that my athlete's quiet moment is productive visualization (still body, slow breathing, calm expression) rather than anxious worry.</div>
+      <div class="freq-options">
+        <button class="freq-btn" data-value="0">Not at all</button>
+        <button class="freq-btn" data-value="1">Somewhat</button>
+        <button class="freq-btn" data-value="2">Usually</button>
+        <button class="freq-btn" data-value="3">Confidently</button>
+      </div>
+    </div>
+
+    <div class="item" data-section="4" data-index="1">
+      <div class="item-text">When I suspect my athlete is worrying (not visualizing), I know how to gently re-anchor them without over-correcting, solving, or dismissing their feelings.</div>
+      <div class="freq-options">
+        <button class="freq-btn" data-value="0">Not at all</button>
+        <button class="freq-btn" data-value="1">Somewhat</button>
+        <button class="freq-btn" data-value="2">Usually</button>
+        <button class="freq-btn" data-value="3">Confidently</button>
+      </div>
+    </div>
+
+    <div class="item" data-section="4" data-index="2">
+      <div class="item-text">I understand the difference between visualization (controlled, rehearsal-focused mental imagery) and worry (unfocused, catastrophizing, repetitive negative scenarios).</div>
+      <div class="freq-options">
+        <button class="freq-btn" data-value="0">Not really</button>
+        <button class="freq-btn" data-value="1">I think so</button>
+        <button class="freq-btn" data-value="2">Mostly yes</button>
+        <button class="freq-btn" data-value="3">Clearly yes</button>
+      </div>
+    </div>
+
+    <div class="item" data-section="4" data-index="3">
+      <div class="item-text">I resist the urge to "do something" every time my athlete seems anxious — I can sit with their pre-competition nerves without adding energy or pressure to it.</div>
+      <div class="freq-options">
+        <button class="freq-btn" data-value="0">Never</button>
+        <button class="freq-btn" data-value="1">Sometimes</button>
+        <button class="freq-btn" data-value="2">Usually</button>
+        <button class="freq-btn" data-value="3">Always</button>
+      </div>
+    </div>
+
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progress-4"></div></div>
+    <div class="progress-label" id="progress-label-4">0 of 4 answered</div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="btn-row no-print">
+    <button class="btn-primary" id="submit-btn" disabled onclick="showResults()">See My Results</button>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-section">
+    <div class="results-header">Your Visualization Support Profile</div>
+    <div class="results-subhead">Based on your answers across all four areas. Remember: every parent starts somewhere. The goal is one shift at a time.</div>
+
+    <div class="overall-banner">
+      <div class="score-num" id="overall-score-display">—</div>
+      <div class="score-label">out of 48 total points</div>
+      <div class="score-message" id="overall-message"></div>
+    </div>
+
+    <div id="result-cards"></div>
+
+    <div class="action-box" id="action-box">
+      <div class="action-box-title">Your One Next Step</div>
+      <div id="action-text" style="font-size:13px;color:#445;line-height:1.65;"></div>
+    </div>
+
+    <div class="science-note">
+      <strong>Why this matters:</strong> Research shows that vivid, first-person motor imagery activates the same neural pathways as physical practice (Jeannerod, 1994). The quality of those pathways depends on the conditions during mental rehearsal (Holmes & Collins, 2001). A parent's emotional state also transmits to the athlete through non-verbal signals — even without a word spoken (Feldman, 2007). You are the conditions.
+    </div>
+
+    <div class="btn-row no-print">
+      <button class="btn-primary" onclick="window.print()">Download as PDF</button>
+      <button class="btn-secondary" onclick="resetTool()">Start Over</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer no-print">
+    <div>The Quiet Edge · Stage 3: Skill Acquisition · Parent Edition</div>
+    <div>For parents of youth and teen athletes at every level.</div>
+    <div style="margin-top:6px;"><a href="https://www.youtube.com/@TheQuietEdge" target="_blank">Watch on YouTube</a> · <a href="https://tinyurl.com/29xuxnps" target="_blank">Find Your Resources</a> · <a href="https://tinyurl.com/5dcm9b9d" target="_blank">Parent Listening Guide</a></div>
+  </div>
+
+</div><!-- /.page-wrapper -->
+
+<script>
+  // ---- State ----
+  const answers = {1: {}, 2: {}, 3: {}, 4: {}};
+  const TOTAL_PER_SECTION = 4;
+
+  // ---- Rating labels ----
+  function getSectionTier(score) {
+    const pct = score / 12;
+    if (pct >= 0.75) return 'high';
+    if (pct >= 0.42) return 'mid';
+    return 'low';
+  }
+
+  // ---- Section feedback ----
+  const sectionData = {
+    1: {
+      title: 'Validate',
+      icon: '✓',
+      feedback: {
+        high: "You're already treating mental practice as real training — and your athlete can feel that. The next level is making it explicit: one conversation this season where you tell them directly that you believe in what they're doing when they go quiet before a game.",
+        mid: "You've started to shift — there are moments where you hold back the skepticism and let the quiet be productive. The gap right now is consistency. Pick one phrase you'll stop saying and one you'll start. Even a single change in your language signals belief.",
+        low: "It's okay that validation hasn't been on your radar — most parents aren't taught to think about this. Start here: the next time you see your athlete sitting quietly before a competition, do nothing. Just let it happen. That's the first rep."
+      }
+    },
+    2: {
+      title: 'Protect',
+      icon: '🛡',
+      feedback: {
+        high: "You're actively guarding quiet time — that's rarer than you think. The one upgrade to consider: make the window explicit. Ask your athlete if there's a specific moment that works best for them, and build the routine around their answer.",
+        mid: "You protect the window sometimes, but game-day logistics or good intentions can still crowd it out. The fix is structural: decide in advance when the quiet window is, and treat it as non-negotiable. Pre-decide beats in-the-moment willpower every time.",
+        low: "Pre-competition time tends to be full — that's normal, especially with travel, siblings, and logistics. But mental practice needs space you currently might not be leaving. Identify one specific window (even 8 minutes in the car before arrival) and protect it as if it were warm-up time."
+      }
+    },
+    3: {
+      title: 'Create Environment',
+      icon: '🌱',
+      feedback: {
+        high: "You've mastered the hardest part: asking what they need and then actually doing it. This is autonomy-supportive parenting in action. Keep modeling it — your athlete is learning how to self-regulate by watching how you regulate.",
+        mid: "You're asking the right questions, but stepping back fully is still a work in progress. Notice what makes it hard: is it discomfort with silence, worry that they need more from you, or habit? The awareness is the lever.",
+        low: "Creating the environment starts with one question: 'What do you need right now?' Then silence. Whatever answer comes, honor it — even if the answer is nothing. The act of asking and honoring teaches your athlete they can trust their own needs."
+      }
+    },
+    4: {
+      title: 'Recognize',
+      icon: '🔍',
+      feedback: {
+        high: "You can read the room — you know when your athlete's quiet is productive and when it's spiraling. Use that skill deliberately: the most helpful thing is often a single calm observation, not a solution. 'You seem focused' lands very differently than 'you seem nervous.'",
+        mid: "You're building the pattern recognition. The key distinction to cement: visualization is controlled and forward-looking (rehearsing what will go right), worry is uncontrolled and backward/catastrophizing (replaying what might go wrong). Breathing and body stillness are your clearest signals.",
+        low: "Most parents can't tell the difference — they weren't taught to look. Start with one physical cue: is your athlete's breathing slow and regular, or fast and shallow? Slow and still = most likely productive. That one cue gives you a starting point for whether to act or stay quiet."
+      }
+    }
+  };
+
+  // ---- Overall messages ----
+  function getOverallMessage(total) {
+    const pct = total / 48;
+    if (pct >= 0.75) return "Strong support foundation. You're creating the conditions for your athlete's mental practice to work. The shifts from here are refinements, not rebuilds.";
+    if (pct >= 0.50) return "Developing support pattern. You're doing some things really well — and there are clear, specific areas where one adjustment will make the biggest difference.";
+    if (pct >= 0.33) return "Early awareness stage. You're just learning this framework, and that's exactly the right place to start. The research is on your side — small, consistent changes compound quickly.";
+    return "Starting point identified. Every parent who's watching this video is already ahead of where most parents are. Now you have a map. Start with whichever section felt most honest.";
+  }
+
+  // ---- Button interaction ----
+  document.querySelectorAll('.freq-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const item = this.closest('.item');
+      const section = parseInt(item.dataset.section);
+      const index = parseInt(item.dataset.index);
+      const value = parseInt(this.dataset.value);
+
+      // Clear siblings
+      item.querySelectorAll('.freq-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      item.classList.add('selected');
+
+      answers[section][index] = value;
+      updateProgress(section);
+      checkAllAnswered();
+    });
+  });
+
+  function updateProgress(section) {
+    const answered = Object.keys(answers[section]).length;
+    const pct = (answered / TOTAL_PER_SECTION) * 100;
+    document.getElementById('progress-' + section).style.width = pct + '%';
+    document.getElementById('progress-label-' + section).textContent = answered + ' of ' + TOTAL_PER_SECTION + ' answered';
+  }
+
+  function checkAllAnswered() {
+    const allDone = [1,2,3,4].every(s => Object.keys(answers[s]).length === TOTAL_PER_SECTION);
+    document.getElementById('submit-btn').disabled = !allDone;
+  }
+
+  function getSectionScore(section) {
+    return Object.values(answers[section]).reduce((a, b) => a + b, 0);
+  }
+
+  function showResults() {
+    const scores = {1: getSectionScore(1), 2: getSectionScore(2), 3: getSectionScore(3), 4: getSectionScore(4)};
+    const total = Object.values(scores).reduce((a,b)=>a+b,0);
+
+    document.getElementById('overall-score-display').textContent = total;
+    document.getElementById('overall-message').textContent = getOverallMessage(total);
+
+    const cardsEl = document.getElementById('result-cards');
+    cardsEl.innerHTML = '';
+
+    [1,2,3,4].forEach(s => {
+      const score = scores[s];
+      const tier = getSectionTier(score);
+      const sd = sectionData[s];
+      const tierLabel = tier === 'high' ? 'Strong' : tier === 'mid' ? 'Building' : 'Emerging';
+      const card = document.createElement('div');
+      card.className = 'result-card tier-' + tier;
+      card.innerHTML = `
+        <div class="result-card-header">
+          <div class="result-card-title">${sd.icon} ${sd.title} — ${score}/12</div>
+          <span class="result-badge badge-${tier}">${tierLabel}</span>
+        </div>
+        <div class="result-feedback">${sd.feedback[tier]}</div>
+      `;
+      cardsEl.appendChild(card);
+    });
+
+    // Determine lowest-scoring section for action step
+    const lowestSection = [1,2,3,4].reduce((a,b) => scores[a] <= scores[b] ? a : b);
+    const actionTexts = {
+      1: "Your biggest opportunity is in <strong>Validation</strong>. This week: the next time your athlete goes quiet before a competition, say nothing and see what happens. That single decision is the first rep.",
+      2: "Your biggest opportunity is in <strong>Protection</strong>. This week: identify one specific 8–10 minute window in your pre-competition routine and declare it quiet time. No conversation, no logistics. Just space.",
+      3: "Your biggest opportunity is in <strong>Creating Environment</strong>. This week: ask your athlete one open-ended question — \"What do you need before a competition?\" — and then do exactly what they say, even if the answer is silence.",
+      4: "Your biggest opportunity is in <strong>Recognition</strong>. This week: watch for one sign that tells you whether your athlete's pre-game quiet is productive (slow breathing, stillness) or worried (sighing, fidgeting). Don't intervene either way — just notice."
+    };
+    document.getElementById('action-text').innerHTML = actionTexts[lowestSection];
+
+    document.getElementById('results-section').style.display = 'block';
+    document.getElementById('results-section').scrollIntoView({behavior: 'smooth', block: 'start'});
+  }
+
+  function resetTool() {
+    [1,2,3,4].forEach(s => { answers[s] = {}; updateProgress(s); });
+    document.querySelectorAll('.freq-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.item').forEach(i => i.classList.remove('selected'));
+    document.getElementById('submit-btn').disabled = true;
+    document.getElementById('results-section').style.display = 'none';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+</script>
+</body>
+</html>
