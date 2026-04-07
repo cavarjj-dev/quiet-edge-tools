@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fatigue or Character? — Parent Reframe Tool | The Quiet Edge</title>
+<style>
+  :root {
+    --teal: #5fb3ac;
+    --teal-dark: #3d8f88;
+    --teal-light: #e8f6f5;
+    --amber: #d4760a;
+    --amber-light: #fdf3e3;
+    --text: #1a2a29;
+    --muted: #5a7070;
+    --border: #c5dedd;
+    --white: #ffffff;
+    --bg: #f4fafa;
+    --trap-red: #c0392b;
+    --trap-red-light: #fdf0ef;
+    --green: #27ae60;
+    --green-light: #eafaf1;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Georgia, serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .page-wrap {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #2d6b65 0%, var(--teal) 60%, #7eccc6 100%);
+    color: white;
+    padding: 36px 36px 28px;
+    border-radius: 12px 12px 0 0;
+    text-align: center;
+  }
+  .header .eyebrow {
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    opacity: 0.82;
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 14px;
+    opacity: 0.88;
+    line-height: 1.5;
+  }
+
+  /* Progress bar */
+  .progress-bar-wrap {
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    height: 4px;
+    margin-top: 20px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: white;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* Cards */
+  .card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 0;
+    padding: 32px 36px;
+    display: none;
+  }
+  .card.active { display: block; }
+  .card:last-of-type { border-radius: 0 0 12px 12px; }
+
+  /* Step indicator */
+  .step-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--teal-dark);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .card h2 {
+    font-size: 20px;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .card .lead {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  /* Scenario setup */
+  .scenario-box {
+    background: var(--amber-light);
+    border-left: 4px solid var(--amber);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #5a3a05;
+  }
+  .scenario-box strong { color: var(--amber); }
+
+  /* Textarea */
+  .field-group { margin-bottom: 20px; }
+  .field-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  textarea, input[type="text"] {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    padding: 11px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    resize: vertical;
+    transition: border-color 0.2s;
+    background: white;
+  }
+  textarea:focus, input[type="text"]:focus {
+    outline: none;
+    border-color: var(--teal);
+  }
+
+  /* Choice grid */
+  .choice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 540px) { .choice-grid { grid-template-columns: 1fr; } }
+
+  .choice-btn {
+    border: 1.5px solid var(--border);
+    background: white;
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 13.5px;
+    color: var(--text);
+    font-family: inherit;
+    line-height: 1.4;
+    transition: all 0.18s;
+  }
+  .choice-btn:hover { border-color: var(--teal); background: var(--teal-light); }
+  .choice-btn.selected {
+    border-color: var(--teal-dark);
+    background: var(--teal-light);
+    font-weight: 600;
+    color: var(--teal-dark);
+  }
+  .choice-btn.danger.selected {
+    border-color: var(--trap-red);
+    background: var(--trap-red-light);
+    color: var(--trap-red);
+  }
+  .choice-btn .choice-tag {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 4px;
+    opacity: 0.7;
+  }
+
+  /* Trap checklist */
+  .trap-list { list-style: none; margin-bottom: 20px; }
+  .trap-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+  .trap-list li:hover { border-color: var(--teal); }
+  .trap-list li.checked {
+    border-color: var(--trap-red);
+    background: var(--trap-red-light);
+  }
+  .trap-list li .trap-check {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.18s;
+    background: white;
+  }
+  .trap-list li.checked .trap-check {
+    background: var(--trap-red);
+    border-color: var(--trap-red);
+    color: white;
+  }
+  .trap-list li .trap-text strong { display: block; margin-bottom: 2px; }
+
+  /* Reframe pairs */
+  .reframe-pair {
+    background: var(--teal-light);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .reframe-pair .old {
+    color: var(--trap-red);
+    font-size: 13px;
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+  .reframe-pair .old::before { content: '✗ '; font-style: normal; }
+  .reframe-pair .new-label {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--teal-dark);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .reframe-pair .new {
+    color: var(--teal-dark);
+    font-size: 13.5px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .reframe-pair .new::before { content: '✓ '; }
+
+  /* Results panel */
+  .result-panel {
+    border-radius: 8px;
+    padding: 20px 22px;
+    margin-bottom: 20px;
+  }
+  .result-panel.fatigue {
+    background: var(--green-light);
+    border: 1.5px solid #7dcea0;
+  }
+  .result-panel.character {
+    background: var(--trap-red-light);
+    border: 1.5px solid #e08b84;
+  }
+  .result-panel.unclear {
+    background: var(--amber-light);
+    border: 1.5px solid #e0b060;
+  }
+  .result-panel h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  .result-panel p { font-size: 13.5px; line-height: 1.6; color: #3a3a3a; }
+
+  .insight-box {
+    background: var(--teal-light);
+    border-left: 4px solid var(--teal);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #2a5553;
+  }
+
+  /* Nav buttons */
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    gap: 12px;
+  }
+  .btn {
+    padding: 11px 24px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    transition: all 0.18s;
+  }
+  .btn-primary {
+    background: var(--teal-dark);
+    color: white;
+  }
+  .btn-primary:hover { background: #2d6b65; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--teal); color: var(--teal-dark); }
+  .btn-download {
+    background: var(--amber);
+    color: white;
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+  .btn-download:hover { background: #b5650a; }
+  .btn-restart {
+    background: transparent;
+    color: var(--teal-dark);
+    border: 1.5px solid var(--teal);
+    width: 100%;
+    padding: 11px;
+    font-size: 14px;
+    border-radius: 8px;
+  }
+  .btn-restart:hover { background: var(--teal-light); }
+
+  /* Evidence callout */
+  .evidence-note {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 12px;
+    line-height: 1.5;
+  }
+
+  /* Score display */
+  .score-display {
+    display: flex;
+    gap: 12px;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+  .score-badge {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    text-align: center;
+    flex: 1;
+    min-width: 120px;
+  }
+  .score-badge .score-num {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--teal-dark);
+    line-height: 1;
+  }
+  .score-badge .score-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  /* Print styles */
+  @media print {
+    body { background: white; padding: 0; }
+    .page-wrap { max-width: 100%; }
+    .btn-download, .nav-row, .btn-restart, .progress-bar-wrap { display: none !important; }
+    .card { display: block !important; border: none; padding: 20px 0; page-break-inside: avoid; }
+    .header { border-radius: 0; }
+    .choice-btn.selected { border: 2px solid #000; }
+    .trap-list li.checked { border: 2px solid #000; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <div class="header">
+    <div class="eyebrow">The Quiet Edge · Stage 3 · EP8 Parent Edition</div>
+    <h1>Fatigue or Character?</h1>
+    <div class="subtitle">A post-game parent self-audit to distinguish fatigue signals from character assessments — and reframe your language accordingly.</div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  </div>
+
+  <!-- Step 1: Setup -->
+  <div class="card active" id="step1">
+    <div class="step-label">Step 1 of 5 — Set the Scene</div>
+    <h2>Bring a specific game to mind</h2>
+    <p class="lead">This tool works best when you're thinking about a real, recent game — not a hypothetical. You'll get a specific reframe for your situation at the end.</p>
+
+    <div class="scenario-box">
+      <strong>Tip:</strong> Choose a game where your athlete made visible mistakes in the <strong>second half, final period, or closing minutes</strong>. The more specific, the more useful your reframe will be.
+    </div>
+
+    <div class="field-group">
+      <label for="sport">What sport / level?</label>
+      <input type="text" id="sport" placeholder="e.g. U14 travel soccer, JV basketball, house league hockey…">
+    </div>
+
+    <div class="field-group">
+      <label for="observation">Describe specifically what you observed late in the game:</label>
+      <textarea id="observation" rows="3" placeholder="e.g. She started giving the ball away in the last 10 minutes. He stopped running back on defense. She was making basic passing errors she never makes in practice."></textarea>
+    </div>
+
+    <div class="field-group">
+      <label for="reaction">What did you think or say immediately after?</label>
+      <textarea id="reaction" rows="3" placeholder="e.g. 'I asked him why he stopped trying.' or 'I was frustrated and stayed quiet in the car.' or 'I told her she looked tired and that wasn't like her.'"></textarea>
+    </div>
+
+    <div class="nav-row">
+      <span></span>
+      <button class="btn btn-primary" onclick="goTo(2)">Next →</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Interpretation Check -->
+  <div class="card" id="step2">
+    <div class="step-label">Step 2 of 5 — Your Interpretation</div>
+    <h2>What was your first automatic thought?</h2>
+    <p class="lead">In that moment — not what you knew you <em>should</em> think, but what your brain actually produced first. Select the closest match.</p>
+
+    <div class="choice-grid">
+      <button class="choice-btn danger" onclick="selectChoice(this, 'character', 1)" data-group="1">
+        "They're not trying hard enough anymore."
+        <span class="choice-tag">Effort / Character</span>
+      </button>
+      <button class="choice-btn danger" onclick="selectChoice(this, 'character', 1)" data-group="1">
+        "They gave up mentally."
+        <span class="choice-tag">Character</span>
+      </button>
+      <button class="choice-btn danger" onclick="selectChoice(this, 'character', 1)" data-group="1">
+        "They just don't have the discipline to finish strong."
+        <span class="choice-tag">Character</span>
+      </button>
+      <button class="choice-btn" onclick="selectChoice(this, 'fatigue', 1)" data-group="1">
+        "They looked physically exhausted — that explains the errors."
+        <span class="choice-tag">Fatigue</span>
+      </button>
+      <button class="choice-btn" onclick="selectChoice(this, 'fatigue', 1)" data-group="1">
+        "Something physical was clearly going on."
+        <span class="choice-tag">Fatigue</span>
+      </button>
+      <button class="choice-btn" onclick="selectChoice(this, 'unclear', 1)" data-group="1">
+        "I honestly wasn't sure what to think."
+        <span class="choice-tag">Unresolved</span>
+      </button>
+    </div>
+
+    <div class="insight-box" id="interpretInsight" style="display:none;"></div>
+
+    <div class="evidence-note">
+      Research note: Schmidt & Lee (2014) — Fatigue degrades attentional capacity and motor control precision simultaneously. Late-game errors are frequently neurological events, not motivational ones.
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="goTo(1)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(3)">Next →</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Trap Audit -->
+  <div class="card" id="step3">
+    <div class="step-label">Step 3 of 5 — The 4 Parent Traps</div>
+    <h2>Which of these showed up?</h2>
+    <p class="lead">Check any trap that applied <em>in this game or your typical post-game pattern</em>. Be honest — this is private self-reflection.</p>
+
+    <ul class="trap-list" id="trapList">
+      <li onclick="toggleTrap(this)" data-trap="shame">
+        <div class="trap-check">✓</div>
+        <div class="trap-text">
+          <strong>Shame Language</strong>
+          Said something like "That was embarrassing," "You let the team down," or "I don't know what happened to you." — or thought it clearly enough that your tone said it.
+        </div>
+      </li>
+      <li onclick="toggleTrap(this)" data-trap="comparison">
+        <div class="trap-check">✓</div>
+        <div class="trap-text">
+          <strong>Fresh vs. Fatigued Comparison</strong>
+          Referenced how well they performed early vs. how they fell apart at the end: "You were doing so well in the first half…"
+        </div>
+      </li>
+      <li onclick="toggleTrap(this)" data-trap="effort">
+        <div class="trap-check">✓</div>
+        <div class="trap-text">
+          <strong>Effort Measurement Bias</strong>
+          Judged their total effort or attitude based primarily on how they looked when they were still fresh — ignoring what physical depletion does to visible output.
+        </div>
+      </li>
+      <li onclick="toggleTrap(this)" data-trap="overload">
+        <div class="trap-check">✓</div>
+        <div class="trap-text">
+          <strong>Missing Overload Signals</strong>
+          Didn't ask about or factor in training volume, sleep, schedule congestion, or multiple-game weekends before drawing conclusions about their mental state.
+        </div>
+      </li>
+    </ul>
+
+    <div class="score-display" id="trapScoreDisplay" style="display:none;">
+      <div class="score-badge">
+        <div class="score-num" id="trapScore">0</div>
+        <div class="score-label">Traps checked</div>
+      </div>
+      <div class="score-badge" id="trapInterpBadge" style="display:none;">
+        <div class="score-num" id="trapInterp" style="font-size:18px;"></div>
+        <div class="score-label">Engagement level</div>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="goTo(2)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(4)">Next →</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Language Reframe -->
+  <div class="card" id="step4">
+    <div class="step-label">Step 4 of 5 — Your Language Reframe</div>
+    <h2>Replace reactive language with curiosity</h2>
+    <p class="lead">Below are reframes specific to the traps you checked. These aren't softer versions of the same message — they're a fundamentally different lens that treats fatigue as information, not failure.</p>
+
+    <div id="reframeContent"></div>
+
+    <div class="insight-box">
+      <strong>The underlying shift:</strong> Reactive language asks "What's wrong with you?" Fatigue-aware language asks "What's happening in your body — and what does it tell us about training?" One adds shame to exhaustion. The other turns the observation into useful data.
+    </div>
+
+    <div class="evidence-note">
+      Mageau & Vallerand (2003): Autonomy-supportive adults who minimize controlling language and acknowledge feelings produce athletes with higher intrinsic motivation and lower anxiety. Nicholls (1989): Framing late-game mistakes as character failure shifts athletes toward ego-involvement at the moment they are most depleted.
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="goTo(3)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(5)">See My Results →</button>
+    </div>
+  </div>
+
+  <!-- Step 5: Results -->
+  <div class="card" id="step5">
+    <div class="step-label">Step 5 of 5 — Your Reframe</div>
+    <h2>Here's what the evidence says about what you saw</h2>
+    <p class="lead">Based on your inputs — here is the most evidence-aligned interpretation of what happened, and what to do with it.</p>
+
+    <div id="finalResult"></div>
+
+    <div id="actionSteps" style="margin-top:20px;"></div>
+
+    <div class="insight-box" style="margin-top:20px;">
+      <strong>The key shift:</strong> When fatigue errors are training gaps rather than character flaws, your job changes. You're no longer the judge of their mental strength. You're the person who can ask better questions, support smarter training, and protect them from shame when they're already depleted.
+    </div>
+
+    <div style="margin-top:28px; padding-top:20px; border-top:1px solid var(--border);">
+      <button class="btn btn-download" onclick="window.print()">⬇ Download / Print as PDF</button>
+      <button class="btn btn-restart" onclick="restart()">↩ Start Over with a Different Game</button>
+    </div>
+
+    <div style="margin-top:20px; text-align:center; font-size:12px; color:var(--muted); line-height:1.6;">
+      <strong>The Quiet Edge</strong> — Stage 3: Skill Acquisition, Parent Edition<br>
+      Evidence sources: Schmidt & Lee (2014), Mageau & Vallerand (2003), Nicholls (1989)
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let state = {
+    sport: '',
+    observation: '',
+    reaction: '',
+    interpretation: null, // 'character' | 'fatigue' | 'unclear'
+    traps: new Set()
+  };
+
+  const totalSteps = 5;
+
+  function updateProgress(step) {
+    document.getElementById('progressBar').style.width = ((step / totalSteps) * 100) + '%';
+  }
+
+  function goTo(step) {
+    // Collect step 1 data before leaving
+    if (step > 1) {
+      state.sport = document.getElementById('sport').value.trim();
+      state.observation = document.getElementById('observation').value.trim();
+      state.reaction = document.getElementById('reaction').value.trim();
+    }
+    if (step === 4) buildReframes();
+    if (step === 5) buildResults();
+
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+    document.getElementById('step' + step).classList.add('active');
+    updateProgress(step);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function selectChoice(btn, type, group) {
+    document.querySelectorAll('[data-group="' + group + '"]').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    state.interpretation = type;
+
+    const insight = document.getElementById('interpretInsight');
+    insight.style.display = 'block';
+    if (type === 'character') {
+      insight.innerHTML = '<strong>This is the most common default.</strong> Most parents trained in sport grew up in an era where late-game mistakes were explained as mental weakness or lack of heart. The science tells a different story: physical depletion produces neurological changes that affect fine motor execution regardless of how much an athlete wants to perform well.';
+    } else if (type === 'fatigue') {
+      insight.innerHTML = '<strong>You\'re already reading this well.</strong> Recognizing fatigue as the primary signal is the shift most parents need to make. The next step is ensuring that\'s reflected in your language and your training support decisions.';
+    } else {
+      insight.innerHTML = '<strong>Uncertainty is actually useful data.</strong> When you don\'t know whether you\'re seeing fatigue or effort, asking is the right move — but how you ask matters. "Why did you quit?" and "Were you completely drained by the end?" are asking the same question with very different effects.';
+    }
+  }
+
+  function toggleTrap(li) {
+    const trap = li.dataset.trap;
+    if (state.traps.has(trap)) {
+      state.traps.delete(trap);
+      li.classList.remove('checked');
+    } else {
+      state.traps.add(trap);
+      li.classList.add('checked');
+    }
+    const count = state.traps.size;
+    const scoreDisplay = document.getElementById('trapScoreDisplay');
+    scoreDisplay.style.display = count > 0 ? 'flex' : 'none';
+    document.getElementById('trapScore').textContent = count;
+
+    const badge = document.getElementById('trapInterpBadge');
+    const interp = document.getElementById('trapInterp');
+    if (count > 0) {
+      badge.style.display = 'block';
+      if (count === 1) { interp.textContent = 'Low'; interp.style.color = '#27ae60'; }
+      else if (count === 2) { interp.textContent = 'Moderate'; interp.style.color = '#d4760a'; }
+      else { interp.textContent = 'High'; interp.style.color = '#c0392b'; }
+    }
+  }
+
+  const trapReframes = {
+    shame: {
+      label: 'Shame Language',
+      old: 'That was embarrassing. You let the team down. I don\'t know what happened to you.',
+      new: 'You were running on empty in that last stretch. That\'s not a character thing — that\'s a training thing. Let\'s figure out together what your body needs to hold up longer.'
+    },
+    comparison: {
+      label: 'Fresh vs. Fatigued Comparison',
+      old: 'You were doing so well in the first half. What happened?',
+      new: 'You looked sharp when you were fresh. The last 10 minutes are where it got hard. Were you completely drained by then? That gap is actually what we\'re training to close.'
+    },
+    effort: {
+      label: 'Effort Measurement Bias',
+      old: 'They looked like they stopped caring / weren\'t trying anymore.',
+      new: 'On a scale of 1–10, how much fuel did you have left in the final minutes? [Listen, don\'t judge.] What they show when they\'re depleted is different from how hard they\'re trying.'
+    },
+    overload: {
+      label: 'Missing Overload Signals',
+      old: '[No question was asked about how their body felt going in]',
+      new: 'Before the next game: "How\'s your body feeling this week — any leftover heaviness from training?" After: "What was your energy like at the start vs. the end?"'
+    }
+  };
+
+  function buildReframes() {
+    const container = document.getElementById('reframeContent');
+    if (state.traps.size === 0) {
+      container.innerHTML = '<div class="insight-box">You didn\'t flag any of the four traps — which either means you\'re reading fatigue well, or the traps showed up in subtler ways. Either way, the language examples below offer a template for curiosity-based post-game conversations.</div>';
+      // Show all reframes lightly
+      Object.values(trapReframes).forEach(r => {
+        container.innerHTML += `<div class="reframe-pair"><div class="old">${r.old}</div><div class="new-label">Try instead</div><div class="new">${r.new}</div></div>`;
+      });
+    } else {
+      container.innerHTML = '';
+      state.traps.forEach(trap => {
+        const r = trapReframes[trap];
+        container.innerHTML += `<div class="reframe-pair"><div class="old">${r.old}</div><div class="new-label">Reframe for "${r.label}"</div><div class="new">${r.new}</div></div>`;
+      });
+      // Add universal close
+      container.innerHTML += `<div class="reframe-pair"><div class="new-label">Universal post-game opener (works for all fatigue situations)</div><div class="new">Were you completely spent by the end? [Pause, let them answer.] That\'s important information for your training. Not a character thing — a fuel thing.</div></div>`;
+    }
+  }
+
+  function buildResults() {
+    const result = document.getElementById('finalResult');
+    const actions = document.getElementById('actionSteps');
+
+    let panel = '';
+    if (state.interpretation === 'fatigue') {
+      panel = `<div class="result-panel fatigue">
+        <h3>✓ You're reading this well — now make sure your language matches</h3>
+        <p>You identified fatigue as the likely driver of what you observed. The research supports you: motor control degrades under physical depletion in ways that are neurologically unavoidable, regardless of effort or character. Your next move is ensuring that understanding is visible to your athlete — that your post-game language and your training conversations reflect this lens, not a default effort/character frame.</p>
+      </div>`;
+    } else if (state.interpretation === 'character') {
+      panel = `<div class="result-panel character">
+        <h3>↻ This is the reframe: what you saw is more likely a training gap than a character gap</h3>
+        <p>Your first read was effort or character — and that's the most common default. But late-game errors have a strong physiological explanation: physical exhaustion degrades the neural pathways that execute trained motor patterns. The athlete may have wanted to perform well and been physically unable to execute. Shame framing in this state adds psychological load to an already depleted system — and makes the training gap harder to close, not easier.</p>
+      </div>`;
+    } else {
+      panel = `<div class="result-panel unclear">
+        <h3>→ Uncertainty is the right starting point — curiosity is the right next move</h3>
+        <p>Not knowing whether you're seeing fatigue or effort is actually good awareness. The answer requires information you can only get by asking — and asking well. The key: frame your questions around their physical state, not their performance output. "Were you empty by the end?" gets you more honest information than "What happened?" or "Why did you stop trying?"</p>
+      </div>`;
+    }
+    result.innerHTML = panel;
+
+    let trapCount = state.traps.size;
+    let actionHTML = '<div style="background:var(--teal-light);border-radius:8px;padding:18px 20px;">';
+    actionHTML += '<div style="font-size:13px;font-weight:700;color:var(--teal-dark);margin-bottom:12px;">YOUR 4 PARENT ACTIONS — Starting This Week</div>';
+    actionHTML += '<ol style="padding-left:18px;font-size:13.5px;line-height:1.8;color:#2a4a48;">';
+    actionHTML += '<li><strong>Recognize fatigue as real.</strong> Late-game errors are often neurological, not motivational. When you see the pattern, name it to yourself first: "That looks like a fuel issue, not a fight issue."</li>';
+    actionHTML += '<li><strong>Ask better questions.</strong> Replace "What happened?" with "Were you running on empty by the end?" One invites defense. One invites honest self-reporting.</li>';
+    actionHTML += '<li><strong>Support fatigue-specific training.</strong> Ask their coach: "Are they doing any training under fatigue conditions? That\'s where late-game execution gets built." This shows you understand the development process.</li>';
+    actionHTML += '<li><strong>Monitor total load.</strong> Before making any character assessment after a game — check: How much did they train this week? How did they sleep? Did they play multiple games? Total load context changes what you\'re seeing.</li>';
+    actionHTML += '</ol></div>';
+
+    if (state.sport) {
+      actionHTML += `<div style="margin-top:12px;font-size:12.5px;color:var(--muted);font-style:italic;">Applied to: ${state.sport}</div>`;
+    }
+
+    actions.innerHTML = actionHTML;
+  }
+
+  function restart() {
+    state = { sport: '', observation: '', reaction: '', interpretation: null, traps: new Set() };
+    document.getElementById('sport').value = '';
+    document.getElementById('observation').value = '';
+    document.getElementById('reaction').value = '';
+    document.querySelectorAll('[data-group="1"]').forEach(b => b.classList.remove('selected'));
+    document.getElementById('interpretInsight').style.display = 'none';
+    document.querySelectorAll('.trap-list li').forEach(li => li.classList.remove('checked'));
+    document.getElementById('trapScoreDisplay').style.display = 'none';
+    goTo(1);
+  }
+
+  // Initialize
+  updateProgress(1);
+</script>
+</body>
+</html>
