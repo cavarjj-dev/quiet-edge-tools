@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Am I the Motivator or the System Supporter? — The Quiet Edge</title>
+<style>
+  /* ── Brand & Reset ─────────────────────────────────────── */
+  :root {
+    --teal:      #5fb3ac;
+    --teal-dark: #3d8f89;
+    --teal-light:#e6f5f4;
+    --amber:     #e8a04a;
+    --bg:        #f9f7f4;
+    --text:      #1a1a1a;
+    --muted:     #6b7280;
+    --card-bg:   #ffffff;
+    --border:    #d1d5db;
+    --radius:    12px;
+    --shadow:    0 2px 12px rgba(0,0,0,.08);
+    font-size: 16px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ── Layout ───────────────────────────────────────────── */
+  .page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+  }
+
+  /* ── Header ───────────────────────────────────────────── */
+  .header {
+    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 2rem 2rem 1.75rem;
+    margin-bottom: 1.75rem;
+    box-shadow: var(--shadow);
+  }
+  .header .tag {
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    opacity: .8;
+    margin-bottom: .5rem;
+  }
+  .header h1 {
+    font-size: 1.55rem;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: .6rem;
+  }
+  .header p {
+    font-size: .95rem;
+    opacity: .9;
+    max-width: 560px;
+  }
+
+  /* ── Progress ─────────────────────────────────────────── */
+  .progress-bar-wrap {
+    background: var(--border);
+    border-radius: 99px;
+    height: 6px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    background: var(--teal);
+    height: 100%;
+    border-radius: 99px;
+    transition: width .4s ease;
+  }
+  .progress-label {
+    font-size: .8rem;
+    color: var(--muted);
+    margin-bottom: .4rem;
+    text-align: right;
+  }
+
+  /* ── Scenario Card ────────────────────────────────────── */
+  .scenario-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--shadow);
+    display: none;
+  }
+  .scenario-card.active { display: block; }
+
+  .scenario-number {
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--teal-dark);
+    margin-bottom: .5rem;
+  }
+  .scenario-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    line-height: 1.45;
+  }
+  .scenario-context {
+    font-size: .88rem;
+    color: var(--muted);
+    background: var(--teal-light);
+    border-left: 3px solid var(--teal);
+    padding: .6rem .9rem;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 1.35rem;
+    line-height: 1.5;
+  }
+
+  /* ── Options ──────────────────────────────────────────── */
+  .options { display: flex; flex-direction: column; gap: .7rem; }
+
+  .option-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: .85rem;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: .85rem 1rem;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color .2s, background .2s, box-shadow .2s;
+    width: 100%;
+    font-family: inherit;
+    font-size: .95rem;
+    line-height: 1.45;
+    color: var(--text);
+  }
+  .option-btn:hover {
+    border-color: var(--teal);
+    background: var(--teal-light);
+    box-shadow: 0 0 0 3px rgba(95,179,172,.15);
+  }
+  .option-btn.selected {
+    border-color: var(--teal-dark);
+    background: var(--teal-light);
+  }
+  .option-letter {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--teal);
+    color: #fff;
+    font-size: .78rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: .05rem;
+  }
+
+  /* ── Nav buttons ──────────────────────────────────────── */
+  .nav { display: flex; gap: .75rem; margin-top: 1.4rem; }
+  .btn {
+    flex: 1;
+    padding: .75rem 1rem;
+    border-radius: 8px;
+    border: none;
+    font-size: .95rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity .2s, transform .1s;
+  }
+  .btn:active { transform: scale(.98); }
+  .btn-primary { background: var(--teal); color: #fff; }
+  .btn-primary:hover { opacity: .9; }
+  .btn-secondary {
+    background: transparent;
+    border: 2px solid var(--border);
+    color: var(--muted);
+  }
+  .btn-secondary:hover { border-color: var(--teal); color: var(--teal-dark); }
+  .btn:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* ── Results ──────────────────────────────────────────── */
+  #results-section { display: none; }
+
+  .result-header {
+    border-radius: var(--radius);
+    padding: 1.75rem 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow);
+    color: #fff;
+  }
+  .result-header.motivator  { background: linear-gradient(135deg, #d97706, #b45309); }
+  .result-header.rescue     { background: linear-gradient(135deg, #7c3aed, #5b21b6); }
+  .result-header.supporter  { background: linear-gradient(135deg, var(--teal), var(--teal-dark)); }
+
+  .result-header .result-label {
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    opacity: .8;
+    margin-bottom: .4rem;
+  }
+  .result-header h2 { font-size: 1.45rem; font-weight: 800; margin-bottom: .5rem; line-height: 1.2; }
+  .result-header p  { font-size: .95rem; opacity: .92; line-height: 1.55; }
+
+  .result-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--shadow);
+  }
+  .result-section h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--teal-dark);
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+
+  .swap-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  .swap-table th {
+    text-align: left;
+    padding: .4rem .7rem;
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+    border-bottom: 2px solid var(--border);
+  }
+  .swap-table td {
+    padding: .6rem .7rem;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.45;
+  }
+  .swap-table tr:last-child td { border-bottom: none; }
+  .swap-table .old { color: #b91c1c; }
+  .swap-table .new { color: var(--teal-dark); font-weight: 600; }
+
+  .score-row {
+    display: flex;
+    gap: .5rem;
+    font-size: .85rem;
+    margin-bottom: .5rem;
+    align-items: center;
+  }
+  .score-label { flex: 1; color: var(--muted); }
+  .score-dots { display: flex; gap: 4px; }
+  .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--bg);
+  }
+  .dot.filled { border-color: var(--teal); background: var(--teal); }
+  .dot.filled.warn { border-color: #d97706; background: #d97706; }
+  .dot.filled.alert { border-color: #7c3aed; background: #7c3aed; }
+
+  .this-week {
+    background: var(--teal-light);
+    border: 1px solid var(--teal);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-top: .75rem;
+  }
+  .this-week p { font-size: .9rem; line-height: 1.55; }
+  .this-week strong { color: var(--teal-dark); }
+
+  .evidence-note {
+    font-size: .8rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: .75rem;
+    margin-top: .75rem;
+    line-height: 1.5;
+  }
+
+  .print-btn-wrap { text-align: center; margin-top: 1.75rem; }
+  .print-btn {
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: .75rem 2rem;
+    font-size: .95rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity .2s;
+  }
+  .print-btn:hover { opacity: .88; }
+
+  .restart-btn {
+    display: block;
+    margin: .75rem auto 0;
+    background: transparent;
+    border: 2px solid var(--border);
+    color: var(--muted);
+    border-radius: 8px;
+    padding: .6rem 1.5rem;
+    font-size: .88rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color .2s, color .2s;
+  }
+  .restart-btn:hover { border-color: var(--teal); color: var(--teal-dark); }
+
+  .footer-note {
+    text-align: center;
+    font-size: .8rem;
+    color: var(--muted);
+    margin-top: 2rem;
+    line-height: 1.5;
+  }
+
+  /* ── Print ────────────────────────────────────────────── */
+  @media print {
+    body { background: #fff; }
+    .page { max-width: 100%; padding: 0; }
+    .header { background: #1a1a1a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .result-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .print-btn-wrap, .restart-btn, #quiz-section, .progress-bar-wrap, .progress-label { display: none !important; }
+    #results-section { display: block !important; }
+    .result-section { break-inside: avoid; }
+    @page { margin: 1in; size: letter; }
+  }
+
+  /* ── Mobile ───────────────────────────────────────────── */
+  @media (max-width: 520px) {
+    .header h1 { font-size: 1.3rem; }
+    .swap-table { font-size: .82rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="tag">The Quiet Edge · Parent Edition · EP9</div>
+    <h1>Am I the Motivator<br>or the System Supporter?</h1>
+    <p>5 real sport-parenting moments. Pick your honest reaction — get a personalized role profile and specific language swaps to try this week.</p>
+  </div>
+
+  <!-- Quiz Section -->
+  <div id="quiz-section">
+    <div class="progress-label" id="progress-label">Scenario 1 of 5</div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progress-bar" style="width:20%"></div>
+    </div>
+
+    <!-- Scenario 1 -->
+    <div class="scenario-card active" id="s1">
+      <div class="scenario-number">Scenario 1 of 5</div>
+      <div class="scenario-text">It's Tuesday evening. Your athlete is on their phone and hasn't mentioned anything about practice. According to the schedule, they were supposed to train today.</div>
+      <div class="scenario-context">⏱ This is a moment you probably face multiple times a week.</div>
+      <div class="options">
+        <button class="option-btn" data-scenario="1" data-type="M" onclick="selectOption(this)">
+          <span class="option-letter">A</span>
+          <span>You walk over and say "Hey — you've been on that phone for an hour. You should be training. Tournament is this weekend."</span>
+        </button>
+        <button class="option-btn" data-scenario="1" data-type="R" onclick="selectOption(this)">
+          <span class="option-letter">B</span>
+          <span>You pull up their schedule on your phone to double-check what they're supposed to do, then go remind them of the plan.</span>
+        </button>
+        <button class="option-btn" data-scenario="1" data-type="S" onclick="selectOption(this)">
+          <span class="option-letter">C</span>
+          <span>You don't interrupt. Later, if the session is missed, you ask once: "Your plan had practice today — what happened?" Then you listen.</span>
+        </button>
+      </div>
+      <div class="nav">
+        <button class="btn btn-primary" onclick="next(1)" id="next1" disabled>Next →</button>
+      </div>
+    </div>
+
+    <!-- Scenario 2 -->
+    <div class="scenario-card" id="s2">
+      <div class="scenario-number">Scenario 2 of 5</div>
+      <div class="scenario-text">Your athlete had a rough game — missed shots they usually make, looked flat. On the car ride home, they're quiet.</div>
+      <div class="scenario-context">💬 What you say (or don't say) in the next 10 minutes shapes how they process this.</div>
+      <div class="options">
+        <button class="option-btn" data-scenario="2" data-type="M" onclick="selectOption(this)">
+          <span class="option-letter">A</span>
+          <span>"You need to put in more work this week. That game showed you're not where you need to be — we need to book extra practice time."</span>
+        </button>
+        <button class="option-btn" data-scenario="2" data-type="R" onclick="selectOption(this)">
+          <span class="option-letter">B</span>
+          <span>You say "It's okay, everyone has bad days" and pivot to something positive — you don't want them to feel bad about themselves.</span>
+        </button>
+        <button class="option-btn" data-scenario="2" data-type="S" onclick="selectOption(this)">
+          <span class="option-letter">C</span>
+          <span>You stay quiet for a few minutes, then ask: "What are you taking from today?" You let them lead the debrief.</span>
+        </button>
+      </div>
+      <div class="nav">
+        <button class="btn btn-secondary" onclick="back(2)">← Back</button>
+        <button class="btn btn-primary" onclick="next(2)" id="next2" disabled>Next →</button>
+      </div>
+    </div>
+
+    <!-- Scenario 3 -->
+    <div class="scenario-card" id="s3">
+      <div class="scenario-number">Scenario 3 of 5</div>
+      <div class="scenario-text">Your athlete has been saying they want to make the elite team next year, but their off-season training has been inconsistent — some weeks great, some weeks nothing.</div>
+      <div class="scenario-context">🎯 This is the gap between stated goals and daily behavior. What do you do with it?</div>
+      <div class="options">
+        <button class="option-btn" data-scenario="3" data-type="M" onclick="selectOption(this)">
+          <span class="option-letter">A</span>
+          <span>You sit them down and explain the connection between their inconsistency and their goal — making it clear they won't get there this way.</span>
+        </button>
+        <button class="option-btn" data-scenario="3" data-type="R" onclick="selectOption(this)">
+          <span class="option-letter">B</span>
+          <span>You offer a deal: if they complete all their planned sessions for the month, you'll sign them up for a camp or get them new equipment.</span>
+        </button>
+        <button class="option-btn" data-scenario="3" data-type="S" onclick="selectOption(this)">
+          <span class="option-letter">C</span>
+          <span>You ask: "You mentioned the elite team — what does your training plan actually look like to get there? Do you have one written out?" You let them design it.</span>
+        </button>
+      </div>
+      <div class="nav">
+        <button class="btn btn-secondary" onclick="back(3)">← Back</button>
+        <button class="btn btn-primary" onclick="next(3)" id="next3" disabled>Next →</button>
+      </div>
+    </div>
+
+    <!-- Scenario 4 -->
+    <div class="scenario-card" id="s4">
+      <div class="scenario-number">Scenario 4 of 5</div>
+      <div class="scenario-text">The morning of a big game. Your athlete forgot to pack their bag last night and is scrambling. You're going to be late if you don't help right now.</div>
+      <div class="scenario-context">⏰ You have 90 seconds before this becomes a real problem. What do you do?</div>
+      <div class="options">
+        <button class="option-btn" data-scenario="4" data-type="M" onclick="selectOption(this)">
+          <span class="option-letter">A</span>
+          <span>You start packing while reminding them this is exactly why you've been telling them to prepare the night before. Lesson delivered.</span>
+        </button>
+        <button class="option-btn" data-scenario="4" data-type="R" onclick="selectOption(this)">
+          <span class="option-letter">B</span>
+          <span>You quietly pack the bag yourself — they're stressed enough and you don't want the morning to spiral before a big game.</span>
+        </button>
+        <button class="option-btn" data-scenario="4" data-type="S" onclick="selectOption(this)">
+          <span class="option-letter">C</span>
+          <span>You stay calm and say "You've got 5 minutes — go." You do not pack the bag. If something's missing, that's information they'll keep.</span>
+        </button>
+      </div>
+      <div class="nav">
+        <button class="btn btn-secondary" onclick="back(4)">← Back</button>
+        <button class="btn btn-primary" onclick="next(4)" id="next4" disabled>Next →</button>
+      </div>
+    </div>
+
+    <!-- Scenario 5 -->
+    <div class="scenario-card" id="s5">
+      <div class="scenario-number">Scenario 5 of 5</div>
+      <div class="scenario-text">Your athlete tells you they don't feel like going to practice today. No injury, no illness — they're just not feeling it.</div>
+      <div class="scenario-context">🔑 This moment is where most patterns get set. What's your go-to?</div>
+      <div class="options">
+        <button class="option-btn" data-scenario="5" data-type="M" onclick="selectOption(this)">
+          <span class="option-letter">A</span>
+          <span>"You're going. You made a commitment to this team. You'll feel better once you're there — motivation follows action." You drive them.</span>
+        </button>
+        <button class="option-btn" data-scenario="5" data-type="R" onclick="selectOption(this)">
+          <span class="option-letter">B</span>
+          <span>You negotiate — maybe they go for just the first half, or you promise something afterward to make it easier to show up.</span>
+        </button>
+        <button class="option-btn" data-scenario="5" data-type="S" onclick="selectOption(this)">
+          <span class="option-letter">C</span>
+          <span>You say "That's your call to make" and let them decide. Then you follow through: whatever they choose, the consequence is theirs to own.</span>
+        </button>
+      </div>
+      <div class="nav">
+        <button class="btn btn-secondary" onclick="back(5)">← Back</button>
+        <button class="btn btn-primary" onclick="showResults()" id="next5" disabled>See My Results →</button>
+      </div>
+    </div>
+  </div><!-- /quiz-section -->
+
+  <!-- Results Section -->
+  <div id="results-section">
+
+    <div class="result-header" id="result-header">
+      <div class="result-label" id="result-label">Your Role Profile</div>
+      <h2 id="result-title"></h2>
+      <p id="result-summary"></p>
+    </div>
+
+    <!-- Score breakdown -->
+    <div class="result-section">
+      <h3>📊 Your Response Breakdown</h3>
+      <div id="score-breakdown"></div>
+      <div class="evidence-note">
+        Research note: External pressure, contingent rewards, and rescue behaviors each independently undermine intrinsic motivation — even when intentions are positive (Deci, Koestner & Ryan, 1999; Deci & Ryan, 2000). Autonomy-supportive adults who ask rather than tell produce athletes with significantly higher persistence and lower anxiety (Mageau & Vallerand, 2003).
+      </div>
+    </div>
+
+    <!-- Language swaps -->
+    <div class="result-section">
+      <h3>🔄 Language Swaps for Your Pattern</h3>
+      <table class="swap-table" id="swap-table">
+        <thead>
+          <tr>
+            <th>What you've been saying</th>
+            <th>What system-building sounds like</th>
+          </tr>
+        </thead>
+        <tbody id="swap-body"></tbody>
+      </table>
+    </div>
+
+    <!-- This week -->
+    <div class="result-section">
+      <h3>📅 Your This-Week Focus</h3>
+      <div class="this-week" id="this-week-content"></div>
+    </div>
+
+    <div class="print-btn-wrap">
+      <button class="print-btn" onclick="window.print()">⬇ Download / Print My Results</button>
+      <button class="restart-btn" onclick="restart()">Start Over</button>
+    </div>
+
+    <p class="footer-note">
+      The Quiet Edge · Parent Edition · EP9: Parent Not the Motivator<br>
+      Evidence base: Deci & Ryan (2000) | Deci, Koestner & Ryan (1999) | Mageau & Vallerand (2003)
+    </p>
+  </div><!-- /results-section -->
+
+</div><!-- /page -->
+
+<script>
+  const answers = {};
+
+  // ── Profile data ──────────────────────────────────────────
+  const profiles = {
+    M: {
+      cssClass: 'motivator',
+      label: 'Your Primary Pattern',
+      title: 'The Daily Motivator',
+      summary: "You're the engine — and your athlete knows it. You push, remind, explain, and keep the standards high because you care. But here's the hard truth the research confirms: the more energy you put into their motivation, the less they develop their own. External drive is borrowed energy — it works until you're not in the room.",
+      swaps: [
+        ['\"You need to practice today.\"', '\"What\'s your training plan look like this week?\"'],
+        ['\"Come on, you should be working harder.\"', '\"What did you set as your goal for this session?\"'],
+        ['\"After everything we invest in this...\"', '(Let the natural consequence land. Say nothing.)'],
+        ['\"I need you to take this seriously.\"', '\"How serious do you want to be about this? What does that look like?\"'],
+      ],
+      focus: `<p>This week: <strong>pick one moment where you'd normally push — and don't.</strong> Ask one question instead, then go silent. See what your athlete does with the space. The discomfort you feel is the motivation transfer beginning.</p><p style="margin-top:.6rem">If they don't fill the space — that's information. Debrief it, don't rescue it.</p>`
+    },
+    R: {
+      cssClass: 'rescue',
+      label: 'Your Primary Pattern',
+      title: 'The Rescue Parent',
+      summary: "You hate watching them struggle — so you step in. You pack the bag, soften the consequence, smooth the road. This comes from love, but it sends a signal your athlete learns fast: 'I don't have to manage this, someone will.' Natural consequences are developmental data. When you absorb them, your athlete loses the lesson.",
+      swaps: [
+        ['Packing their bag / setting their alarm', '\"What do you need to get ready? You\'ve got 10 minutes.\"'],
+        ['\"It\'s okay, you\'ll do better next time.\"', '\"What are you taking from today? What\'s your plan from here?\"'],
+        ['Negotiating to make showing up easier', '\"That\'s your call. What\'s the consequence if you skip?\"'],
+        ['Managing the schedule so they don\'t miss anything', 'Post the schedule. Ask weekly: \"What\'s on your plate this week?\"'],
+      ],
+      focus: `<p>This week: <strong>let one thing land without a buffer.</strong> If they forget something, let them face it. If it goes badly, debrief it afterward: \"What happened? What will you do differently?\" Your job is the debrief — not the rescue.</p><p style="margin-top:.6rem">Start small: one item they normally rely on you for, transferred to them this week.</p>`
+    },
+    S: {
+      cssClass: 'supporter',
+      label: 'Your Primary Pattern',
+      title: 'The System Supporter',
+      summary: "You're doing the harder work — and it's paying off. You ask instead of tell, you let consequences teach, and you hold space for them to problem-solve their own system. This is autonomy-supportive parenting in practice, and the research is clear: athletes raised this way show greater persistence, resilience, and long-term intrinsic motivation.",
+      swaps: [
+        ['Occasional check-in → keep it open-ended', '\"How is your system working? Any adjustments needed?\"'],
+        ['When they struggle → resist the instinct to fix', '\"What do you think is going on? What do you want to do about it?\"'],
+        ['When co-parent pushes → be the anchor', '\"We agreed to ask first. Let\'s let them figure it out.\"'],
+        ['Celebrating effort → stay specific, not generic', '\"I noticed how you stuck with it in the second half — that\'s the work.\"'],
+      ],
+      focus: `<p>You're in a strong position. <strong>The growth edge for system supporters: co-parenting alignment.</strong> If another caregiver in your athlete\'s life defaults to the motivator or rescue pattern, the system breaks down. This week, have one direct conversation about a specific moment and how you'll both respond differently.</p><p style="margin-top:.6rem">Also: notice the temptation to slip back when your athlete is struggling — that\'s when it\'s hardest to hold the line.</p>`
+    }
+  };
+
+  // ── Option selection ──────────────────────────────────────
+  function selectOption(btn) {
+    const scenario = btn.dataset.scenario;
+    const type = btn.dataset.type;
+    // Deselect siblings
+    btn.closest('.options').querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    answers[scenario] = type;
+    document.getElementById('next' + scenario).disabled = false;
+  }
+
+  // ── Navigation ─────────────────────────────────────────────
+  function showCard(id) {
+    document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('active'));
+    document.getElementById('s' + id).classList.add('active');
+    const pct = (id / 5) * 100;
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = 'Scenario ' + id + ' of 5';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function next(from) {
+    if (!answers[from]) return;
+    showCard(from + 1);
+  }
+  function back(from) {
+    showCard(from - 1);
+  }
+
+  // ── Results ───────────────────────────────────────────────
+  function showResults() {
+    if (!answers[5]) return;
+
+    // Tally
+    const counts = { M: 0, R: 0, S: 0 };
+    Object.values(answers).forEach(t => counts[t]++);
+
+    // Dominant type (ties favor S > M > R — the most actionable result)
+    let dominant = 'M';
+    if (counts.S >= counts.M && counts.S >= counts.R) dominant = 'S';
+    else if (counts.M >= counts.R) dominant = 'M';
+    else dominant = 'R';
+
+    const profile = profiles[dominant];
+
+    // Render header
+    const header = document.getElementById('result-header');
+    header.className = 'result-header ' + profile.cssClass;
+    document.getElementById('result-label').textContent = profile.label;
+    document.getElementById('result-title').textContent = profile.title;
+    document.getElementById('result-summary').textContent = profile.summary;
+
+    // Score breakdown
+    const labels = { M: 'Daily Motivator', R: 'Rescue Parent', S: 'System Supporter' };
+    const dotColors = { M: 'warn', R: 'alert', S: '' };
+    let breakdownHtml = '';
+    ['S', 'M', 'R'].forEach(type => {
+      const count = counts[type];
+      let dotsHtml = '';
+      for (let i = 1; i <= 5; i++) {
+        const filled = i <= count;
+        const colorClass = filled ? (dotColors[type] ? ' ' + dotColors[type] : '') : '';
+        dotsHtml += `<span class="dot${filled ? ' filled' + colorClass : ''}"></span>`;
+      }
+      breakdownHtml += `
+        <div class="score-row">
+          <span class="score-label">${labels[type]}</span>
+          <span class="score-dots">${dotsHtml}</span>
+          <span style="font-size:.82rem;color:var(--muted);min-width:55px;text-align:right">${count} of 5</span>
+        </div>`;
+    });
+    document.getElementById('score-breakdown').innerHTML = breakdownHtml;
+
+    // Swaps
+    let swapHtml = '';
+    profile.swaps.forEach(([old, nw]) => {
+      swapHtml += `<tr><td class="old">${old}</td><td class="new">${nw}</td></tr>`;
+    });
+    document.getElementById('swap-body').innerHTML = swapHtml;
+
+    // This week
+    document.getElementById('this-week-content').innerHTML = profile.focus;
+
+    // Show/hide
+    document.getElementById('quiz-section').style.display = 'none';
+    document.getElementById('results-section').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Restart ───────────────────────────────────────────────
+  function restart() {
+    Object.keys(answers).forEach(k => delete answers[k]);
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    document.querySelectorAll('.btn[id^="next"]').forEach(b => b.disabled = true);
+    document.getElementById('quiz-section').style.display = 'block';
+    document.getElementById('results-section').style.display = 'none';
+    showCard(1);
+  }
+</script>
+</body>
+</html>
