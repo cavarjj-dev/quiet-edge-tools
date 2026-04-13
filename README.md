@@ -30,6 +30,8 @@ Companion tools for the Stage 2 mental skills video series. All tools are self-c
 | S3 EP5p | Post-Game Conversation Self-Scorer — Where Is My Focus After the Game? | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep5p/ |
 | S3 EP6p | Pre-Competition Environment Audit — Parent Edition | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep6p/ |
 | S3 EP7p | Parent Visualization Support Checklist | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep7p/ |
+| S3 EP8p | Fatigue or Character? — Post-Game Observation Reframe Tool | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep8p/ |
+| S3 EP9p | Am I the Motivator or the System Supporter? — Parent Self-Assessment | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep9p/ |
 
 ## Stage 2: Self Awareness — Athlete Edition
 
