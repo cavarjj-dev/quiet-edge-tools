@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practice Pressure Support Audit — The Quiet Edge</title>
+<style>
+  :root {
+    --teal: #5fb3ac;
+    --teal-dark: #3d8f89;
+    --teal-light: #e8f5f4;
+    --amber: #c97d3a;
+    --amber-light: #fdf3e8;
+    --dark: #1a2326;
+    --mid: #3d5156;
+    --light: #f4f8f7;
+    --white: #ffffff;
+    --border: #c8dedd;
+    --text: #2c3e3d;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: var(--light);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  .page-wrapper {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+  }
+
+  .header {
+    background: linear-gradient(135deg, var(--dark) 0%, var(--mid) 100%);
+    color: var(--white);
+    border-radius: 12px 12px 0 0;
+    padding: 36px 36px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(95, 179, 172, 0.12);
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 10px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 600;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: normal;
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+  .header h1 em { color: var(--teal); font-style: normal; }
+  .header-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.5;
+  }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    padding: 32px 36px;
+    border-top: none;
+  }
+
+  .intro-card {
+    background: var(--teal-light);
+    border: 1px solid var(--teal);
+    border-top: none;
+    padding: 24px 36px;
+  }
+  .intro-card p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--mid);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+  .intro-card strong { color: var(--teal-dark); }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--teal);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .section-title {
+    font-size: 19px;
+    font-weight: normal;
+    color: var(--dark);
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--teal-light);
+  }
+
+  .question-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid #e8f0ef;
+  }
+  .question-block:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  .question-text {
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--dark);
+    margin-bottom: 14px;
+  }
+  .question-number {
+    display: inline-block;
+    background: var(--teal);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 22px;
+    margin-right: 8px;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+
+  .scale-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .scale-option { position: relative; }
+  .scale-option input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+  .scale-option label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 6px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    text-align: center;
+    min-height: 64px;
+    background: var(--white);
+  }
+  .scale-option label:hover { border-color: var(--teal); background: var(--teal-light); }
+  .scale-option input:checked + label {
+    border-color: var(--teal-dark);
+    background: var(--teal);
+    color: white;
+  }
+  .scale-num { font-size: 20px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+  .scale-desc { font-size: 10px; line-height: 1.3; letter-spacing: 0.2px; }
+  .scale-option input:checked + label .scale-desc { color: rgba(255,255,255,0.9); }
+
+  .submit-area {
+    text-align: center;
+    padding: 32px 36px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: none;
+  }
+  .btn-score {
+    background: var(--teal);
+    color: white;
+    border: none;
+    padding: 16px 48px;
+    font-size: 16px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.2s ease;
+  }
+  .btn-score:hover { background: var(--teal-dark); }
+  .incomplete-msg {
+    font-size: 13px;
+    color: var(--amber);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    margin-top: 10px;
+    display: none;
+  }
+
+  #results { display: none; border-top: none; }
+
+  .result-header {
+    padding: 32px 36px 24px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: none;
+    text-align: center;
+  }
+  .score-display {
+    font-size: 56px;
+    font-weight: 700;
+    color: var(--teal-dark);
+    line-height: 1;
+    margin-bottom: 4px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+  .score-label {
+    font-size: 12px;
+    color: #888;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .tier-badge {
+    display: inline-block;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    margin-bottom: 16px;
+  }
+  .tier-1 { background: #d4edda; color: #1a5c2e; }
+  .tier-2 { background: #fff3cd; color: #7a5000; }
+  .tier-3 { background: #fde8d8; color: #8a3800; }
+  .tier-4 { background: #f8d7da; color: #7a1c24; }
+  .tier-description {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--mid);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .result-section {
+    padding: 28px 36px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: none;
+  }
+  .result-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--teal-dark);
+    margin-bottom: 16px;
+  }
+
+  .script-card {
+    background: var(--teal-light);
+    border-left: 4px solid var(--teal);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+  .script-trigger {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--teal-dark);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .script-text { font-size: 15px; line-height: 1.5; color: var(--dark); font-style: italic; }
+
+  .action-list { list-style: none; padding: 0; }
+  .action-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e8f0ef;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--mid);
+  }
+  .action-list li:last-child { border-bottom: none; }
+  .action-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  .crossref-box {
+    background: var(--amber-light);
+    border: 1px solid #e8c897;
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--mid);
+  }
+  .crossref-box strong { color: var(--amber); }
+  .crossref-box a { color: var(--amber); }
+
+  .btn-reset {
+    background: transparent;
+    border: 2px solid var(--teal);
+    color: var(--teal-dark);
+    padding: 12px 32px;
+    font-size: 14px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 24px;
+    transition: all 0.2s ease;
+  }
+  .btn-reset:hover { background: var(--teal-light); }
+
+  .print-bar {
+    text-align: center;
+    padding: 24px 36px 32px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+  }
+  .btn-print {
+    background: transparent;
+    border: 2px solid var(--mid);
+    color: var(--mid);
+    padding: 12px 32px;
+    font-size: 14px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-print:hover { background: var(--light); }
+  .print-note { font-size: 12px; color: #999; font-family: 'Helvetica Neue', Arial, sans-serif; margin-top: 8px; }
+
+  .brand-footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: #aaa;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  @media print {
+    body { background: white; }
+    .page-wrapper { padding: 0; max-width: 100%; }
+    .header { border-radius: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .btn-score, .btn-reset, .print-bar, .brand-footer, .incomplete-msg { display: none !important; }
+    #audit-form { display: block !important; }
+    #results { display: block !important; }
+    .card, .intro-card, .result-header, .result-section, .submit-area { border-radius: 0; break-inside: avoid; }
+    .scale-option input:checked + label { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .script-card, .crossref-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <div class="header">
+    <div class="header-eyebrow">The Quiet Edge &mdash; Parent Edition &middot; Stage 3</div>
+    <h1>Practice Pressure Support Audit<br><em>Are You Reinforcing or Rescuing?</em></h1>
+    <p class="header-sub">8 questions &middot; ~4 minutes &middot; No sign-in required</p>
+  </div>
+
+  <div class="intro-card">
+    <p>Competition-like practice is <strong>designed to be uncomfortable</strong>. Your response to that discomfort &mdash; what you say in the car, how you frame a hard practice &mdash; either reinforces the training or quietly undoes it. This audit helps you identify where your instincts are aligned and where they might be working against your athlete's development.</p>
+  </div>
+
+  <form id="audit-form">
+    <div class="card">
+      <div class="section-label">Part 1 of 1</div>
+      <div class="section-title">How do you typically respond?</div>
+      <p style="font-size:13px;color:#888;font-family:'Helvetica Neue',Arial,sans-serif;margin-bottom:24px;">Rate each statement honestly. Think about how you <em>actually</em> respond &mdash; not how you&rsquo;d like to.</p>
+
+      <div class="question-block">
+        <div class="question-text"><span class="question-number">1</span>When my athlete comes home from a stressful, competitive practice, I resist the urge to contact the coach or suggest the session was too hard.</div>
+        <div class="scale-row">
+          <div class="scale-option"><input type="radio" name="q1" value="1" id="q1a"><label for="q1a"><span class="scale-num">1</span><span class="scale-desc">Not like me at all</span></label></div>
+          <div class="scale-option"><input type="radio" name="q1" value="2" id="q1b"><label for="q1b"><span class="scale-num">2</span><span class="scale-desc">Sometimes</span></label></div>
+          <div class="scale-option"><input type="radio" name="q1" value="3" id="q1c"><label for="q1c"><span class="scale-num">3</span><span class="scale-desc">Often</span></label></div>
+          <div class="scale-option"><input type="radio" name="q1" value="4" id="q1d"><label for="q1d"><span class="scale-num">4</span><span class="scale-desc">This is me</span></label></div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text"><span class="question-number">2</span>After a hard practice, my first question to my athlete is about how <em>they</em> handled it &mdash; not about whether the session was fair or necessary.</div>
+        <div class="scale-row">
+          <div class="scale-option"><input type="radio" name="q2" value="1" id="q2a"><label for="q2a"><span class="scale-num">1</span><span class="scale-desc">Not like me at all</span></label></div>
+          <div class="scale-option"><input type="radio" name="q2" value="2" id="q2b"><label for="q2b"><span class="scale-num">2</span><span class="scale-desc">Sometimes</span></label></div>
+          <div class="scale-option"><input type="radio" name="q2" value="3" id="q2c"><label for="q2c"><span class="scale-num">3</span><span class="scale-desc">Often</span></label></div>
+          <div class="scale-option"><input type="radio" name="q2" value="4" id="q2d"><label for="q2d"><span class="scale-num">4</span><span class="scale-desc">This is me</span></label></div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text"><span class="question-number">3</span>I can explain to my athlete &mdash; without negativity toward the coach &mdash; <em>why</em> competition-like practice is designed to feel uncomfortable.</div>
+        <div class="scale-row">
+          <div class="scale-option"><input type="radio" name="q3" value="1" id="q3a"><label for="q3a"><span class="scale-num">1</span><span class="scale-desc">Not like me at all</span></label></div>
+          <div class="scale-option"><input type="radio" name="q3" value="2" id="q3b"><label for="q3b"><span class="scale-num">2</span><span class="scale-desc">Sometimes</span></label></div>
+          <div class="scale-option"><input type="radio" name="q3" value="3" id="q3c"><label for="q3c"><span class="scale-num">3</span><span class="scale-desc">Often</span></label></div>
+          <div class="scale-option"><input type="radio" name="q3" value="4" id="q3d"><label for="q3d"><span class="scale-num">4</span><span class="scale-desc">This is me</span></label></div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text"><span class="question-number">4</span>When my athlete says &ldquo;I don&rsquo;t feel ready&rdquo; before a competition, I validate the feeling without trying to eliminate it or rush past it.</div>
+        <div class="scale-row">
+          <div class="scale-option"><input type="radio" name="q4" value="1" id="q4a"><label for="q4a"><span class="scale-num">1</span><span class="scale-desc">Not like me at all</span></label></div>
+          <div class="scale-option"><input type="radio" name="q4" value="2" id="q4b"><label for="q4b"><span class="scale-num">2</span><span class="scale-desc">Sometimes</span></label></div>
+          <div class="scale-option"><input type="radio" name="q4" value="3" id="q4c"><label for="q4c"><span class="scale-num">3</span><span class="scale-desc">Often</span></label></div>
+          <div class="scale-option"><input type="radio" name="q4" value="4" id="q4d"><label for="q4d"><span class="scale-num">4</span><span class="scale-desc">This is me</span></label></div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text"><span class="question-number">5</span>I allow my athlete to sit with post-practice frustration or exhaustion without immediately stepping in with advice, solutions, or reassurance.</div>
+        <div class="scale-row">
+          <div class="scale-option"><input type="radio" name="q5" value="1" id="q5a"><label for="q5a"><span class="scale-num">1</span><span class="scale-desc">Not like me at all</span></label></div>
+          <div class="scale-option"><input type="radio" name="q5" value="2" id="q5b"><label for="q5b"><span class="scale-num">2</span><span class="scale-desc">Sometimes</span></label></div>
+          <div class="scale-option"><input type="radio" name="q5" value="3" id="q5c"><label for="q5c"><span class="scale-num">3</span><span class="scale-desc">Often</span></label></div>
+          <div class="scale-option"><input type="radio" name="q5" value="4" id="q5d"><label for="q5d"><span class="scale-num">4</span><span class="scale-desc">This is me</span></label></div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text"><span class="question-number">6</span>I avoid comparing how my athlete handles practice pressure to their teammates or other kids.</div>
+        <div class="scale-row">
+          <div class="scale-option"><input type="radio" name="q6" value="1" id="q6a"><label for="q6a"><span class="scale-num">1</span><span class="scale-desc">Not like me at all</span></label></div>
+          <div class="scale-option"><input type="radio" name="q6" value="2" id="q6b"><label for="q6b"><span class="scale-num">2</span><span class="scale-desc">Sometimes</span></label></div>
+          <div class="scale-option"><input type="radio" name="q6" value="3" id="q6c"><label for="q6c"><span class="scale-num">3</span><span class="scale-desc">Often</span></label></div>
+          <div class="scale-option"><input type="radio" name="q6" value="4" id="q6d"><label for="q6d"><span class="scale-num">4</span><span class="scale-desc">This is me</span></label></div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text"><span class="question-number">7</span>When my athlete performs better in practice than in games, I see it as a gap to bridge &mdash; not as a coaching problem or a sign that something is wrong.</div>
+        <div class="scale-row">
+          <div class="scale-option"><input type="radio" name="q7" value="1" id="q7a"><label for="q7a"><span class="scale-num">1</span><span class="scale-desc">Not like me at all</span></label></div>
+          <div class="scale-option"><input type="radio" name="q7" value="2" id="q7b"><label for="q7b"><span class="scale-num">2</span><span class="scale-desc">Sometimes</span></label></div>
+          <div class="scale-option"><input type="radio" name="q7" value="3" id="q7c"><label for="q7c"><span class="scale-num">3</span><span class="scale-desc">Often</span></label></div>
+          <div class="scale-option"><input type="radio" name="q7" value="4" id="q7d"><label for="q7d"><span class="scale-num">4</span><span class="scale-desc">This is me</span></label></div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text"><span class="question-number">8</span>After a particularly demanding practice, I use language that frames the challenge as preparation &mdash; not as something my athlete has to endure or get through.</div>
+        <div class="scale-row">
+          <div class="scale-option"><input type="radio" name="q8" value="1" id="q8a"><label for="q8a"><span class="scale-num">1</span><span class="scale-desc">Not like me at all</span></label></div>
+          <div class="scale-option"><input type="radio" name="q8" value="2" id="q8b"><label for="q8b"><span class="scale-num">2</span><span class="scale-desc">Sometimes</span></label></div>
+          <div class="scale-option"><input type="radio" name="q8" value="3" id="q8c"><label for="q8c"><span class="scale-num">3</span><span class="scale-desc">Often</span></label></div>
+          <div class="scale-option"><input type="radio" name="q8" value="4" id="q8d"><label for="q8d"><span class="scale-num">4</span><span class="scale-desc">This is me</span></label></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="submit-area">
+      <button type="button" class="btn-score" onclick="scoreAudit()">See My Results</button>
+      <p class="incomplete-msg" id="incomplete-msg">Please answer all 8 questions before scoring.</p>
+    </div>
+  </form>
+
+  <div id="results">
+
+    <div class="result-header">
+      <div class="score-display" id="score-display">&mdash;</div>
+      <div class="score-label">out of 32</div>
+      <div class="tier-badge" id="tier-badge"></div>
+      <p class="tier-description" id="tier-description"></p>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-title">Your Most Common Pattern</div>
+      <p id="pattern-text" style="font-size:15px;line-height:1.7;font-family:'Helvetica Neue',Arial,sans-serif;color:var(--mid);"></p>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-title">3 Scripts to Use This Week</div>
+      <p style="font-size:13px;color:#888;font-family:'Helvetica Neue',Arial,sans-serif;margin-bottom:16px;">Use these verbatim or adapt to your voice. The goal is to signal that pressure in practice is purposeful &mdash; not a problem.</p>
+      <div id="scripts-container"></div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-title">This Week&rsquo;s Focus</div>
+      <ul class="action-list" id="actions-container"></ul>
+    </div>
+
+    <div class="result-section">
+      <div class="crossref-box" id="crossref-box"></div>
+    </div>
+
+    <div style="text-align:center;padding:16px 36px 0;background:white;border:1px solid var(--border);border-top:none;">
+      <button class="btn-reset" onclick="resetAudit()">Retake the Audit</button>
+    </div>
+
+    <div class="print-bar">
+      <button class="btn-print" onclick="window.print()">Download / Print Results</button>
+      <p class="print-note">Saves as PDF from your browser&rsquo;s print dialog</p>
+    </div>
+
+  </div>
+
+  <div class="brand-footer">
+    The Quiet Edge &middot; Parent Edition &middot; Stage 3: Skill Acquisition<br>
+    Evidence: Battig (1979) &middot; Meichenbaum (1985) &middot; Bandura (1997) &middot; Mageau &amp; Vallerand (2003)
+  </div>
+
+</div>
+
+<script>
+const tiers = [
+  {
+    min: 28, max: 32,
+    label: "Full-Support Mode",
+    badgeClass: "tier-1",
+    description: "Your instincts are strongly aligned with how competition simulation training works. You're reinforcing the process — not fighting it. Your athlete is likely receiving consistent signals that hard practice is preparation, not punishment.",
+    pattern: "Your main opportunity isn't correcting a problem — it's sustaining this under pressure. The hardest moments will be when practice goes wrong right before a major competition. Your instinct to intervene will spike. The audit says you're ready to hold steady.",
+    scripts: [
+      { trigger: "After a brutal practice:", text: "That sounds like exactly the kind of hard that builds game-day confidence. How did you handle it?" },
+      { trigger: "When they say 'I don't feel ready':", text: "That feeling means you're taking it seriously. That's different from not being ready. What specifically feels uncertain?" },
+      { trigger: "When the practice-game gap shows up:", text: "Practice and games are supposed to feel different right now. The more you practice under that pressure, the more familiar game day gets." }
+    ],
+    actions: [
+      { icon: "&#10003;", text: "Keep using language that reframes challenge as preparation — you're doing it right." },
+      { icon: "&#10003;", text: "If co-parenting, share what you know about competition simulation with your co-parent so the message stays consistent." },
+      { icon: "&#10003;", text: "After your athlete's next hard practice, try asking: 'What's one thing you did well even when it was hard?'" }
+    ],
+    crossref: "<strong>Next resource:</strong> If your athlete is still struggling to perform under game pressure despite good practice habits, the <em>Competition Process Planner</em> (athlete-facing) helps them design the mental approach for competition day. Ask your coach if they use it."
+  },
+  {
+    min: 20, max: 27,
+    label: "Partial Supporter",
+    badgeClass: "tier-2",
+    description: "You understand the value of competition-like training but some protective instincts are leaking through — especially under stress. You're supporting the process most of the time, but there are moments where your language or actions signal to your athlete that the pressure is a problem.",
+    pattern: "The gap between your belief (hard practice is good) and your behavior (intervening or complaining in the moment) is where to focus. Your athlete may be getting mixed signals: 'This is good preparation' on a calm day, 'This seems unfair' after a rough one. Consistency is the next step.",
+    scripts: [
+      { trigger: "When your instinct is to complain about the session:", text: "That sounded tough. Before I say anything else — how did you feel you handled it?" },
+      { trigger: "When they come home exhausted and frustrated:", text: "That stress you're feeling? That's how your brain learns to handle game pressure. It doesn't feel good yet, but it's working." },
+      { trigger: "When the practice-game gap shows up:", text: "What the coach is building is the bridge between practice and game day. It takes longer than we want it to." }
+    ],
+    actions: [
+      { icon: "&#8594;", text: "Notice the next time your instinct is to frame practice as excessive — and pause before speaking." },
+      { icon: "&#8594;", text: "Ask about how your athlete handled the challenge before you offer any opinion on the practice design." },
+      { icon: "&#8594;", text: "Pick one default script you've been using and replace it with a reframe this week." }
+    ],
+    crossref: "<strong>Co-parenting angle:</strong> If one parent is consistently more protective than the other, that dynamic amplifies the inconsistency your athlete receives. The <em>Co-Parenting Through Youth Sports</em> guide was built for exactly this. <a href='https://tinyurl.com/24bpcuc7' target='_blank'>Access it here &rarr;</a>"
+  },
+  {
+    min: 12, max: 19,
+    label: "Well-Intentioned Rescuer",
+    badgeClass: "tier-3",
+    description: "Your responses are driven by care — but they're working against the training design. When practice feels hard, your instinct is to fix the environment, reduce the pressure, or validate the complaint. That response, however loving, signals to your athlete that pressure is something to escape rather than something to build on.",
+    pattern: "The most common pattern at this tier: validating the stress without validating the training. 'That sounds so hard, you must be exhausted' isn't wrong — but if it's never followed by any reframe, your athlete learns that hard practice is something to survive rather than grow from.",
+    scripts: [
+      { trigger: "First response after a hard practice:", text: "That was a hard session. Take a minute. When you're ready — tell me one thing that got better, even slightly." },
+      { trigger: "When your protective instinct spikes:", text: "I want to say the right thing here, not just the comforting thing. What do you actually need from me right now?" },
+      { trigger: "When they're anxious before a game:", text: "That nervousness means your body knows this matters. That's not a bad sign — that's the system working. What's one thing you feel ready for today?" }
+    ],
+    actions: [
+      { icon: "&#8594;", text: "For the next two weeks: before any post-practice response, ask yourself: 'Am I reinforcing the process or rescuing from it?'" },
+      { icon: "&#8594;", text: "Learn the 4 mechanisms (stress inoculation, reveals readiness, confidence evidence, reduces novelty) so you can explain them in your own words." },
+      { icon: "&#8594;", text: "Focus on asking one better question after hard practices rather than overhauling everything at once." }
+    ],
+    crossref: "<strong>If a co-parent is reinforcing the rescuing pattern</strong>, the gap between what your athlete hears from each parent creates confusion about whether the pressure is good or bad. The <em>Co-Parenting Through Youth Sports</em> guide addresses how to align across different parenting instincts. <a href='https://tinyurl.com/24bpcuc7' target='_blank'>Read it here &rarr;</a>"
+  },
+  {
+    min: 8, max: 11,
+    label: "Inadvertent Underminer",
+    badgeClass: "tier-4",
+    description: "Your responses — however well-meaning — are consistently working against the competition simulation process. You may be framing stressful practice as a problem, intervening when the coach creates pressure, or expecting practice to feel manageable. That expectation, when communicated to your athlete, erodes exactly what the training is building.",
+    pattern: "This score doesn't mean you're a bad sports parent. It means your instincts are calibrated to protect your child from discomfort — which is a deeply normal parenting response. The shift required isn't about caring less. It's about relearning what 'support' means in the context of competition training.",
+    scripts: [
+      { trigger: "Start here — one script, used consistently:", text: "That sounds like hard preparation. How did you handle it?" },
+      { trigger: "When you feel the urge to contact the coach:", text: "Wait 24 hours. Ask your athlete first: 'What do you think the coach is trying to build with that drill?'" },
+      { trigger: "When they're frustrated after a loss or poor game:", text: "What you practiced under pressure this week — that's already in your system. Games reveal what practice builds. What did you notice?" }
+    ],
+    actions: [
+      { icon: "&#8594;", text: "Start with one behavior change: pause before any post-practice response and ask 'How did you handle it?' before anything else." },
+      { icon: "&#8594;", text: "Watch or rewatch the full video — especially the section on what undermines competition training (3:50–5:02)." },
+      { icon: "&#8594;", text: "If your co-parent scored higher on this audit, ask them to lead post-practice conversations while you observe the reframe pattern." }
+    ],
+    crossref: "<strong>Start here:</strong> The <em>Co-Parenting Through Youth Sports</em> guide has a section specifically on mismatched parenting instincts around pressure and performance. <a href='https://tinyurl.com/24bpcuc7' target='_blank'>Access it here &rarr;</a> The <em>Post-Game Conversation Scorer</em> can also help you audit the language patterns after competitions: <a href='https://tinyurl.com/29mu2ddq' target='_blank'>Try it here &rarr;</a>"
+  }
+];
+
+function scoreAudit() {
+  const names = ['q1','q2','q3','q4','q5','q6','q7','q8'];
+  let total = 0;
+  let allAnswered = true;
+  for (const name of names) {
+    const selected = document.querySelector('input[name="' + name + '"]:checked');
+    if (!selected) { allAnswered = false; break; }
+    total += parseInt(selected.value);
+  }
+  if (!allAnswered) {
+    document.getElementById('incomplete-msg').style.display = 'block';
+    return;
+  }
+  document.getElementById('incomplete-msg').style.display = 'none';
+
+  const tier = tiers.find(function(t) { return total >= t.min && total <= t.max; }) || tiers[tiers.length - 1];
+
+  document.getElementById('score-display').textContent = total;
+  const badge = document.getElementById('tier-badge');
+  badge.textContent = tier.label;
+  badge.className = 'tier-badge ' + tier.badgeClass;
+  document.getElementById('tier-description').textContent = tier.description;
+  document.getElementById('pattern-text').textContent = tier.pattern;
+
+  const scriptsContainer = document.getElementById('scripts-container');
+  scriptsContainer.innerHTML = '';
+  tier.scripts.forEach(function(s) {
+    scriptsContainer.innerHTML += '<div class="script-card"><div class="script-trigger">' + s.trigger + '</div><div class="script-text">&ldquo;' + s.text + '&rdquo;</div></div>';
+  });
+
+  const actionsContainer = document.getElementById('actions-container');
+  actionsContainer.innerHTML = '';
+  tier.actions.forEach(function(a) {
+    actionsContainer.innerHTML += '<li><span class="action-icon">' + a.icon + '</span><span>' + a.text + '</span></li>';
+  });
+
+  document.getElementById('crossref-box').innerHTML = tier.crossref;
+
+  document.getElementById('audit-form').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetAudit() {
+  document.querySelectorAll('input[type="radio"]').forEach(function(r) { r.checked = false; });
+  document.getElementById('audit-form').style.display = 'block';
+  document.getElementById('results').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
