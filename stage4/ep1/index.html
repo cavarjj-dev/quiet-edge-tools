@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pressure Signal Log — The Quiet Edge</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --bg-card: #161616;
+      --bg-card2: #1e1e1e;
+      --border: #2c2c2c;
+      --accent: #f4830a;
+      --accent-dim: #c96a06;
+      --text: #e2e2e2;
+      --text-muted: #888;
+      --text-dim: #aaa;
+      --great: #34d17a;
+      --good: #4ca8e8;
+      --ok: #f0b429;
+      --poor: #e05252;
+      --radius: 8px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      padding: 24px 20px 48px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .header .subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .badges {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+    .badge {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .badge.stage { border-color: var(--accent); color: var(--accent); }
+
+    /* ── How to Use (collapsible) ── */
+    .how-to-use {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .how-to-use summary {
+      padding: 14px 20px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .how-to-use summary::-webkit-details-marker { display: none; }
+    .how-to-use summary::after {
+      content: '▸';
+      font-size: 12px;
+      transition: transform 0.2s;
+    }
+    .how-to-use[open] summary::after { transform: rotate(90deg); }
+    .how-to-use .content {
+      padding: 0 20px 18px;
+      font-size: 14px;
+      color: var(--text-dim);
+    }
+    .how-to-use .content p { margin-bottom: 10px; }
+    .how-to-use .content ol { padding-left: 20px; }
+    .how-to-use .content li { margin-bottom: 6px; }
+    .step-label {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    /* ── Form ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 14px;
+      padding: 9px 12px;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.15s;
+    }
+    input[type="date"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+    }
+    select option { background: #1e1e1e; }
+    textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
+
+    /* ── Signals grid ── */
+    .signals-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .signals-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .signal-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      font-size: 13px;
+    }
+    .signal-item:hover { border-color: #444; }
+    .signal-item input[type="checkbox"] { accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer; }
+    .signal-item.checked {
+      border-color: var(--accent);
+      background: rgba(244, 131, 10, 0.07);
+    }
+    .custom-signal-wrap { margin-top: 4px; }
+    .custom-signal-wrap input[type="text"] {
+      width: 100%;
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 13px;
+      padding: 8px 12px;
+      outline: none;
+      font-family: inherit;
+    }
+    .custom-signal-wrap input:focus { border-color: var(--accent); }
+
+    /* ── Result options ── */
+    .result-options {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .result-option {
+      display: none;
+    }
+    .result-option + label {
+      padding: 8px 18px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-card2);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.15s;
+      color: var(--text-muted);
+    }
+    .result-option + label:hover { border-color: #555; color: var(--text); }
+    .result-option[value="Great"] + label { }
+    .result-option:checked[value="Great"] + label { border-color: var(--great); background: rgba(52,209,122,0.1); color: var(--great); }
+    .result-option:checked[value="Good"] + label  { border-color: var(--good);  background: rgba(76,168,232,0.1);  color: var(--good);  }
+    .result-option:checked[value="OK"] + label    { border-color: var(--ok);    background: rgba(240,180,41,0.1);  color: var(--ok);    }
+    .result-option:checked[value="Poor"] + label  { border-color: var(--poor);  background: rgba(224,82,82,0.1);   color: var(--poor);  }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.15s, transform 0.1s;
+      font-family: inherit;
+    }
+    .btn:hover { opacity: 0.88; }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .btn-ghost:hover { border-color: #555; color: var(--text); }
+    .btn-danger { background: rgba(224,82,82,0.15); border: 1px solid rgba(224,82,82,0.3); color: var(--poor); }
+    .btn-danger:hover { background: rgba(224,82,82,0.25); }
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+    .empty-state .icon { font-size: 32px; margin-bottom: 12px; }
+    .empty-state p { font-size: 14px; }
+
+    /* ── Log table ── */
+    .log-table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 12px 12px;
+      border-bottom: 1px solid #1e1e1e;
+      vertical-align: top;
+      color: var(--text-dim);
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .td-date { white-space: nowrap; color: var(--text-muted); font-size: 12px; }
+    .td-event { font-weight: 600; color: var(--text); }
+    .td-signals { }
+    .signal-tag {
+      display: inline-block;
+      background: rgba(244,131,10,0.1);
+      border: 1px solid rgba(244,131,10,0.25);
+      color: var(--accent);
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin: 2px 2px 2px 0;
+    }
+    .result-badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .result-great { background: rgba(52,209,122,0.12); color: var(--great); }
+    .result-good  { background: rgba(76,168,232,0.12);  color: var(--good);  }
+    .result-ok    { background: rgba(240,180,41,0.12);  color: var(--ok);    }
+    .result-poor  { background: rgba(224,82,82,0.12);   color: var(--poor);  }
+    .result-none  { background: rgba(255,255,255,0.05); color: var(--text-muted); }
+    .td-delete { width: 40px; text-align: center; }
+    .delete-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .delete-btn:hover { color: var(--poor); background: rgba(224,82,82,0.1); }
+
+    /* ── Pattern Insights ── */
+    .pattern-threshold {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 16px;
+    }
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .pattern-panel {
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+    .pattern-panel-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 14px;
+    }
+    .pattern-panel-title.best { color: var(--great); }
+    .pattern-panel-title.worst { color: var(--poor); }
+    .pattern-bar-wrap {
+      margin-bottom: 10px;
+    }
+    .pattern-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 4px;
+      color: var(--text-dim);
+    }
+    .pattern-bar-track {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .pattern-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+    .fill-best { background: var(--great); }
+    .fill-worst { background: var(--poor); }
+
+    .insight-box {
+      background: rgba(244,131,10,0.05);
+      border: 1px solid rgba(244,131,10,0.2);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+    }
+    .insight-box p { font-size: 14px; color: var(--text-dim); margin-bottom: 8px; }
+    .insight-box p:last-child { margin-bottom: 0; }
+    .insight-box strong { color: var(--accent); }
+
+    /* ── Bottom actions ── */
+    .bottom-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Print ── */
+    @media print {
+      body {
+        background: white;
+        color: #111;
+        padding: 20px;
+        font-size: 12px;
+      }
+      .no-print { display: none !important; }
+      .header h1 { color: #111; }
+      .brand, .badges { display: none; }
+      .how-to-use { display: none; }
+      .card {
+        background: white;
+        border: 1px solid #ccc;
+        page-break-inside: avoid;
+      }
+      .card-title { color: #c96a06; }
+      .form-section { display: none; }
+      .signal-tag {
+        background: #fff7f0;
+        border-color: #c96a06;
+        color: #c96a06;
+      }
+      .result-great { background: #e8faf1; color: #1a8a4a; }
+      .result-good  { background: #e8f4fd; color: #2a72a8; }
+      .result-ok    { background: #fffbea; color: #a07000; }
+      .result-poor  { background: #fdeaea; color: #a03030; }
+      .pattern-panel { background: #f9f9f9; border-color: #ccc; }
+      .pattern-panel-title.best { color: #1a8a4a; }
+      .pattern-panel-title.worst { color: #a03030; }
+      .fill-best { background: #1a8a4a; }
+      .fill-worst { background: #a03030; }
+      .insight-box { background: #fff7f0; border-color: #c96a06; }
+      .insight-box strong { color: #c96a06; }
+      .delete-btn { display: none; }
+      table { border-collapse: collapse; }
+      th { color: #555; border-bottom: 1px solid #ccc; }
+      td { border-bottom: 1px solid #eee; color: #333; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ── -->
+  <header class="header">
+    <div class="brand">The Quiet Edge</div>
+    <h1>Pressure Signal Log</h1>
+    <p class="subtitle">Season-Arc Pressure Reading Protocol — Name → Reframe → Pattern-Track → Calibrate</p>
+    <div class="badges">
+      <span class="badge stage">Stage 4</span>
+      <span class="badge">Athlete Edition</span>
+      <span class="badge">Ep. 1: Pressure Is Information</span>
+    </div>
+  </header>
+
+  <!-- ── How to Use ── -->
+  <details class="how-to-use">
+    <summary>How to Use This Tool</summary>
+    <div class="content">
+      <p>The Pressure Signal Log is a <strong>season-arc protocol</strong>, not a one-session drill. Each entry takes 3 minutes before an event and 2 minutes after. The data becomes actionable after 3–4 weeks.</p>
+      <ol>
+        <li><span class="step-label">Before the event:</span> Log the physical signals you notice — heart rate, breathing, muscle tension. One sentence only. Do not interpret yet.</li>
+        <li><span class="step-label">After the event:</span> Return to your entry and tag your performance (Great / Good / OK / Poor). Add a quick note if useful.</li>
+        <li><span class="step-label">After 5+ rated entries:</span> The Pattern Insights section automatically surfaces which signals appear before your best and worst performances.</li>
+        <li><span class="step-label">Calibrate:</span> Use your preparation signal as a performance cue. When you feel it, that is your body preparing — not warning you.</li>
+      </ol>
+      <p style="margin-top:10px;">Your entries are saved in your browser and persist between sessions. Use the <strong>Download as PDF</strong> button to save a copy for your records.</p>
+    </div>
+  </details>
+
+  <!-- ── Add Entry Form ── -->
+  <div class="card form-section no-print">
+    <div class="card-title">Add Entry</div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="entry-date">Date</label>
+        <input type="date" id="entry-date">
+      </div>
+
+      <div class="form-group">
+        <label for="entry-event">Event Type</label>
+        <select id="entry-event">
+          <option value="">Select event type…</option>
+          <option>Tryout</option>
+          <option>College Showcase</option>
+          <option>Regional Selection Event</option>
+          <option>Tournament / Championship</option>
+          <option>High-Stakes Practice</option>
+          <option>Regular Game</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="form-group full">
+        <div class="signals-label">Physical Signals — What does your body notice? (select all that apply)</div>
+        <div class="signals-grid" id="signals-grid">
+          <label class="signal-item">
+            <input type="checkbox" value="Heart rate elevated"> Heart rate elevated
+          </label>
+          <label class="signal-item">
+            <input type="checkbox" value="Breathing shallow / fast"> Breathing shallow / fast
+          </label>
+          <label class="signal-item">
+            <input type="checkbox" value="Hands / forearms tight"> Hands / forearms tight
+          </label>
+          <label class="signal-item">
+            <input type="checkbox" value="Stomach tight / unsettled"> Stomach tight / unsettled
+          </label>
+          <label class="signal-item">
+            <input type="checkbox" value="Jaw / neck tension"> Jaw / neck tension
+          </label>
+          <label class="signal-item">
+            <input type="checkbox" value="Tunnel vision"> Tunnel vision
+          </label>
+          <label class="signal-item">
+            <input type="checkbox" value="Physical stillness / calm"> Physical stillness / calm
+          </label>
+          <label class="signal-item">
+            <input type="checkbox" value="Restlessness / physical urgency"> Restlessness / urgency
+          </label>
+        </div>
+        <div class="custom-signal-wrap">
+          <input type="text" id="custom-signal" placeholder="Other signal (optional — describe in your own words)">
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <label>Performance Result <span style="font-weight:400;color:var(--text-muted)">(fill after event — can leave blank now)</span></label>
+        <div class="result-options">
+          <input class="result-option" type="radio" name="result" id="r-great" value="Great">
+          <label for="r-great">Great</label>
+          <input class="result-option" type="radio" name="result" id="r-good" value="Good">
+          <label for="r-good">Good</label>
+          <input class="result-option" type="radio" name="result" id="r-ok" value="OK">
+          <label for="r-ok">OK</label>
+          <input class="result-option" type="radio" name="result" id="r-poor" value="Poor">
+          <label for="r-poor">Poor</label>
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <label for="entry-notes">Notes <span style="font-weight:400;color:var(--text-muted)">(optional)</span></label>
+        <textarea id="entry-notes" placeholder="One-line note — what stood out, what you adjusted, anything useful for pattern review later"></textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveEntry()">Save Entry</button>
+      <button class="btn btn-ghost" onclick="clearForm()">Clear</button>
+    </div>
+  </div>
+
+  <!-- ── Log ── -->
+  <div class="card" id="log-card">
+    <div class="card-title">Your Log</div>
+    <div id="log-container">
+      <div class="empty-state">
+        <div class="icon">📋</div>
+        <p>No entries yet. Add your first pre-competition signal above.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Pattern Insights ── -->
+  <div class="card" id="patterns-card">
+    <div class="card-title">Pattern Insights</div>
+    <div id="patterns-container">
+      <p class="pattern-threshold">Add 5 or more entries with performance results to unlock your signal pattern analysis.</p>
+    </div>
+  </div>
+
+  <!-- ── Bottom Actions ── -->
+  <div class="bottom-actions no-print">
+    <button class="btn btn-ghost" onclick="window.print()">⬇ Download as PDF</button>
+    <button class="btn btn-danger" onclick="clearAllEntries()">Clear All Entries</button>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'psl_entries_v1';
+    const SIGNALS_LIST = [
+      'Heart rate elevated',
+      'Breathing shallow / fast',
+      'Hands / forearms tight',
+      'Stomach tight / unsettled',
+      'Jaw / neck tension',
+      'Tunnel vision',
+      'Physical stillness / calm',
+      'Restlessness / physical urgency'
+    ];
+
+    // ── Utilities ──
+    function loadEntries() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+      catch { return []; }
+    }
+    function saveEntries(entries) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    }
+    function formatDate(iso) {
+      if (!iso) return '—';
+      const [y, m, d] = iso.split('-');
+      return `${parseInt(m)}/${parseInt(d)}/${y}`;
+    }
+    function resultClass(r) {
+      if (!r) return 'result-none';
+      return { Great: 'result-great', Good: 'result-good', OK: 'result-ok', Poor: 'result-poor' }[r] || 'result-none';
+    }
+
+    // ── Set default date ──
+    document.getElementById('entry-date').value = new Date().toISOString().split('T')[0];
+
+    // ── Signal checkbox visual feedback ──
+    document.querySelectorAll('.signal-item').forEach(item => {
+      item.addEventListener('change', () => {
+        item.classList.toggle('checked', item.querySelector('input').checked);
+      });
+    });
+
+    // ── Save Entry ──
+    function saveEntry() {
+      const date = document.getElementById('entry-date').value;
+      const event = document.getElementById('entry-event').value;
+      const customSignal = document.getElementById('custom-signal').value.trim();
+      const notes = document.getElementById('entry-notes').value.trim();
+      const result = document.querySelector('input[name="result"]:checked')?.value || '';
+
+      const signals = [];
+      document.querySelectorAll('#signals-grid input[type="checkbox"]:checked').forEach(cb => {
+        signals.push(cb.value);
+      });
+      if (customSignal) signals.push(customSignal);
+
+      if (!date) { alert('Please add a date before saving.'); return; }
+      if (signals.length === 0) { alert('Select at least one physical signal before saving.'); return; }
+
+      const entries = loadEntries();
+      entries.unshift({
+        id: Date.now(),
+        date,
+        event: event || 'Not specified',
+        signals,
+        result,
+        notes
+      });
+      saveEntries(entries);
+      clearForm();
+      render();
+    }
+
+    // ── Clear Form ──
+    function clearForm() {
+      document.getElementById('entry-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('entry-event').value = '';
+      document.getElementById('custom-signal').value = '';
+      document.getElementById('entry-notes').value = '';
+      document.querySelectorAll('input[name="result"]').forEach(r => r.checked = false);
+      document.querySelectorAll('#signals-grid input[type="checkbox"]').forEach(cb => {
+        cb.checked = false;
+        cb.closest('.signal-item').classList.remove('checked');
+      });
+    }
+
+    // ── Delete Entry ──
+    function deleteEntry(id) {
+      if (!confirm('Remove this entry?')) return;
+      const entries = loadEntries().filter(e => e.id !== id);
+      saveEntries(entries);
+      render();
+    }
+
+    // ── Clear All ──
+    function clearAllEntries() {
+      if (!confirm('This will permanently delete all entries. Are you sure?')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      render();
+    }
+
+    // ── Render Log ──
+    function renderLog(entries) {
+      const container = document.getElementById('log-container');
+      if (entries.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">📋</div>
+            <p>No entries yet. Add your first pre-competition signal above.</p>
+          </div>`;
+        return;
+      }
+      const rows = entries.map(e => {
+        const signalTags = e.signals.map(s => `<span class="signal-tag">${s}</span>`).join('');
+        const resultBadge = e.result
+          ? `<span class="result-badge ${resultClass(e.result)}">${e.result}</span>`
+          : `<span class="result-badge result-none">Pending</span>`;
+        return `
+          <tr>
+            <td class="td-date">${formatDate(e.date)}</td>
+            <td class="td-event">${e.event}</td>
+            <td class="td-signals">${signalTags}</td>
+            <td>${resultBadge}</td>
+            <td style="color:var(--text-muted);font-size:12px">${e.notes || '—'}</td>
+            <td class="td-delete no-print">
+              <button class="delete-btn" onclick="deleteEntry(${e.id})" title="Delete">✕</button>
+            </td>
+          </tr>`;
+      }).join('');
+      container.innerHTML = `
+        <div class="log-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Event</th>
+                <th>Signals</th>
+                <th>Result</th>
+                <th>Notes</th>
+                <th class="no-print"></th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
+    }
+
+    // ── Compute Patterns ──
+    function computePatterns(entries) {
+      const rated = entries.filter(e => e.result);
+      if (rated.length < 5) return null;
+
+      const best  = rated.filter(e => e.result === 'Great' || e.result === 'Good');
+      const worst = rated.filter(e => e.result === 'Poor');
+
+      function countSignals(group) {
+        const counts = {};
+        group.forEach(e => e.signals.forEach(s => { counts[s] = (counts[s] || 0) + 1; }));
+        return Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      }
+
+      return {
+        best:  countSignals(best),
+        worst: countSignals(worst),
+        bestTotal:  best.length,
+        worstTotal: worst.length,
+        ratedTotal: rated.length
+      };
+    }
+
+    // ── Render Patterns ──
+    function renderPatterns(entries) {
+      const container = document.getElementById('patterns-container');
+      const data = computePatterns(entries);
+
+      if (!data) {
+        const rated = entries.filter(e => e.result).length;
+        const remaining = Math.max(0, 5 - rated);
+        container.innerHTML = `
+          <p class="pattern-threshold">
+            ${rated > 0
+              ? `${rated} rated ${rated === 1 ? 'entry' : 'entries'} recorded — add ${remaining} more with performance results to unlock pattern analysis.`
+              : 'Add 5 or more entries with performance results to unlock your signal pattern analysis.'
+            }
+          </p>`;
+        return;
+      }
+
+      function bars(signalCounts, total, cls) {
+        if (signalCounts.length === 0) return `<p style="color:var(--text-muted);font-size:13px">Not enough data yet in this category.</p>`;
+        return signalCounts.slice(0, 5).map(([signal, count]) => {
+          const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+          return `
+            <div class="pattern-bar-wrap">
+              <div class="pattern-bar-label">
+                <span>${signal}</span>
+                <span>${count} of ${total} (${pct}%)</span>
+              </div>
+              <div class="pattern-bar-track">
+                <div class="pattern-bar-fill ${cls}" style="width:${pct}%"></div>
+              </div>
+            </div>`;
+        }).join('');
+      }
+
+      // Preparation signal: top signal in best performances
+      const prepSignal = data.best.length > 0 ? data.best[0][0] : null;
+      // Interference signal: top signal in worst NOT in top best
+      const bestTop = data.best.slice(0, 3).map(e => e[0]);
+      const interferenceSignal = data.worst.find(([s]) => !bestTop.includes(s));
+
+      const insightHtml = (prepSignal || interferenceSignal) ? `
+        <div class="insight-box" style="margin-top:16px">
+          ${prepSignal ? `<p>📈 <strong>Preparation signal:</strong> "${prepSignal}" — present in ${data.best.filter(e=>e[0]===prepSignal)[0]?.[1]||'—'} of your best ${data.bestTotal} ${data.bestTotal===1?'performance':'performances'}. When you feel this, your body is preparing.</p>` : ''}
+          ${interferenceSignal ? `<p>⚠ <strong>Signal to watch:</strong> "${interferenceSignal[0]}" — appears before underperformance ${interferenceSignal[1]}x. When you notice this, redirect attention to execution, not evaluation.</p>` : ''}
+          <p style="margin-top:8px;font-size:12px;color:var(--text-muted)">Based on ${data.ratedTotal} rated entries. Patterns strengthen with more data — keep logging through your season arc.</p>
+        </div>` : '';
+
+      container.innerHTML = `
+        <div class="pattern-grid">
+          <div class="pattern-panel">
+            <div class="pattern-panel-title best">Signals Before Your Best Performances (${data.bestTotal})</div>
+            ${bars(data.best, data.bestTotal, 'fill-best')}
+          </div>
+          <div class="pattern-panel">
+            <div class="pattern-panel-title worst">Signals Before Underperformance (${data.worstTotal})</div>
+            ${bars(data.worst, data.worstTotal, 'fill-worst')}
+          </div>
+        </div>
+        ${insightHtml}`;
+    }
+
+    // ── Main Render ──
+    function render() {
+      const entries = loadEntries();
+      renderLog(entries);
+      renderPatterns(entries);
+    }
+
+    // ── Init ──
+    render();
+  </script>
+</body>
+</html>
