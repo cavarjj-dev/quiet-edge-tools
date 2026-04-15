@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Quiet Edge — Resource Library</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:           #0f1117;
+  --surface:      #1a1f2e;
+  --card:         #1e2435;
+  --athlete:      #f97316;
+  --athlete-dim:  rgba(249,115,22,0.14);
+  --parent:       #5fb3ac;
+  --parent-dim:   rgba(95,179,172,0.14);
+  --text:         #e8eaf0;
+  --muted:        #8b92a5;
+  --border:       rgba(255,255,255,0.07);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ── Header ─────────────────────────────────────────── */
+.header {
+  text-align: center;
+  padding: 64px 24px 44px;
+  border-bottom: 1px solid var(--border);
+}
+.header .brand {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+.header h1 {
+  font-size: clamp(1.9rem, 4.5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+.header p {
+  color: var(--muted);
+  font-size: 1.05rem;
+  max-width: 520px;
+  margin: 0 auto 28px;
+}
+.cta-primary {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--athlete) 0%, #ea580c 100%);
+  color: #fff;
+  font-weight: 700;
+  padding: 14px 34px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: opacity 0.2s;
+}
+.cta-primary:hover { opacity: 0.88; }
+
+/* ── Sticky nav ──────────────────────────────────────── */
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 16px 24px;
+  position: sticky;
+  top: 0;
+  background: rgba(15,17,23,0.96);
+  backdrop-filter: blur(8px);
+  z-index: 20;
+  border-bottom: 1px solid var(--border);
+}
+.nav a {
+  padding: 7px 18px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  transition: all 0.2s;
+}
+.nav a:hover { color: var(--text); }
+.nav a.ath:hover  { background: var(--athlete-dim); border-color: var(--athlete); color: var(--athlete); }
+.nav a.par:hover  { background: var(--parent-dim);  border-color: var(--parent);  color: var(--parent); }
+
+/* ── Audience sections ───────────────────────────────── */
+.audience-section {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 52px 24px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 36px;
+}
+.section-header h2 {
+  font-size: 1.65rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.audience-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+.athlete .audience-badge { background: var(--athlete-dim); color: var(--athlete); }
+.parent  .audience-badge { background: var(--parent-dim);  color: var(--parent); }
+
+/* ── Stage blocks ────────────────────────────────────── */
+.stage-block { margin-bottom: 44px; }
+.stage-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Card grid ───────────────────────────────────────── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 14px;
+}
+
+.tool-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  transition: border-color 0.2s, transform 0.18s;
+}
+.tool-card:hover { transform: translateY(-2px); }
+.athlete .tool-card:hover { border-color: rgba(249,115,22,0.32); }
+.parent  .tool-card:hover { border-color: rgba(95,179,172,0.32); }
+
+.ep-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 9px;
+  border-radius: 4px;
+}
+.athlete .ep-badge { background: var(--athlete-dim); color: var(--athlete); }
+.parent  .ep-badge { background: var(--parent-dim);  color: var(--parent); }
+.universal-section .ep-badge { background: rgba(255,255,255,0.07); color: var(--muted); }
+
+.tool-card h3 {
+  font-size: 0.93rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.tool-card .framework {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-style: italic;
+  flex: 1;
+}
+.tool-link {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: opacity 0.2s;
+}
+.athlete .tool-link { color: var(--athlete); }
+.parent  .tool-link { color: var(--parent); }
+.tool-link:hover { opacity: 0.7; }
+
+/* ── Divider ─────────────────────────────────────────── */
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+/* ── Universal section ───────────────────────────────── */
+.universal-section {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 52px 24px 64px;
+}
+.universal-section h2 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin-bottom: 24px;
+  color: var(--muted);
+  letter-spacing: 0.01em;
+}
+.universal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 14px;
+}
+.uni-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+}
+.uni-card h3 {
+  font-size: 0.93rem;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+.uni-card p {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+.uni-links { display: flex; gap: 14px; flex-wrap: wrap; }
+.uni-links a {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+.uni-links a:hover { color: var(--text); }
+
+/* ── Footer ──────────────────────────────────────────── */
+footer {
+  text-align: center;
+  padding: 36px 24px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+footer a { color: var(--muted); }
+footer a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<!-- ── Header ─────────────────────────────────────────── -->
+<header class="header">
+  <div class="brand">The Quiet Edge</div>
+  <h1>Resource Library</h1>
+  <p>38 research-backed mental performance tools for athletes and parents. Free, evidence-based, built for youth sport.</p>
+  <a href="https://tinyurl.com/29xuxnps" class="cta-primary" target="_blank">🎯 Find Your Personalized Tool</a>
+</header>
+
+<!-- ── Sticky nav ─────────────────────────────────────── -->
+<nav class="nav">
+  <a href="#athletes" class="ath">For Athletes</a>
+  <a href="#parents"  class="par">For Parents</a>
+  <a href="#universal">Universal Resources</a>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════
+     ATHLETES
+══════════════════════════════════════════════════════ -->
+<section id="athletes" class="audience-section athlete">
+  <div class="section-header">
+    <h2>For Athletes</h2>
+    <span class="audience-badge">Athletes</span>
+  </div>
+
+  <!-- Stage 2 -->
+  <div class="stage-block">
+    <div class="stage-label">Stage 2: Self-Awareness — mental skills foundation</div>
+    <div class="card-grid">
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 1</span>
+        <h3>Emotional Pattern Tracker</h3>
+        <p class="framework">Notice → Name → Navigate</p>
+        <a href="https://tinyurl.com/4pthebyz" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 2</span>
+        <h3>Self-Talk Pattern &amp; Replacement Script</h3>
+        <p class="framework">Identify → Replace → Practice</p>
+        <a href="https://tinyurl.com/2h474vab" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 3</span>
+        <h3>Control Circle Mapping + Daily Control Check</h3>
+        <p class="framework">Inside/Outside Circle + Redirect Practice</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/ep3/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 5</span>
+        <h3>Result-Reason-Response Framework</h3>
+        <p class="framework">Processing Failure Constructively</p>
+        <a href="https://tinyurl.com/yujrvh36" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 6</span>
+        <h3>Anchor Phrase + 5-Second Reset Practice Log</h3>
+        <p class="framework">Present Moment Anchoring</p>
+        <a href="https://tinyurl.com/4wccpwmx" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 7</span>
+        <h3>GPS Framework (Goal-Process-Scoreboard)</h3>
+        <p class="framework">Converting Outcome Goals to Process Focus</p>
+        <a href="https://tinyurl.com/56btkhh4" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 9</span>
+        <h3>ACR Practice Log</h3>
+        <p class="framework">Acknowledge → Correct → Refocus</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/ep9/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 10</span>
+        <h3>5 Questions Self-Evaluation Template</h3>
+        <p class="framework">Building Internal Standards</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/ep10/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Stage 3 -->
+  <div class="stage-block">
+    <div class="stage-label">Stage 3: Skill Acquisition — applying it under pressure</div>
+    <div class="card-grid">
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 3 · Ep. 1</span>
+        <h3>Deliberate Practice Session Planner</h3>
+        <p class="framework">Focus → Challenge → Feedback → Adjust (FCFA)</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep1/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 3 · Ep. 2</span>
+        <h3>Train Sharp — Quality Threshold Session Tracker</h3>
+        <p class="framework">Quality over Volume — 7-Session Log</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep2/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 3 · Ep. 3</span>
+        <h3>Mental Cue Playbook Builder</h3>
+        <p class="framework">Cue Word Theory: Short · Action · Feel · Test</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep3/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 3 · Ep. 4</span>
+        <h3>Mid-Game Refocus Card Builder</h3>
+        <p class="framework">Notice → Name → Next (Attentional Reset)</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep4/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 3 · Ep. 5</span>
+        <h3>Competition Process Planner</h3>
+        <p class="framework">Outcome → Process → Execute</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep5/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 3 · Ep. 7</span>
+        <h3>Mental Rep Builder — Visualization Script Generator</h3>
+        <p class="framework">PETTLEP Model (7-Dimension Imagery)</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep7/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 3 · Ep. 9</span>
+        <h3>4-Step System Builder + Weekly Habit Tracker</h3>
+        <p class="framework">Non-Negotiables → Schedule → Remove Decision → Start Smaller</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep9/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 3 · Ep. 10</span>
+        <h3>Competition Conditions Design Map</h3>
+        <p class="framework">5 Elements: Pressure · Decision · Fatigue · Distraction · Variability</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep10/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ══════════════════════════════════════════════════════
+     PARENTS
+══════════════════════════════════════════════════════ -->
+<section id="parents" class="audience-section parent">
+  <div class="section-header">
+    <h2>For Parents</h2>
+    <span class="audience-badge">Parents</span>
+  </div>
+
+  <!-- Stage 2 -->
+  <div class="stage-block">
+    <div class="stage-label">Stage 2: Self-Awareness — understanding your impact</div>
+    <div class="card-grid">
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 1</span>
+        <h3>What's Your Post-Game Script?</h3>
+        <p class="framework">Notice-Name-Navigate (Parent Lens) + Anxiety Reappraisal</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/ep1p/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 2</span>
+        <h3>The Voice in Their Head — Parent Self-Talk Audit</h3>
+        <p class="framework">Parent Self-Talk Modeling</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/ep2p/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 3</span>
+        <h3>Ownership Builds Confidence — Parent Responsibility Toolkit</h3>
+        <p class="framework">Autonomy-Supportive Parenting + Responsibility Scaffolding</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/ep3p/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 4</span>
+        <h3>Progress Recognition Toolkit</h3>
+        <p class="framework">Trait → Outcome → Progress Recognition Spectrum</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/ep4p/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 5</span>
+        <h3>What's Your Failure Response Pattern?</h3>
+        <p class="framework">Acknowledge → Space → Process → Model</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/ep5p/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 6</span>
+        <h3>Multi-Child Family Navigator</h3>
+        <p class="framework">4-Step Regulation Support Model × Child Emotional Profile</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/ep6p/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 7</span>
+        <h3>GPS Goal-Builder — Parent Edition</h3>
+        <p class="framework">GPS Goals — Parent Facilitation Role</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/ep7p/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 8</span>
+        <h3>Am I Effort-First? One-Week Parent Reaction Tracker</h3>
+        <p class="framework">Effort vs. Outcome Reaction Audit + 7-Day Behavioral Tracking</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/ep8p/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 9</span>
+        <h3>Sideline Reset Audit — Parent Edition</h3>
+        <p class="framework">ACR Sideline Presence Audit (8-Scenario Profile)</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/ep9p/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 2 · Ep. 10</span>
+        <h3>Post-Game Question Guide — Parent Edition</h3>
+        <p class="framework">Ask-First Protocol — Five Questions Framework</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/ep10p/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Stage 3 -->
+  <div class="stage-block">
+    <div class="stage-label">Stage 3: Skill Acquisition — applying it under pressure</div>
+    <div class="card-grid">
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 3 · Ep. 2</span>
+        <h3>Training Load Audit — Is My Child Training Too Much?</h3>
+        <p class="framework">Adaptation Equation + 5 Warning Sign Categories</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep2p/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 3 · Ep. 3</span>
+        <h3>Sideline Self-Check — Parent Edition</h3>
+        <p class="framework">5-Dimension Sideline Behavior Profile</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep3p/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 3 · Ep. 4</span>
+        <h3>Game Day Protocol Card — Parent Edition</h3>
+        <p class="framework">Before / During / After Sideline Protocol</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep4p/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 3 · Ep. 5</span>
+        <h3>Post-Game Conversation Self-Scorer</h3>
+        <p class="framework">5-Dimension Outcome Pressure Audit</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep5p/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 3 · Ep. 6</span>
+        <h3>Pre-Competition Environment Audit — Parent Edition</h3>
+        <p class="framework">Environment Provider Framework — 4 Support + 4 Disruptor Audit</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep6p/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 3 · Ep. 7</span>
+        <h3>Parent Visualization Support Checklist</h3>
+        <p class="framework">Validate / Protect / Create Environment</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep7p/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <span class="ep-badge">Stage 3 · Ep. 8</span>
+        <h3>Fatigue or Character? — Post-Game Observation Reframe Tool</h3>
+        <p class="framework">4 Parent Traps + 4 Parent Roles + Language Reframe Generator</p>
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep8p/" class="tool-link" target="_blank">Open Tool →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ══════════════════════════════════════════════════════
+     UNIVERSAL
+══════════════════════════════════════════════════════ -->
+<section id="universal" class="universal-section">
+  <h2>Universal Resources</h2>
+  <div class="universal-grid">
+
+    <div class="uni-card">
+      <h3>Athlete Listening Guide</h3>
+      <p>Complete Stage 2 episode companion with reflection prompts. Best starting point for athletes new to the series.</p>
+      <div class="uni-links">
+        <a href="https://tinyurl.com/54tzjeku" target="_blank">Open Guide →</a>
+      </div>
+    </div>
+
+    <div class="uni-card">
+      <h3>Parent Listening Guide</h3>
+      <p>Full episode companion for the Parent Edition series — Stage 2 through Stage 3 arc.</p>
+      <div class="uni-links">
+        <a href="https://tinyurl.com/5dcm9b9d" target="_blank">Open Guide →</a>
+      </div>
+    </div>
+
+    <div class="uni-card">
+      <h3>Parent Alignment Discussion Guide</h3>
+      <p>For co-parents: align on emotional regulation language and consistent approach across caregivers.</p>
+      <div class="uni-links">
+        <a href="https://tinyurl.com/sma75c93" target="_blank">Open Workbook →</a>
+      </div>
+    </div>
+
+    <div class="uni-card">
+      <h3>Multi-Child Family Navigator</h3>
+      <p>Personalized regulation support scripts for families with multiple athletes at different emotional profiles.</p>
+      <div class="uni-links">
+        <a href="https://cavarjj-dev.github.io/quiet-edge-tools/ep6p/" target="_blank">Interactive →</a>
+        <a href="https://tinyurl.com/5n6vjk4e" target="_blank">PDF →</a>
+      </div>
+    </div>
+
+    <div class="uni-card">
+      <h3>Co-Parenting Through Youth Sports</h3>
+      <p>Shared emotional language and unified support protocols for co-parents navigating youth sport together.</p>
+      <div class="uni-links">
+        <a href="https://tinyurl.com/24bpcuc7" target="_blank">Interactive →</a>
+        <a href="https://tinyurl.com/5n7rz9d7" target="_blank">PDF →</a>
+      </div>
+    </div>
+
+    <div class="uni-card">
+      <h3>Not sure where to start?</h3>
+      <p>Answer 5 questions to get a personalized guide of research-backed resources matched to your specific challenge.</p>
+      <div class="uni-links">
+        <a href="https://tinyurl.com/29xuxnps" target="_blank">Take the Quiz →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <p>
+    <a href="https://www.youtube.com/@TheQuietEdgeExperience" target="_blank">@TheQuietEdgeExperience</a>
+    &nbsp;·&nbsp; All tools are free and evidence-based &nbsp;·&nbsp; Built for youth sport development
+  </p>
+</footer>
+
+</body>
+</html>
