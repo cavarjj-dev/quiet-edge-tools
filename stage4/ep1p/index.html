@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What Does Your Pre-Game Language Signal? | The Quiet Edge — Parent Edition</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #5fb3ac;
+      --teal-dark: #3d8f88;
+      --teal-light: #d4f0ee;
+      --teal-faint: #eef8f7;
+      --amber: #e8a83a;
+      --amber-light: #fdf3dc;
+      --text: #1a1a2e;
+      --text-muted: #5c5c7a;
+      --bg: #fafafa;
+      --white: #ffffff;
+      --border: #dde8e7;
+      --radius: 10px;
+      --shadow: 0 2px 12px rgba(63,143,136,0.10);
+    }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      font-size: 15px;
+    }
+
+    /* ─── Header ──────────────────────────────────────────────── */
+    .site-header {
+      background: linear-gradient(135deg, #3d8f88 0%, #5fb3ac 60%, #7ecbc5 100%);
+      color: var(--white);
+      text-align: center;
+      padding: 2.5rem 1.5rem 2rem;
+    }
+    .site-header .stage-label {
+      font-family: 'Arial', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.82;
+      margin-bottom: 0.5rem;
+    }
+    .site-header h1 {
+      font-size: 1.8rem;
+      line-height: 1.25;
+      font-weight: normal;
+      margin-bottom: 0.5rem;
+    }
+    .site-header .subtitle {
+      font-family: 'Arial', sans-serif;
+      font-size: 13px;
+      opacity: 0.85;
+    }
+
+    /* ─── Layout ──────────────────────────────────────────────── */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    section { margin-bottom: 2.5rem; }
+
+    h2 {
+      font-size: 1.15rem;
+      color: var(--teal-dark);
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 2px solid var(--teal-light);
+    }
+
+    h3 {
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    p { margin-bottom: 0.75rem; }
+
+    .intro-box {
+      background: var(--teal-faint);
+      border-left: 4px solid var(--teal);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.4rem;
+      margin-bottom: 1.5rem;
+    }
+    .intro-box p { margin-bottom: 0.4rem; }
+    .intro-box p:last-child { margin-bottom: 0; }
+
+    /* ─── Quiz ──────────────────────────────────────────────── */
+    .quiz-question {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.4rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+    }
+    .quiz-question .q-number {
+      font-family: 'Arial', sans-serif;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--teal-dark);
+      margin-bottom: 0.4rem;
+    }
+    .quiz-question .q-text {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+    .quiz-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 0.4rem;
+      transition: background 0.15s;
+    }
+    .quiz-option:hover { background: var(--teal-faint); }
+    .quiz-option input[type="radio"] {
+      margin-top: 3px;
+      flex-shrink: 0;
+      accent-color: var(--teal);
+    }
+    .quiz-option label {
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .quiz-option.selected { background: var(--teal-light); }
+
+    .quiz-submit-row {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    .btn-primary {
+      background: var(--teal);
+      color: var(--white);
+      border: none;
+      border-radius: 6px;
+      padding: 0.75rem 2.25rem;
+      font-family: 'Arial', sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--teal-dark); }
+    .quiz-note {
+      font-family: 'Arial', sans-serif;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    /* ─── Results ─────────────────────────────────────────────── */
+    #results-section { display: none; }
+    .profile-card {
+      border-radius: var(--radius);
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+      border: 2px solid transparent;
+    }
+    .profile-card.neutralizer { background: #fff8f0; border-color: #e8a83a; }
+    .profile-card.cheerleader { background: #f0f8ff; border-color: #5b9bd5; }
+    .profile-card.observer    { background: #f5f5ff; border-color: #8a7fc8; }
+    .profile-card.reader      { background: var(--teal-faint); border-color: var(--teal); }
+    .profile-card .profile-label {
+      font-family: 'Arial', sans-serif;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.35rem;
+      color: var(--text-muted);
+    }
+    .profile-card .profile-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 0.75rem;
+    }
+    .profile-card .profile-body { font-size: 14.5px; line-height: 1.7; }
+    .profile-card .challenge-box {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      font-size: 13.5px;
+      font-family: 'Arial', sans-serif;
+      background: rgba(255,255,255,0.65);
+    }
+    .profile-card .challenge-box strong { display: block; margin-bottom: 0.25rem; }
+
+    .score-bar-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+    .score-pill {
+      font-family: 'Arial', sans-serif;
+      font-size: 12px;
+      padding: 0.3rem 0.85rem;
+      border-radius: 99px;
+      background: var(--teal-light);
+      color: var(--teal-dark);
+      font-weight: bold;
+    }
+    .score-pill.dominant { background: var(--teal); color: var(--white); }
+
+    /* ─── Language Swap Bank ─────────────────────────────────── */
+    .swap-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+    }
+    .swap-card .swap-scenario {
+      background: var(--teal-faint);
+      padding: 0.75rem 1.25rem;
+      font-size: 13px;
+      font-family: 'Arial', sans-serif;
+      color: var(--teal-dark);
+      font-weight: bold;
+      border-bottom: 1px solid var(--border);
+    }
+    .swap-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .swap-col {
+      padding: 1rem 1.25rem;
+    }
+    .swap-col:first-child {
+      border-right: 1px solid var(--border);
+    }
+    .swap-col .col-label {
+      font-family: 'Arial', sans-serif;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+    .swap-col .col-phrase {
+      font-size: 14px;
+      margin-bottom: 0.4rem;
+      font-style: italic;
+    }
+    .swap-col .col-signal {
+      font-family: 'Arial', sans-serif;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .swap-col.try-instead { background: var(--teal-faint); }
+    .swap-col.try-instead .col-phrase { color: var(--teal-dark); font-style: normal; font-weight: bold; }
+    .swap-col.try-instead .col-signal { color: var(--teal-dark); }
+
+    /* ─── Challenge Tracker ──────────────────────────────────── */
+    .challenge-header {
+      background: var(--teal);
+      color: var(--white);
+      padding: 1rem 1.4rem;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .challenge-header h3 { color: var(--white); margin-bottom: 0.2rem; }
+    .challenge-header p  { font-family: 'Arial', sans-serif; font-size: 13px; opacity: 0.9; margin: 0; }
+    .challenge-body {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+      padding: 1.25rem 1.4rem;
+    }
+
+    .week-block {
+      margin-bottom: 1.25rem;
+    }
+    .week-block h4 {
+      font-family: 'Arial', sans-serif;
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--teal-dark);
+      margin-bottom: 0.35rem;
+    }
+    .week-block .week-goal {
+      font-size: 14px;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+    .day-rows {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.4rem;
+    }
+    .day-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+    }
+    .day-cell .day-label {
+      font-family: 'Arial', sans-serif;
+      font-size: 9px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .day-check {
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      background: var(--white);
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .day-check.checked {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: white;
+    }
+    .log-section {
+      margin-top: 0.75rem;
+    }
+    .log-section .log-label {
+      font-family: 'Arial', sans-serif;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+    .log-line {
+      border: none;
+      border-bottom: 1px solid var(--border);
+      display: block;
+      width: 100%;
+      margin-bottom: 6px;
+      padding: 0.15rem 0;
+      font-family: Georgia, serif;
+      font-size: 14px;
+      color: var(--text);
+      background: transparent;
+      outline: none;
+    }
+    .log-line:focus { border-bottom-color: var(--teal); }
+
+    /* ─── Framework reminder ─────────────────────────────────── */
+    .framework-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.4rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+      align-items: stretch;
+    }
+    .framework-step {
+      flex: 1;
+      text-align: center;
+      padding: 0.75rem 0.5rem;
+      border-radius: 6px;
+      background: var(--teal-faint);
+    }
+    .framework-step .step-icon { font-size: 1.5rem; }
+    .framework-step .step-label {
+      font-family: 'Arial', sans-serif;
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--teal-dark);
+      display: block;
+      margin-top: 0.3rem;
+    }
+    .framework-step .step-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+      line-height: 1.4;
+    }
+    .framework-arrow {
+      display: flex;
+      align-items: center;
+      color: var(--teal);
+      font-size: 1.2rem;
+      padding: 0 0.25rem;
+    }
+
+    /* ─── Footer ──────────────────────────────────────────────── */
+    .site-footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-family: 'Arial', sans-serif;
+      font-size: 12px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+    .site-footer a { color: var(--teal-dark); }
+
+    /* ─── PDF Button ─────────────────────────────────────────── */
+    .pdf-row {
+      text-align: center;
+      margin: 2rem 0;
+    }
+    .btn-pdf {
+      background: transparent;
+      border: 2px solid var(--teal);
+      color: var(--teal-dark);
+      border-radius: 6px;
+      padding: 0.65rem 2rem;
+      font-family: 'Arial', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .btn-pdf:hover { background: var(--teal); color: white; }
+
+    /* ─── Print ───────────────────────────────────────────────── */
+    @media print {
+      body { font-size: 12pt; background: white; }
+      .container { max-width: 100%; padding: 0 0.5cm; }
+      .site-header { padding: 1cm 1cm 0.75cm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .pdf-row, .btn-pdf, .btn-primary, .quiz-submit-row { display: none !important; }
+      #results-section { display: block !important; }
+      .quiz-question, .swap-card, .profile-card, .challenge-body { break-inside: avoid; }
+      section { break-inside: avoid; }
+      .day-check { border: 1px solid #aaa; }
+      .log-line { border-bottom: 1px solid #aaa; }
+      .swap-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="stage-label">The Quiet Edge &middot; Stage 4: Performance Environments &middot; Parent Edition</div>
+    <h1>What Does Your Pre-Game<br>Language Signal?</h1>
+    <div class="subtitle">A parent self-assessment for pressure moments &mdash; Ep. 1: Why Pressure Moments Are Developmental</div>
+  </header>
+
+  <div class="container">
+
+    <!-- Intro -->
+    <section id="intro-section">
+      <div class="intro-box">
+        <p><strong>This tool is about you &mdash; not your athlete.</strong></p>
+        <p>Research on stress mindset (Crum et al., 2013) shows that parents transmit their interpretation of the pressure response through language &mdash; often without knowing it. When you say &ldquo;just breathe,&rdquo; you&rsquo;re not just offering comfort. You&rsquo;re telling your athlete that their nerves are a problem to solve.</p>
+        <p>This assessment helps you identify your default pattern, see what you&rsquo;re actually signaling, and practice the language that lets the signal work <em>for</em> your athlete instead of against them.</p>
+      </div>
+
+      <!-- Stop Notice Validate Framework -->
+      <div class="framework-box">
+        <div class="framework-step">
+          <div class="step-icon">&#9632;</div>
+          <span class="step-label">Stop</span>
+          <div class="step-desc">Pause your default impulse before speaking</div>
+        </div>
+        <div class="framework-arrow">&#8594;</div>
+        <div class="framework-step">
+          <div class="step-icon">&#128065;</div>
+          <span class="step-label">Notice</span>
+          <div class="step-desc">Observe the signal without judgment or urgency</div>
+        </div>
+        <div class="framework-arrow">&#8594;</div>
+        <div class="framework-step">
+          <div class="step-icon">&#10003;</div>
+          <span class="step-label">Validate</span>
+          <div class="step-desc">Name it as preparation, not a problem</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz -->
+    <section id="quiz-section">
+      <h2>Part 1 &mdash; Your Language Profile</h2>
+      <p style="font-family: Arial, sans-serif; font-size: 13px; color: var(--text-muted); margin-bottom: 1.25rem;">Choose the response that most sounds like you. There are no wrong answers &mdash; only honest ones.</p>
+
+      <!-- Q1 -->
+      <div class="quiz-question">
+        <div class="q-number">Question 1 of 6</div>
+        <div class="q-text">Your athlete seems visibly nervous before a game. Your first instinct is to say:</div>
+        <div class="quiz-option"><input type="radio" name="q1" id="q1a" value="A"><label for="q1a">&ldquo;Just breathe &mdash; you&rsquo;ve got this. You&rsquo;ll be fine.&rdquo;</label></div>
+        <div class="quiz-option"><input type="radio" name="q1" id="q1b" value="B"><label for="q1b">&ldquo;Think about how hard you&rsquo;ve worked. You&rsquo;re so prepared for this.&rdquo;</label></div>
+        <div class="quiz-option"><input type="radio" name="q1" id="q1c" value="C"><label for="q1c">Nothing specific &mdash; you give them space and try not to crowd them.</label></div>
+        <div class="quiz-option"><input type="radio" name="q1" id="q1d" value="D"><label for="q1d">&ldquo;I see it. That&rsquo;s your body taking this seriously.&rdquo;</label></div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-question">
+        <div class="q-number">Question 2 of 6</div>
+        <div class="q-text">In the car, 10 minutes before the event, you typically:</div>
+        <div class="quiz-option"><input type="radio" name="q2" id="q2a" value="A"><label for="q2a">Try to calm the mood &mdash; light conversation, reassurance, or asking how they feel.</label></div>
+        <div class="quiz-option"><input type="radio" name="q2" id="q2b" value="B"><label for="q2b">Talk through their preparation &mdash; remind them of drills, past successes, or effort.</label></div>
+        <div class="quiz-option"><input type="radio" name="q2" id="q2c" value="C"><label for="q2c">Stay mostly quiet and let them set the tone.</label></div>
+        <div class="quiz-option"><input type="radio" name="q2" id="q2d" value="D"><label for="q2d">Make one grounding statement and leave it alone: &ldquo;Trust what you&rsquo;ve built. Let&rsquo;s go.&rdquo;</label></div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question">
+        <div class="q-number">Question 3 of 6</div>
+        <div class="q-text">Your athlete says: &ldquo;I feel sick. I&rsquo;m so nervous.&rdquo; You respond:</div>
+        <div class="quiz-option"><input type="radio" name="q3" id="q3a" value="A"><label for="q3a">&ldquo;You&rsquo;ll be fine &mdash; just breathe through it. Everyone gets nervous.&rdquo;</label></div>
+        <div class="quiz-option"><input type="radio" name="q3" id="q3b" value="B"><label for="q3b">&ldquo;Remember all the work you&rsquo;ve put in! You know this. You&rsquo;re ready.&rdquo;</label></div>
+        <div class="quiz-option"><input type="radio" name="q3" id="q3c" value="C"><label for="q3c">You&rsquo;re not sure what to say, so you stay quiet or give a reassuring pat on the back.</label></div>
+        <div class="quiz-option"><input type="radio" name="q3" id="q3d" value="D"><label for="q3d">&ldquo;Good. That means your body is getting ready. Let it work.&rdquo;</label></div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question">
+        <div class="q-number">Question 4 of 6</div>
+        <div class="q-text">Your athlete is pacing and tight before a big game. You:</div>
+        <div class="quiz-option"><input type="radio" name="q4" id="q4a" value="A"><label for="q4a">Help them relax &mdash; breathing, humor, a distraction, or asking them to shake it out.</label></div>
+        <div class="quiz-option"><input type="radio" name="q4" id="q4b" value="B"><label for="q4b">Give a confidence boost: &ldquo;You&rsquo;ve worked too hard not to be ready for this.&rdquo;</label></div>
+        <div class="quiz-option"><input type="radio" name="q4" id="q4c" value="C"><label for="q4c">Step back and give them room &mdash; you don&rsquo;t want to make it worse.</label></div>
+        <div class="quiz-option"><input type="radio" name="q4" id="q4d" value="D"><label for="q4d">Say nothing or say quietly: &ldquo;I see it. Your body knows what to do.&rdquo;</label></div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question">
+        <div class="q-number">Question 5 of 6</div>
+        <div class="q-text">Your athlete says: &ldquo;What if I choke in front of everyone?&rdquo; You respond:</div>
+        <div class="quiz-option"><input type="radio" name="q5" id="q5a" value="A"><label for="q5a">&ldquo;Stop thinking like that. You&rsquo;re not going to choke. Just focus.&rdquo;</label></div>
+        <div class="quiz-option"><input type="radio" name="q5" id="q5b" value="B"><label for="q5b">&ldquo;You&rsquo;ve done this a thousand times. Think about your practice &mdash; it&rsquo;s all there.&rdquo;</label></div>
+        <div class="quiz-option"><input type="radio" name="q5" id="q5c" value="C"><label for="q5c">You sit with the question and don&rsquo;t have a great answer, so you don&rsquo;t respond.</label></div>
+        <div class="quiz-option"><input type="radio" name="q5" id="q5d" value="D"><label for="q5d">&ldquo;That&rsquo;s a real question. What&rsquo;s one thing you can control out there right now?&rdquo;</label></div>
+      </div>
+
+      <!-- Q6 -->
+      <div class="quiz-question">
+        <div class="q-number">Question 6 of 6</div>
+        <div class="q-text">After a hard loss where your athlete played poorly, on the car ride home you:</div>
+        <div class="quiz-option"><input type="radio" name="q6" id="q6a" value="A"><label for="q6a">Try to lighten the mood &mdash; change the subject, get food, normalize it.</label></div>
+        <div class="quiz-option"><input type="radio" name="q6" id="q6b" value="B"><label for="q6b">Look for positives immediately: &ldquo;You played well in the first half. Here&rsquo;s what I noticed.&rdquo;</label></div>
+        <div class="quiz-option"><input type="radio" name="q6" id="q6c" value="C"><label for="q6c">Stay quiet and give them space &mdash; let them bring it up if they want to.</label></div>
+        <div class="quiz-option"><input type="radio" name="q6" id="q6d" value="D"><label for="q6d">&ldquo;That was a tough one. I&rsquo;m here. Talk whenever you&rsquo;re ready.&rdquo;</label></div>
+      </div>
+
+      <div class="quiz-submit-row">
+        <button class="btn-primary" onclick="scoreQuiz()">See My Language Profile</button>
+        <p class="quiz-note">All 6 questions must be answered</p>
+      </div>
+    </section>
+
+    <!-- Results (hidden until scored) -->
+    <section id="results-section">
+      <h2>Part 2 &mdash; Your Language Profile</h2>
+
+      <div class="score-bar-row" id="score-pills"></div>
+
+      <!-- Neutralizer -->
+      <div class="profile-card neutralizer" id="profile-neutralizer" style="display:none;">
+        <div class="profile-label">Your Primary Pattern</div>
+        <div class="profile-title">The Neutralizer</div>
+        <div class="profile-body">
+          <p>Your instinct is to take the signal away. When your athlete shows nerves, you reach for calm &mdash; &ldquo;just breathe,&rdquo; &ldquo;you&rsquo;ll be fine,&rdquo; &ldquo;stop overthinking.&rdquo; This impulse comes from love, and it&rsquo;s the most common parent pattern in sports.</p>
+          <p>But Crum&rsquo;s stress mindset research is clear: every time you frame the pressure response as a problem to fix, you teach your athlete that their body&rsquo;s pre-competition signal means something is wrong. Over time, they learn to fight their own nervous system instead of use it.</p>
+          <p>Your athlete doesn&rsquo;t need calm. They need to believe the signal is on their side.</p>
+          <div class="challenge-box">
+            <strong>Your Practice Focus</strong>
+            Notice when you reach for a calming phrase. Before you say it, ask: &ldquo;Is this for them, or is this for me?&rdquo; You don&rsquo;t need to have a better phrase ready yet &mdash; just noticing is the first step.
+          </div>
+        </div>
+      </div>
+
+      <!-- Cheerleader -->
+      <div class="profile-card cheerleader" id="profile-cheerleader" style="display:none;">
+        <div class="profile-label">Your Primary Pattern</div>
+        <div class="profile-title">The Cheerleader</div>
+        <div class="profile-body">
+          <p>You replace the signal with confidence. Pep talks, reminders of hard work, proof of preparation &mdash; your instinct is to build your athlete up before competition. This comes from genuine belief in them, and it&rsquo;s often what athletes say they love about their parents.</p>
+          <p>The subtle cost: relentless encouragement before a high-stakes moment can create pressure to <em>feel</em> confident, which competes with the natural pre-competition activation the body is producing. Athletes sometimes perform <em>worse</em> after high-energy pep talks because they&rsquo;re managing your expectations alongside their own.</p>
+          <p>Try letting the signal stand. Trust that they already believe in themselves &mdash; your job isn&rsquo;t to manufacture that belief in the final 15 minutes.</p>
+          <div class="challenge-box">
+            <strong>Your Practice Focus</strong>
+            Before your next pep talk, pause. Ask: &ldquo;Is this what they need, or what I need to give?&rdquo; One grounding statement instead of three encouragements. Then stop.
+          </div>
+        </div>
+      </div>
+
+      <!-- Observer -->
+      <div class="profile-card observer" id="profile-observer" style="display:none;">
+        <div class="profile-label">Your Primary Pattern</div>
+        <div class="profile-title">The Observer</div>
+        <div class="profile-body">
+          <p>You already know that less is more in the pre-game window. You hold back, give space, and resist the urge to fix or coach. This restraint is a genuine strength &mdash; most parents never get here.</p>
+          <p>The next step isn&rsquo;t doing less. It&rsquo;s moving from strategic silence to intentional validation. There&rsquo;s a meaningful difference between saying nothing and saying one specific thing that names the signal as useful. Right now your athlete may read your quiet as uncertainty. One well-placed sentence changes that.</p>
+          <p>You don&rsquo;t need to speak more. You need to speak <em>once</em> &mdash; with intention.</p>
+          <div class="challenge-box">
+            <strong>Your Practice Focus</strong>
+            Before the next competition, use the Stop &rarr; Notice &rarr; Validate exchange once: &ldquo;I see it. That&rsquo;s your body taking this seriously.&rdquo; Then return to quiet. See what changes.
+          </div>
+        </div>
+      </div>
+
+      <!-- Signal Reader -->
+      <div class="profile-card reader" id="profile-reader" style="display:none;">
+        <div class="profile-label">Your Primary Pattern</div>
+        <div class="profile-title">The Signal Reader</div>
+        <div class="profile-body">
+          <p>You&rsquo;re already working with the research. You understand that the pre-competition nervous system signal is preparation &mdash; not panic &mdash; and your language reflects that. You name it, you don&rsquo;t fight it, and you give your athlete permission to carry it into competition without treating it as a problem.</p>
+          <p>The challenge now is staying consistent under <em>your own</em> pressure: the important game, the visible tension on their face before a tryout, the moment when your anxiety rises and the old impulse comes back. It&rsquo;s easier to validate in low-stakes moments.</p>
+          <div class="challenge-box">
+            <strong>Your Practice Focus</strong>
+            Identify your own pressure threshold &mdash; which games or moments make it hardest to hold the Signal Reader pattern? Notice those moments. That&rsquo;s where the work is.
+          </div>
+        </div>
+      </div>
+
+      <div class="pdf-row"><button class="btn-pdf" onclick="window.print()">Download as PDF</button></div>
+    </section>
+
+    <!-- Language Swap Bank -->
+    <section id="swap-section">
+      <h2>Part 3 &mdash; Language Swap Bank</h2>
+      <p style="font-family: Arial, sans-serif; font-size: 13px; color: var(--text-muted); margin-bottom: 1.25rem;">Common phrases, what they actually signal, and what to say instead. These aren&rsquo;t scripts &mdash; they&rsquo;re starting points. Find the version that sounds like you.</p>
+
+      <!-- Swap 1 -->
+      <div class="swap-card">
+        <div class="swap-scenario">Scenario: Your athlete looks nervous before the game starts</div>
+        <div class="swap-grid">
+          <div class="swap-col">
+            <div class="col-label">What you might say</div>
+            <div class="col-phrase">&ldquo;Just breathe. You&rsquo;ve got this. You&rsquo;ll be fine.&rdquo;</div>
+            <div class="col-signal">What it signals: &ldquo;Your nerves are a problem. Let me fix them for you.&rdquo;</div>
+          </div>
+          <div class="swap-col try-instead">
+            <div class="col-label">Try instead</div>
+            <div class="col-phrase">&ldquo;I see it. That&rsquo;s your body taking this seriously.&rdquo;</div>
+            <div class="col-signal">What it signals: &ldquo;The signal is valid. It&rsquo;s working for you.&rdquo;</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Swap 2 -->
+      <div class="swap-card">
+        <div class="swap-scenario">Scenario: Your athlete is shaking or visibly tense during warmup</div>
+        <div class="swap-grid">
+          <div class="swap-col">
+            <div class="col-label">What you might say</div>
+            <div class="col-phrase">&ldquo;Relax &mdash; shake it out. Loosen up. You look so tight.&rdquo;</div>
+            <div class="col-signal">What it signals: &ldquo;Being this activated is the wrong state for competition.&rdquo;</div>
+          </div>
+          <div class="swap-col try-instead">
+            <div class="col-label">Try instead</div>
+            <div class="col-phrase">[Say nothing. Optional: a hand on the shoulder, a nod.] &ldquo;Let it work.&rdquo;</div>
+            <div class="col-signal">What it signals: &ldquo;I trust your body. You don&rsquo;t need to perform calm for me.&rdquo;</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Swap 3 -->
+      <div class="swap-card">
+        <div class="swap-scenario">Scenario: Your athlete says &ldquo;What if I mess up in front of everyone?&rdquo;</div>
+        <div class="swap-grid">
+          <div class="swap-col">
+            <div class="col-label">What you might say</div>
+            <div class="col-phrase">&ldquo;That&rsquo;s not going to happen! Stop thinking like that. You&rsquo;re so prepared.&rdquo;</div>
+            <div class="col-signal">What it signals: &ldquo;That fear is irrational &mdash; override it.&rdquo;</div>
+          </div>
+          <div class="swap-col try-instead">
+            <div class="col-label">Try instead</div>
+            <div class="col-phrase">&ldquo;That&rsquo;s a real question. What&rsquo;s one thing you can control out there?&rdquo;</div>
+            <div class="col-signal">What it signals: &ldquo;The fear is valid. Let&rsquo;s redirect it into something useful.&rdquo;</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Swap 4 -->
+      <div class="swap-card">
+        <div class="swap-scenario">Scenario: You give a pep talk before a big game</div>
+        <div class="swap-grid">
+          <div class="swap-col">
+            <div class="col-label">What you might say</div>
+            <div class="col-phrase">&ldquo;You&rsquo;ve worked so hard for this. You&rsquo;re ready. This is your moment. Let&rsquo;s go!&rdquo;</div>
+            <div class="col-signal">What it signals: &ldquo;The weight of your preparation is on this moment. I need you to feel ready.&rdquo;</div>
+          </div>
+          <div class="swap-col try-instead">
+            <div class="col-label">Try instead</div>
+            <div class="col-phrase">&ldquo;Trust what you&rsquo;ve built. Go play your game.&rdquo;</div>
+            <div class="col-signal">What it signals: &ldquo;I believe in your preparation. No pressure from me.&rdquo;</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Swap 5 -->
+      <div class="swap-card">
+        <div class="swap-scenario">Scenario: Car ride home after a tough loss</div>
+        <div class="swap-grid">
+          <div class="swap-col">
+            <div class="col-label">What you might say</div>
+            <div class="col-phrase">&ldquo;You just need to believe in yourself more&rdquo; or an immediate positive spin.</div>
+            <div class="col-signal">What it signals: &ldquo;Let&rsquo;s get past this feeling fast. Fix your mindset.&rdquo;</div>
+          </div>
+          <div class="swap-col try-instead">
+            <div class="col-label">Try instead</div>
+            <div class="col-phrase">&ldquo;That was hard. I&rsquo;m here. Talk whenever you&rsquo;re ready.&rdquo;</div>
+            <div class="col-signal">What it signals: &ldquo;The feeling is allowed. You don&rsquo;t have to process this on my timeline.&rdquo;</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3-Week Challenge -->
+    <section id="challenge-section">
+      <div class="challenge-header">
+        <h3>Part 4 &mdash; The 3-Week Challenge</h3>
+        <p>One behavioral shift per week. Each builds on the last.</p>
+      </div>
+      <div class="challenge-body">
+        <p style="font-family: Arial, sans-serif; font-size: 13px; color: var(--text-muted); margin-bottom: 1.25rem;">
+          In the 15 minutes before competition, don&rsquo;t neutralize. Let the signal stand. Use this tracker to check in with yourself after each game or practice.
+        </p>
+
+        <!-- Week 1 -->
+        <div class="week-block">
+          <h4>Week 1 &mdash; Notice</h4>
+          <div class="week-goal">Goal: Identify your default phrase. Write it down after each game. Don&rsquo;t try to change it yet &mdash; just see it clearly.</div>
+          <div class="day-rows">
+            <div class="day-cell"><div class="day-label">Mon</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Tue</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Wed</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Thu</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Fri</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Sat</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Sun</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+          </div>
+          <div class="log-section">
+            <div class="log-label">What did I say before competition this week?</div>
+            <input class="log-line" type="text" placeholder="Write the phrase(s) you used..." />
+            <input class="log-line" type="text" placeholder="What did I notice about my impulse?" />
+          </div>
+        </div>
+
+        <!-- Week 2 -->
+        <div class="week-block">
+          <h4>Week 2 &mdash; Pause</h4>
+          <div class="week-goal">Goal: Before speaking in the pre-game window, take one breath. Ask yourself: &ldquo;Is this for them or for me?&rdquo; Then choose whether to speak.</div>
+          <div class="day-rows">
+            <div class="day-cell"><div class="day-label">Mon</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Tue</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Wed</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Thu</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Fri</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Sat</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Sun</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+          </div>
+          <div class="log-section">
+            <div class="log-label">When did I pause this week? What did I notice?</div>
+            <input class="log-line" type="text" placeholder="Describe a moment when you paused before speaking..." />
+            <input class="log-line" type="text" placeholder="What did you choose to do? What happened?" />
+          </div>
+        </div>
+
+        <!-- Week 3 -->
+        <div class="week-block">
+          <h4>Week 3 &mdash; Validate</h4>
+          <div class="week-goal">Goal: Use the Stop &rarr; Notice &rarr; Validate exchange at least once before competition. &ldquo;I see it. That&rsquo;s your body taking this seriously.&rdquo; Then stop &mdash; let it land.</div>
+          <div class="day-rows">
+            <div class="day-cell"><div class="day-label">Mon</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Tue</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Wed</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Thu</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Fri</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Sat</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+            <div class="day-cell"><div class="day-label">Sun</div><div class="day-check" onclick="toggleCheck(this)"></div></div>
+          </div>
+          <div class="log-section">
+            <div class="log-label">When did you use the validation exchange? What happened after?</div>
+            <input class="log-line" type="text" placeholder="Describe the moment and what you said..." />
+            <input class="log-line" type="text" placeholder="How did your athlete respond? What did you notice?" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="pdf-row">
+      <button class="btn-pdf" onclick="window.print()">&#8595; Download as PDF</button>
+    </div>
+
+  </div><!-- /container -->
+
+  <footer class="site-footer">
+    <p>The Quiet Edge &mdash; Stage 4: Performance Environments &mdash; Parent Edition</p>
+    <p style="margin-top: 0.3rem;">
+      Watch the episode &nbsp;|&nbsp;
+      <a href="https://tinyurl.com/5dcm9b9d">Parent Listening Guide</a>
+    </p>
+    <p style="margin-top: 0.5rem; font-size: 11px; color: #aaa;">
+      Evidence base: Crum, Salovey &amp; Achor (2013); Jamieson, Mendes &amp; Nock (2013); Feldman (2007)
+    </p>
+  </footer>
+
+  <script>
+    // ─── Quiz Scoring ─────────────────────────────────────────────
+    function scoreQuiz() {
+      const questions = ['q1','q2','q3','q4','q5','q6'];
+      const answers = {};
+      for (const q of questions) {
+        const checked = document.querySelector(`input[name="${q}"]:checked`);
+        if (!checked) {
+          alert('Please answer all 6 questions before seeing your profile.');
+          return;
+        }
+        answers[q] = checked.value;
+      }
+
+      const counts = { A: 0, B: 0, C: 0, D: 0 };
+      Object.values(answers).forEach(v => counts[v]++);
+
+      // Determine dominant profile
+      const maxCount = Math.max(...Object.values(counts));
+      const dominant = Object.entries(counts).filter(([,v]) => v === maxCount).map(([k]) => k);
+      const profileMap = { A: 'neutralizer', B: 'cheerleader', C: 'observer', D: 'reader' };
+      const profileNames = { A: 'The Neutralizer', B: 'The Cheerleader', C: 'The Observer', D: 'The Signal Reader' };
+
+      // Show results section
+      document.getElementById('results-section').style.display = 'block';
+
+      // Score pills
+      const pillsEl = document.getElementById('score-pills');
+      pillsEl.innerHTML = '';
+      const labels = { A: 'Neutralizer', B: 'Cheerleader', C: 'Observer', D: 'Signal Reader' };
+      ['A','B','C','D'].forEach(letter => {
+        if (counts[letter] > 0) {
+          const pill = document.createElement('div');
+          pill.className = 'score-pill' + (dominant.includes(letter) ? ' dominant' : '');
+          pill.textContent = labels[letter] + ': ' + counts[letter] + '/6';
+          pillsEl.appendChild(pill);
+        }
+      });
+
+      // Show dominant profile card
+      ['A','B','C','D'].forEach(letter => {
+        const el = document.getElementById('profile-' + profileMap[letter]);
+        if (el) {
+          el.style.display = dominant.includes(letter) ? 'block' : 'none';
+        }
+      });
+
+      // Smooth scroll to results
+      document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ─── Option highlight on click ────────────────────────────────
+    document.querySelectorAll('.quiz-option').forEach(opt => {
+      opt.addEventListener('click', function() {
+        const name = this.querySelector('input').name;
+        document.querySelectorAll(`input[name="${name}"]`).forEach(inp => {
+          inp.closest('.quiz-option').classList.remove('selected');
+        });
+        this.classList.add('selected');
+      });
+    });
+
+    // ─── Challenge Tracker ────────────────────────────────────────
+    function toggleCheck(el) {
+      el.classList.toggle('checked');
+      el.textContent = el.classList.contains('checked') ? '✓' : '';
+    }
+  </script>
+</body>
+</html>
