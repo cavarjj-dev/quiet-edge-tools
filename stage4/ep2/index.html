@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arousal Calibration Log — The Quiet Edge</title>
+<style>
+  /* ── Reset & Base ─────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange: #ffaa44;
+    --orange-dim: #ffaa4422;
+    --orange-border: #ffaa4466;
+    --dark: #0f1117;
+    --surface: #181c26;
+    --surface2: #1e2330;
+    --text: #e8e8f0;
+    --text-dim: #9098b0;
+    --green: #4caf82;
+    --green-dim: #4caf8222;
+    --red: #f07060;
+    --red-dim: #f0706022;
+    --blue: #5b9cf6;
+    --blue-dim: #5b9cf622;
+    --radius: 10px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--dark);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* ── Header ───────────────────────────────────── */
+  .header {
+    background: linear-gradient(135deg, #0f1117 0%, #1a1f30 100%);
+    border-bottom: 1px solid #ffffff15;
+    padding: 28px 24px 22px;
+    text-align: center;
+  }
+  .header-badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--orange);
+    border: 1.5px solid var(--orange-border);
+    background: var(--orange-dim);
+    border-radius: 20px;
+    padding: 4px 14px;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .header p {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  /* ── Nav tabs ─────────────────────────────────── */
+  .tabs {
+    display: flex;
+    gap: 0;
+    background: var(--surface);
+    border-bottom: 1px solid #ffffff12;
+    padding: 0 20px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .tab {
+    padding: 14px 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-dim);
+    border-bottom: 2.5px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+  /* ── Page containers ──────────────────────────── */
+  .page { display: none; padding: 24px 20px; max-width: 700px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* ── Section titles ───────────────────────────── */
+  .section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 14px;
+  }
+
+  /* ── Cards ────────────────────────────────────── */
+  .card {
+    background: var(--surface);
+    border: 1px solid #ffffff12;
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+  .card p {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* ── Arousal slider ───────────────────────────── */
+  .arousal-section { margin-bottom: 24px; }
+  .arousal-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+
+  .rating-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .rating-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 8px;
+    border: 1.5px solid #ffffff20;
+    background: var(--surface2);
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .rating-btn:hover { border-color: var(--orange); color: var(--orange); }
+  .rating-btn.selected-low { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+  .rating-btn.selected-zone { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+  .rating-btn.selected-high { background: var(--red-dim); border-color: var(--red); color: var(--red); }
+
+  /* ── Zone result box ──────────────────────────── */
+  .zone-result {
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .zone-result.low { background: var(--blue-dim); border: 1.5px solid #5b9cf640; }
+  .zone-result.zone { background: var(--green-dim); border: 1.5px solid #4caf8240; }
+  .zone-result.high { background: var(--red-dim); border: 1.5px solid #f0706040; }
+  .zone-result.visible { display: block; }
+
+  .zone-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .low .zone-label { color: var(--blue); }
+  .zone .zone-label { color: var(--green); }
+  .high .zone-label { color: var(--red); }
+
+  .zone-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .zone-desc {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  /* ── Technique list ───────────────────────────── */
+  .technique-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .technique-item {
+    background: #ffffff08;
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .technique-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 3px;
+  }
+  .technique-how {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* ── Log entry form ───────────────────────────── */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: var(--surface2);
+    border: 1.5px solid #ffffff18;
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--orange);
+  }
+  .form-group select option { background: #1e2330; }
+  .form-group textarea { resize: vertical; min-height: 70px; }
+
+  /* ── Buttons ──────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+  .btn-primary {
+    background: var(--orange);
+    color: #0f1117;
+  }
+  .btn-primary:hover { background: #ffb85a; }
+  .btn-secondary {
+    background: transparent;
+    border: 1.5px solid #ffffff25;
+    color: var(--text-dim);
+  }
+  .btn-secondary:hover { border-color: var(--orange); color: var(--orange); }
+  .btn-full { width: 100%; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+
+  /* ── Log table ────────────────────────────────── */
+  .log-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-dim);
+    font-size: 0.88rem;
+    border: 1.5px dashed #ffffff15;
+    border-radius: var(--radius);
+  }
+  .log-entry {
+    background: var(--surface);
+    border: 1px solid #ffffff10;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .log-entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .log-entry-meta {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+  }
+  .log-entry-rating {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+  }
+  .badge-low { background: var(--blue-dim); color: var(--blue); border: 1px solid #5b9cf630; }
+  .badge-zone { background: var(--green-dim); color: var(--green); border: 1px solid #4caf8230; }
+  .badge-high { background: var(--red-dim); color: var(--red); border: 1px solid #f0706030; }
+  .log-entry-body {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 14px;
+  }
+  .log-entry-body span { display: block; }
+  .log-entry-body strong { color: var(--text); }
+  .log-notes {
+    margin-top: 8px;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+  .log-delete {
+    background: none;
+    border: none;
+    color: #ffffff25;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: color 0.15s;
+    flex-shrink: 0;
+  }
+  .log-delete:hover { color: var(--red); }
+
+  /* ── Stats ────────────────────────────────────── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .stat-box {
+    background: var(--surface);
+    border: 1px solid #ffffff10;
+    border-radius: var(--radius);
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .stat-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--orange);
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Alert ────────────────────────────────────── */
+  .alert {
+    background: var(--orange-dim);
+    border: 1.5px solid var(--orange-border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    color: var(--text);
+    margin-bottom: 16px;
+    display: none;
+  }
+  .alert.visible { display: block; }
+
+  /* ── Footer ───────────────────────────────────── */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-dim);
+    font-size: 0.78rem;
+    border-top: 1px solid #ffffff10;
+    margin-top: 20px;
+  }
+
+  /* ── Print styles ─────────────────────────────── */
+  @media print {
+    body { background: #fff; color: #111; padding: 0; }
+    .header { background: #fff; border-bottom: 2px solid #333; padding: 16px; }
+    .header-badge { border-color: #333; color: #333; background: transparent; }
+    .header h1 { color: #111; font-size: 1.2rem; }
+    .header p { color: #555; }
+    .tabs, .btn-row, .log-delete, .print-hide, footer { display: none !important; }
+    .page { display: block !important; padding: 12px 0; }
+    .card, .log-entry, .stat-box { border: 1px solid #ccc; background: #fafafa; }
+    .zone-result { border: 1px solid #ccc; background: #f5f5f5; }
+    .zone-label, .zone-title, .technique-name { color: #111; }
+    .zone-desc, .technique-how { color: #444; }
+    .stats-grid { grid-template-columns: repeat(3, 1fr); }
+    .stat-value { color: #333; font-size: 1.3rem; }
+    .section-title { color: #333; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">Stage 4 · Ep. 2 · Athlete Edition</div>
+  <h1>Arousal Calibration Log</h1>
+  <p>Rate your pre-event arousal. Get your regulation technique. Build your performance zone data.</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showPage('check')">Pre-Event Check</div>
+  <div class="tab" onclick="showPage('log')">Event Log</div>
+  <div class="tab" onclick="showPage('patterns')">My Patterns</div>
+</div>
+
+<!-- ── PAGE 1: Pre-Event Check ───────────────────── -->
+<div class="page active" id="page-check">
+
+  <div class="arousal-section">
+    <div class="arousal-label">Where is your arousal right now?</div>
+    <div class="rating-buttons" id="ratingButtons">
+      <button class="rating-btn" onclick="selectRating(1)">1</button>
+      <button class="rating-btn" onclick="selectRating(2)">2</button>
+      <button class="rating-btn" onclick="selectRating(3)">3</button>
+      <button class="rating-btn" onclick="selectRating(4)">4</button>
+      <button class="rating-btn" onclick="selectRating(5)">5</button>
+      <button class="rating-btn" onclick="selectRating(6)">6</button>
+      <button class="rating-btn" onclick="selectRating(7)">7</button>
+      <button class="rating-btn" onclick="selectRating(8)">8</button>
+      <button class="rating-btn" onclick="selectRating(9)">9</button>
+      <button class="rating-btn" onclick="selectRating(10)">10</button>
+    </div>
+    <div style="display:flex;gap:16px;font-size:0.78rem;color:var(--text-dim);margin-bottom:20px;">
+      <span>1 = completely flat</span>
+      <span style="margin:0 auto;">5–6 = target zone</span>
+      <span>10 = too wired</span>
+    </div>
+  </div>
+
+  <!-- Zone result: LOW -->
+  <div class="zone-result low" id="result-low">
+    <div class="zone-label">Zone: Flat (1–4)</div>
+    <div class="zone-title">You're under-activated. Time to up-regulate.</div>
+    <div class="zone-desc">Low arousal means your body isn't generating the activation your performance requires. You'll feel slow to react, distracted, or unable to find urgency. Use one of these techniques now — 60–90 seconds is enough.</div>
+    <div class="technique-list">
+      <div class="technique-item">
+        <div class="technique-name">Activation Breathing</div>
+        <div class="technique-how">Short sharp exhales, faster rhythm. 10 reps. Gets CO₂ moving and wakes up your system fast.</div>
+      </div>
+      <div class="technique-item">
+        <div class="technique-name">Power Posture</div>
+        <div class="technique-how">Stand tall, arms wide or hands on hips, chin up. Hold 60 seconds. Physical dominance posture signals activation to your nervous system.</div>
+      </div>
+      <div class="technique-item">
+        <div class="technique-name">Best Performance Recall</div>
+        <div class="technique-how">Close your eyes. Recall one moment where you performed at your best — make it specific, visual, first-person. 60 seconds. Gets your system into familiar high-output state.</div>
+      </div>
+      <div class="technique-item">
+        <div class="technique-name">Physical Activation</div>
+        <div class="technique-how">Jump, sprint, explosive movement. 30–60 seconds. Direct input to your arousal level.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zone result: IN ZONE -->
+  <div class="zone-result zone" id="result-zone">
+    <div class="zone-label">Zone: In Range (5–6)</div>
+    <div class="zone-title">You're in your target window. Protect it.</div>
+    <div class="zone-desc">This is where your working memory operates at capacity — you can read the full picture and make fast decisions. Your job now is to protect this state. Don't try to get more fired up. Don't try to calm down further. Lock in to your process cue and compete.</div>
+    <div class="technique-list">
+      <div class="technique-item">
+        <div class="technique-name">Focus Cue Word</div>
+        <div class="technique-how">One word that anchors your attention to process — "sharp," "next," "here," "smooth." Repeat it slowly 3×. This is an anchor, not a correction.</div>
+      </div>
+      <div class="technique-item">
+        <div class="technique-name">Process Visualization</div>
+        <div class="technique-how">30 seconds. See yourself executing your first movement — not winning, not the outcome. The specific physical action of the opening moment.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zone result: HIGH -->
+  <div class="zone-result high" id="result-high">
+    <div class="zone-label">Zone: Wired (7–10)</div>
+    <div class="zone-title">You're over-activated. Time to down-regulate.</div>
+    <div class="zone-desc">High arousal narrows working memory — you'll react off one cue and miss reads you trained to make. You'll rush mechanics. Use one technique now. You don't need to reach 5–6 immediately; even moving to a 7 from a 9 changes your execution quality.</div>
+    <div class="technique-list">
+      <div class="technique-item">
+        <div class="technique-name">Extended Exhale Breathing</div>
+        <div class="technique-how">Inhale 4 counts, hold 2, exhale 8. Repeat 4×. The long exhale activates your parasympathetic system — physiologically the fastest down-regulation technique.</div>
+      </div>
+      <div class="technique-item">
+        <div class="technique-name">Box Breathing</div>
+        <div class="technique-how">Inhale 4, hold 4, exhale 4, hold 4. Repeat 4×. Used by elite military and athletes under extreme pressure.</div>
+      </div>
+      <div class="technique-item">
+        <div class="technique-name">Progressive Muscle Release</div>
+        <div class="technique-how">Tighten hands → release. Arms → release. Shoulders → release. 30 seconds. Releases the physical tension that feeds the arousal cycle.</div>
+      </div>
+      <div class="technique-item">
+        <div class="technique-name">Slow Deliberate Movement</div>
+        <div class="technique-how">Move at 60% speed — warm-up movements, dribbling, passing. Signals physiological safety. Counterintuitive but effective when you're tight.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row print-hide">
+    <button class="btn btn-primary" id="logThisBtn" onclick="showLogForm()" style="display:none;">Log This Entry</button>
+  </div>
+
+</div>
+
+<!-- ── PAGE 2: Event Log ──────────────────────────── -->
+<div class="page" id="page-log">
+
+  <p class="section-title">New Entry</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="entryDate">
+      </div>
+      <div class="form-group">
+        <label>Event Type</label>
+        <select id="entryEventType">
+          <option value="">Select type...</option>
+          <option>Showcase / Tryout</option>
+          <option>Regional / Tournament</option>
+          <option>Game / Match</option>
+          <option>High-Stakes Practice</option>
+          <option>Scrimmage</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Pre-Event Arousal (1–10)</label>
+        <input type="number" id="entryPreRating" min="1" max="10" placeholder="1–10">
+      </div>
+      <div class="form-group">
+        <label>Post-Performance Rating (1–10)</label>
+        <input type="number" id="entryPostRating" min="1" max="10" placeholder="1–10">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Technique Used</label>
+        <select id="entryTechnique">
+          <option value="">Select...</option>
+          <optgroup label="Down-Regulation (too high)">
+            <option>Extended exhale breathing</option>
+            <option>Box breathing</option>
+            <option>Progressive muscle release</option>
+            <option>Slow deliberate movement</option>
+            <option>Focus cue word</option>
+          </optgroup>
+          <optgroup label="Up-Regulation (too flat)">
+            <option>Activation breathing</option>
+            <option>Power posture</option>
+            <option>Best performance recall</option>
+            <option>Physical activation</option>
+            <option>Activation music</option>
+          </optgroup>
+          <optgroup label="In Zone">
+            <option>Focus cue word (anchor)</option>
+            <option>Process visualization</option>
+            <option>No adjustment needed</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Did the technique help?</label>
+        <select id="entryTechResult">
+          <option value="">Select...</option>
+          <option>Yes — moved toward zone</option>
+          <option>Slightly — partial effect</option>
+          <option>No — no effect</option>
+          <option>Didn't have time to use it</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group full">
+        <label>Notes (optional)</label>
+        <textarea id="entryNotes" placeholder="What happened? What did you notice? What would you adjust?"></textarea>
+      </div>
+    </div>
+    <div class="alert" id="formAlert"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="saveEntry()">Save Entry</button>
+    </div>
+  </div>
+
+  <p class="section-title">Previous Entries</p>
+  <div id="logEntries"></div>
+
+</div>
+
+<!-- ── PAGE 3: My Patterns ───────────────────────── -->
+<div class="page" id="page-patterns">
+
+  <p class="section-title">Your Season Data</p>
+
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-box">
+      <div class="stat-value" id="statTotal">—</div>
+      <div class="stat-label">Entries</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value" id="statAvgPre">—</div>
+      <div class="stat-label">Avg Pre-Rating</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value" id="statAvgPost">—</div>
+      <div class="stat-label">Avg Performance</div>
+    </div>
+  </div>
+
+  <div class="card" id="patternCard">
+    <h3>Zone Distribution</h3>
+    <div id="zoneDistribution" style="margin-top:10px;"></div>
+  </div>
+
+  <div class="card" id="techniqueCard">
+    <h3>Top Techniques Used</h3>
+    <div id="techniqueBreakdown" style="margin-top:10px;"></div>
+  </div>
+
+  <div class="card">
+    <h3>Week 2 Self-Calibration</h3>
+    <p style="margin-bottom:12px;">Answer these after 2–4 entries:</p>
+    <div class="form-group" style="margin-bottom:10px;">
+      <label>What's my most common zone at arrival?</label>
+      <input type="text" id="q1" placeholder="e.g. Usually arriving too high (7–8)">
+    </div>
+    <div class="form-group" style="margin-bottom:10px;">
+      <label>Is my target zone (5–6) accurate, or do I perform better at a different range?</label>
+      <input type="text" id="q2" placeholder="e.g. My best performances happen at 6–7">
+    </div>
+    <div class="form-group">
+      <label>Which technique is actually working?</label>
+      <input type="text" id="q3" placeholder="e.g. Extended exhale is the only one that reliably moves me">
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Week 4 Pattern Analysis</h3>
+    <p style="margin-bottom:12px;">Answer these after 6–8 entries:</p>
+    <div class="form-group" style="margin-bottom:10px;">
+      <label>What pattern do I see between pre-event rating and performance rating?</label>
+      <textarea id="q4" placeholder="e.g. When I'm at 5–6, my performance is usually 8+. At 8+, it drops to 6–7."></textarea>
+    </div>
+    <div class="form-group" style="margin-bottom:10px;">
+      <label>Is my zone different for different event types?</label>
+      <textarea id="q5" placeholder="e.g. Tryouts run me higher than regular games. I need to build in more down-reg time."></textarea>
+    </div>
+    <div class="form-group">
+      <label>One adjustment to my regulation plan based on this data:</label>
+      <textarea id="q6" placeholder="e.g. Start down-reg earlier — 20 min before instead of right before stepping in."></textarea>
+    </div>
+  </div>
+
+  <div class="btn-row print-hide">
+    <button class="btn btn-secondary" onclick="window.print()">⬇ Download as PDF</button>
+    <button class="btn btn-secondary" onclick="clearAllData()">Clear All Data</button>
+  </div>
+
+</div>
+
+<div class="footer">
+  The Quiet Edge · Stage 4: Performance Environments · Ep. 2<br>
+  <span style="color:#ffffff30;">Based on Yerkes & Dodson (1908) · Hanin IZOF model (2000)</span>
+</div>
+
+<script>
+  // ── State ──────────────────────────────────────
+  let selectedRating = null;
+  let logEntries = JSON.parse(localStorage.getItem('qe_arousal_log') || '[]');
+
+  // ── Tab navigation ─────────────────────────────
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    event.target.classList.add('active');
+    if (name === 'log') renderLog();
+    if (name === 'patterns') renderPatterns();
+  }
+
+  // ── Rating selection ───────────────────────────
+  function selectRating(n) {
+    selectedRating = n;
+    const buttons = document.querySelectorAll('.rating-btn');
+    buttons.forEach((btn, i) => {
+      btn.classList.remove('selected-low', 'selected-zone', 'selected-high');
+      const num = i + 1;
+      if (num === n) {
+        btn.classList.add(n <= 4 ? 'selected-low' : n <= 6 ? 'selected-zone' : 'selected-high');
+      }
+    });
+
+    document.getElementById('result-low').classList.remove('visible');
+    document.getElementById('result-zone').classList.remove('visible');
+    document.getElementById('result-high').classList.remove('visible');
+
+    if (n <= 4) document.getElementById('result-low').classList.add('visible');
+    else if (n <= 6) document.getElementById('result-zone').classList.add('visible');
+    else document.getElementById('result-high').classList.add('visible');
+
+    document.getElementById('logThisBtn').style.display = 'inline-flex';
+
+    // Pre-fill the log form rating
+    document.getElementById('entryPreRating').value = n;
+    // Set today's date
+    if (!document.getElementById('entryDate').value) {
+      document.getElementById('entryDate').value = new Date().toISOString().split('T')[0];
+    }
+  }
+
+  function showLogForm() {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('page-log').classList.add('active');
+    document.querySelectorAll('.tab')[1].classList.add('active');
+    renderLog();
+    document.getElementById('entryDate').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // ── Save entry ─────────────────────────────────
+  function saveEntry() {
+    const date = document.getElementById('entryDate').value;
+    const eventType = document.getElementById('entryEventType').value;
+    const pre = parseInt(document.getElementById('entryPreRating').value);
+    const post = parseInt(document.getElementById('entryPostRating').value);
+    const technique = document.getElementById('entryTechnique').value;
+    const techResult = document.getElementById('entryTechResult').value;
+    const notes = document.getElementById('entryNotes').value.trim();
+
+    const alert = document.getElementById('formAlert');
+
+    if (!date || !eventType || !pre || pre < 1 || pre > 10) {
+      alert.textContent = 'Please fill in Date, Event Type, and Pre-Event Arousal (1–10).';
+      alert.classList.add('visible');
+      return;
+    }
+    alert.classList.remove('visible');
+
+    const zone = pre <= 4 ? 'low' : pre <= 6 ? 'zone' : 'high';
+
+    logEntries.unshift({ id: Date.now(), date, eventType, pre, post: post || null, technique, techResult, notes, zone });
+    localStorage.setItem('qe_arousal_log', JSON.stringify(logEntries));
+
+    // Reset form
+    document.getElementById('entryEventType').value = '';
+    document.getElementById('entryPreRating').value = '';
+    document.getElementById('entryPostRating').value = '';
+    document.getElementById('entryTechnique').value = '';
+    document.getElementById('entryTechResult').value = '';
+    document.getElementById('entryNotes').value = '';
+
+    renderLog();
+  }
+
+  // ── Delete entry ───────────────────────────────
+  function deleteEntry(id) {
+    logEntries = logEntries.filter(e => e.id !== id);
+    localStorage.setItem('qe_arousal_log', JSON.stringify(logEntries));
+    renderLog();
+  }
+
+  // ── Render log ─────────────────────────────────
+  function renderLog() {
+    const container = document.getElementById('logEntries');
+    if (logEntries.length === 0) {
+      container.innerHTML = '<div class="log-empty">No entries yet. Complete the Pre-Event Check and tap "Log This Entry" to start tracking.</div>';
+      return;
+    }
+
+    container.innerHTML = logEntries.map(e => {
+      const badgeClass = e.zone === 'low' ? 'badge-low' : e.zone === 'zone' ? 'badge-zone' : 'badge-high';
+      const zoneLabel = e.zone === 'low' ? 'Flat' : e.zone === 'zone' ? 'In Zone' : 'Wired';
+      const formattedDate = new Date(e.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      return `
+        <div class="log-entry">
+          <div class="log-entry-header">
+            <div>
+              <div style="font-weight:700;font-size:0.9rem;color:#fff;margin-bottom:2px;">${e.eventType}</div>
+              <div class="log-entry-meta">${formattedDate}</div>
+            </div>
+            <div class="log-entry-rating">
+              <span class="badge ${badgeClass}">${zoneLabel} · ${e.pre}/10</span>
+              <button class="log-delete print-hide" onclick="deleteEntry(${e.id})">×</button>
+            </div>
+          </div>
+          <div class="log-entry-body">
+            ${e.technique ? `<span><strong>Technique:</strong> ${e.technique}</span>` : ''}
+            ${e.techResult ? `<span><strong>Effect:</strong> ${e.techResult}</span>` : ''}
+            ${e.post ? `<span><strong>Performance:</strong> ${e.post}/10</span>` : ''}
+          </div>
+          ${e.notes ? `<div class="log-notes">"${e.notes}"</div>` : ''}
+        </div>`;
+    }).join('');
+  }
+
+  // ── Render patterns ────────────────────────────
+  function renderPatterns() {
+    const total = logEntries.length;
+    document.getElementById('statTotal').textContent = total || '—';
+
+    if (total === 0) {
+      document.getElementById('statAvgPre').textContent = '—';
+      document.getElementById('statAvgPost').textContent = '—';
+      document.getElementById('zoneDistribution').innerHTML = '<p style="color:var(--text-dim);font-size:0.85rem;">No data yet.</p>';
+      document.getElementById('techniqueBreakdown').innerHTML = '<p style="color:var(--text-dim);font-size:0.85rem;">No data yet.</p>';
+      return;
+    }
+
+    const avgPre = (logEntries.reduce((s, e) => s + e.pre, 0) / total).toFixed(1);
+    document.getElementById('statAvgPre').textContent = avgPre;
+
+    const withPost = logEntries.filter(e => e.post);
+    if (withPost.length > 0) {
+      const avgPost = (withPost.reduce((s, e) => s + e.post, 0) / withPost.length).toFixed(1);
+      document.getElementById('statAvgPost').textContent = avgPost;
+    }
+
+    // Zone distribution
+    const low = logEntries.filter(e => e.zone === 'low').length;
+    const zone = logEntries.filter(e => e.zone === 'zone').length;
+    const high = logEntries.filter(e => e.zone === 'high').length;
+    document.getElementById('zoneDistribution').innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        ${bar('Flat (1–4)', low, total, 'var(--blue)')}
+        ${bar('In Zone (5–6)', zone, total, 'var(--green)')}
+        ${bar('Wired (7–10)', high, total, 'var(--red)')}
+      </div>`;
+
+    // Technique breakdown
+    const techCounts = {};
+    logEntries.filter(e => e.technique).forEach(e => {
+      techCounts[e.technique] = (techCounts[e.technique] || 0) + 1;
+    });
+    const sorted = Object.entries(techCounts).sort((a,b) => b[1]-a[1]).slice(0,5);
+    document.getElementById('techniqueBreakdown').innerHTML = sorted.length === 0
+      ? '<p style="color:var(--text-dim);font-size:0.85rem;">No technique data yet.</p>'
+      : `<div style="display:flex;flex-direction:column;gap:8px;">${sorted.map(([t, c]) => bar(t, c, logEntries.length, 'var(--orange)')).join('')}</div>`;
+  }
+
+  function bar(label, count, total, color) {
+    const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+    return `<div>
+      <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:4px;">
+        <span style="color:var(--text)">${label}</span>
+        <span style="color:var(--text-dim)">${count} entry${count !== 1 ? 's' : ''} · ${pct}%</span>
+      </div>
+      <div style="background:#ffffff10;border-radius:4px;height:6px;">
+        <div style="background:${color};width:${pct}%;height:6px;border-radius:4px;transition:width 0.4s;"></div>
+      </div>
+    </div>`;
+  }
+
+  // ── Clear data ─────────────────────────────────
+  function clearAllData() {
+    if (confirm('Clear all log entries? This cannot be undone.')) {
+      logEntries = [];
+      localStorage.removeItem('qe_arousal_log');
+      renderLog();
+      renderPatterns();
+    }
+  }
+
+  // ── Init ───────────────────────────────────────
+  renderLog();
+</script>
+
+</body>
+</html>
