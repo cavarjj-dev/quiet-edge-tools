@@ -18,6 +18,7 @@ Companion tools for the Stage 2 mental skills video series. All tools are self-c
 | Episode | Tool | Live Link |
 |---------|------|-----------|
 | S4 EP1p | What Does Your Pre-Game Language Signal? — Parent Language Audit | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep1p/ |
+| S4 EP2p | Know Your Athlete's Zone — Performance State Profile | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep2p/ |
 
 ## Stage 3: Skill Acquisition — Athlete Edition
 
