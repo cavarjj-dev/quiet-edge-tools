@@ -6,6 +6,19 @@ Companion tools for the Stage 2 mental skills video series. All tools are self-c
 
 ---
 
+## Stage 4: Performance Environments — Athlete Edition
+
+| Episode | Tool | Live Link |
+|---------|------|-----------|
+| S4 EP1 | Pressure Signal Log | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep1/ |
+| S4 EP2 | Arousal Calibration Log | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep2/ |
+
+## Stage 4: Performance Environments — Parent Edition
+
+| Episode | Tool | Live Link |
+|---------|------|-----------|
+| S4 EP1p | What Does Your Pre-Game Language Signal? — Parent Language Audit | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep1p/ |
+
 ## Stage 3: Skill Acquisition — Athlete Edition
 
 | Episode | Tool | Live Link |
