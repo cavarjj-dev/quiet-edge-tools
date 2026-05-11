@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Process Contract — The Quiet Edge</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --bg-card: #161616;
+      --bg-card2: #1e1e1e;
+      --bg-card3: #232323;
+      --border: #2c2c2c;
+      --border-light: #3a3a3a;
+      --accent: #f4830a;
+      --accent-dim: rgba(244,131,10,0.12);
+      --accent-border: rgba(244,131,10,0.4);
+      --text: #e2e2e2;
+      --text-muted: #888;
+      --text-dim: #aaa;
+      --green: #34d17a;
+      --green-dim: rgba(52,209,122,0.1);
+      --blue: #4ca8e8;
+      --blue-dim: rgba(76,168,232,0.1);
+      --yellow: #f0b429;
+      --yellow-dim: rgba(240,180,41,0.1);
+      --red: #e05252;
+      --radius: 8px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      padding: 24px 20px 60px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .header .subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .badges {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .badge.stage { border-color: var(--accent); color: var(--accent); }
+
+    /* ── Concept Block ── */
+    .concept-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 24px;
+    }
+    .concept-block p {
+      color: var(--text-dim);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .concept-block p:last-child { margin-bottom: 0; }
+    .concept-block strong { color: var(--text); }
+
+    /* ── Section ── */
+    .section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .section-header {
+      padding: 16px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1.5px solid var(--accent-border);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.02em;
+    }
+    .section-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .section-body { padding: 20px; }
+
+    /* ── Sport Selector ── */
+    .sport-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .sport-btn {
+      background: var(--bg-card2);
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 8px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 12px;
+      color: var(--text-dim);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .sport-btn:hover { border-color: var(--accent-border); color: var(--text); }
+    .sport-btn.active {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .sport-btn .sport-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+
+    /* ── Process Behavior Bank ── */
+    .behavior-bank {
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .behavior-bank h4 {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .behavior-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip {
+      background: var(--bg-card3);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 13px;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .chip:hover {
+      border-color: var(--accent-border);
+      color: var(--accent);
+    }
+    .chip.used {
+      border-color: var(--green);
+      color: var(--green);
+      background: var(--green-dim);
+    }
+
+    /* ── My Contract Behavior ── */
+    .contract-input-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .contract-input {
+      flex: 1;
+      background: var(--bg-card2);
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 60px;
+      transition: border-color 0.15s;
+    }
+    .contract-input:focus {
+      outline: none;
+      border-color: var(--accent-border);
+    }
+    .contract-input::placeholder { color: var(--text-muted); }
+
+    /* ── Week Tracker ── */
+    .week-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin: -20px -20px 20px;
+    }
+    .week-tab {
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .week-tab:hover { color: var(--text); }
+    .week-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .week-panel { display: none; }
+    .week-panel.active { display: block; }
+
+    /* ── Session Row ── */
+    .session-rows { display: flex; flex-direction: column; gap: 12px; }
+    .session-row {
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .session-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .session-day {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      width: 60px;
+      flex-shrink: 0;
+    }
+    .session-type-input {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 13px;
+      font-family: inherit;
+      flex: 1;
+      min-width: 0;
+    }
+    .session-type-input:focus { outline: none; color: var(--text); }
+    .session-type-input::placeholder { color: #555; }
+    .grade-select {
+      background: var(--bg-card3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 8px;
+      cursor: pointer;
+      width: 42px;
+    }
+    .grade-select:focus { outline: none; border-color: var(--accent-border); }
+    .grade-select.g5 { border-color: var(--green); color: var(--green); }
+    .grade-select.g4 { border-color: var(--blue); color: var(--blue); }
+    .grade-select.g3 { border-color: var(--yellow); color: var(--yellow); }
+    .grade-select.g2, .grade-select.g1 { border-color: var(--red); color: var(--red); }
+    .session-fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .session-field {
+      padding: 10px 14px;
+    }
+    .session-field:first-child {
+      border-right: 1px solid var(--border);
+    }
+    .session-field label {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .session-field textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 13px;
+      font-family: inherit;
+      resize: none;
+      min-height: 48px;
+    }
+    .session-field textarea:focus { outline: none; color: var(--text); }
+    .session-field textarea::placeholder { color: #444; }
+
+    /* ── Calibration Section ── */
+    .calibration-prompt {
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .calibration-prompt h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .calibration-prompt p {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+    }
+    .calibration-prompt textarea {
+      width: 100%;
+      background: var(--bg-card3);
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      padding: 10px 14px;
+      resize: vertical;
+      min-height: 64px;
+      transition: border-color 0.15s;
+    }
+    .calibration-prompt textarea:focus {
+      outline: none;
+      border-color: var(--accent-border);
+    }
+    .calibration-prompt textarea::placeholder { color: var(--text-muted); }
+
+    /* ── Scale options ── */
+    .scale-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .scale-opt {
+      flex: 1;
+      min-width: 60px;
+      background: var(--bg-card3);
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 4px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .scale-opt:hover { border-color: var(--border-light); color: var(--text); }
+    .scale-opt.selected {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+    .scale-opt .num { font-size: 16px; display: block; }
+    .scale-opt .lbl { font-size: 10px; display: block; margin-top: 2px; }
+
+    /* ── Progress Bar ── */
+    .progress-wrap {
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .progress-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .progress-count {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .progress-bar-bg {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    /* ── Insight Box ── */
+    .insight-box {
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-border);
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-top: 16px;
+    }
+    .insight-box p {
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+    .insight-box strong { color: var(--accent); }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: 1.5px solid var(--accent-border);
+      border-radius: 6px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn:hover { background: var(--accent-dim); }
+    .btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #000;
+    }
+    .btn.primary:hover { opacity: 0.9; }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .footer p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+      .session-fields { grid-template-columns: 1fr; }
+      .session-field:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+      .sport-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">The Quiet Edge</div>
+  <h1>The Process Contract</h1>
+  <p class="subtitle">A 3-week attention training framework for high-stakes competition</p>
+  <div class="badges">
+    <span class="badge stage">Stage 4</span>
+    <span class="badge">Ep. 3</span>
+    <span class="badge">Athlete Edition</span>
+  </div>
+</div>
+
+<div class="concept-block">
+  <p><strong>The core problem:</strong> When results carry weight — scouts, showcases, starting spots — your brain tries to run two processes at once: execution and evaluation. It can't. That split is where trained skills break down.</p>
+  <p><strong>The fix:</strong> The Process Contract pre-decides where your attention goes <em>before</em> the pressure arrives. You're not making that choice mid-competition — you already made it. Three parts. Three weeks. One session at a time.</p>
+</div>
+
+<!-- PART 1: SPORT SELECTOR -->
+<div class="section" id="part-sport">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <div>
+      <div class="section-title">Your Sport</div>
+      <div class="section-desc">Select to load process behavior examples matched to your game</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="sport-grid" id="sportGrid">
+      <div class="sport-btn" onclick="selectSport('basketball','Basketball')"><span class="sport-icon">🏀</span>Basketball</div>
+      <div class="sport-btn" onclick="selectSport('soccer','Soccer')"><span class="sport-icon">⚽</span>Soccer</div>
+      <div class="sport-btn" onclick="selectSport('football','Football')"><span class="sport-icon">🏈</span>Football</div>
+      <div class="sport-btn" onclick="selectSport('baseball','Baseball')"><span class="sport-icon">⚾</span>Baseball</div>
+      <div class="sport-btn" onclick="selectSport('swimming','Swimming')"><span class="sport-icon">🏊</span>Swimming</div>
+      <div class="sport-btn" onclick="selectSport('track','Track / XC')"><span class="sport-icon">🏃</span>Track / XC</div>
+      <div class="sport-btn" onclick="selectSport('volleyball','Volleyball')"><span class="sport-icon">🏐</span>Volleyball</div>
+      <div class="sport-btn" onclick="selectSport('tennis','Tennis')"><span class="sport-icon">🎾</span>Tennis</div>
+      <div class="sport-btn" onclick="selectSport('lacrosse','Lacrosse')"><span class="sport-icon">🥍</span>Lacrosse</div>
+      <div class="sport-btn" onclick="selectSport('other','Other')"><span class="sport-icon">🎯</span>Other</div>
+    </div>
+    <div id="behaviorBank" class="behavior-bank" style="display:none;">
+      <h4 id="bankTitle">Process behaviors for your sport</h4>
+      <div class="behavior-chips" id="behaviorChips"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PART 2: PRE-SESSION CONTRACT -->
+<div class="section" id="part-contract">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <div>
+      <div class="section-title">Step 1 — Pre-Session Contract</div>
+      <div class="section-desc">Name one process behavior before each session. This becomes your anchor.</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <p style="font-size:13px;color:var(--text-dim);margin-bottom:14px;">
+      Choose one thing you control — a specific behavior, not a result or a stat.
+      <strong style="color:var(--text);">Not "play well." Not "hit my shots."</strong>
+      Something like "defensive footwork on every drive" or "my approach angle on grounders."
+      That's your contract for the session.
+    </p>
+    <div style="margin-bottom:6px;">
+      <label style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:8px;">My process behavior this session:</label>
+      <div class="contract-input-row">
+        <textarea class="contract-input" id="contractBehavior" rows="2" placeholder="e.g. First step on defense — full drop-step, every possession..."></textarea>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);">Tap a chip above to auto-fill, or write your own. One behavior only — specificity is what makes it work.</p>
+    <div class="insight-box" style="margin-top:14px;">
+      <p><strong>Why this works:</strong> You've already decided where your attention goes. When the scoreboard starts pulling — and it will — you have somewhere specific to return to. That decision was made in calm, not in chaos.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PART 3: MID-COMPETITION ANCHOR -->
+<div class="section" id="part-anchor">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <div>
+      <div class="section-title">Step 2 — Mid-Competition Anchor</div>
+      <div class="section-desc">A short phrase to return to your contract when results start pulling</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <p style="font-size:13px;color:var(--text-dim);margin-bottom:14px;">
+      When you catch yourself monitoring results mid-game, you need a phrase that redirects — not motivational, not calming. Just a cue that returns your attention to the contract behavior.
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:16px;" id="anchorSuggestions">
+      <div class="chip" onclick="selectAnchor(this,'Next play. Track the assignment.')">Next play. Track the assignment.</div>
+      <div class="chip" onclick="selectAnchor(this,'One possession. My job.')">One possession. My job.</div>
+      <div class="chip" onclick="selectAnchor(this,'Back to my thing.')">Back to my thing.</div>
+      <div class="chip" onclick="selectAnchor(this,'Process. Here. Now.')">Process. Here. Now.</div>
+      <div class="chip" onclick="selectAnchor(this,'Trust the rep.')">Trust the rep.</div>
+      <div class="chip" onclick="selectAnchor(this,'My behavior. My control.')">My behavior. My control.</div>
+    </div>
+    <label style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:8px;">My anchor phrase (or write your own):</label>
+    <input type="text" id="anchorPhrase" class="contract-input" style="min-height:auto;padding:10px 14px;resize:none;" placeholder="Your personal return phrase...">
+    <p style="font-size:12px;color:var(--text-muted);margin-top:8px;">Short, personal, and action-oriented. You'll say this to yourself — not to anyone else.</p>
+  </div>
+</div>
+
+<!-- PART 4: 3-WEEK TRACKER -->
+<div class="section" id="part-tracker">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <div>
+      <div class="section-title">Step 3 — 3-Week Session Tracker</div>
+      <div class="section-desc">Log each session. Grade your process — not your outcome.</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span class="progress-label">Sessions Logged</span>
+        <span class="progress-count" id="progressCount">0 / 21</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="week-tabs">
+      <div class="week-tab active" onclick="switchWeek(1,this)">Week 1</div>
+      <div class="week-tab" onclick="switchWeek(2,this)">Week 2</div>
+      <div class="week-tab" onclick="switchWeek(3,this)">Week 3</div>
+    </div>
+
+    <!-- Week 1 -->
+    <div class="week-panel active" id="week1">
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">
+        <strong style="color:var(--text);">Week 1 focus:</strong> Just notice. You're building the habit of pre-deciding — don't expect to feel a shift yet. Log every session, practice or game.
+      </p>
+      <div class="session-rows" id="sessions-week1"></div>
+    </div>
+
+    <!-- Week 2 -->
+    <div class="week-panel" id="week2">
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">
+        <strong style="color:var(--text);">Week 2 focus:</strong> Track when you returned to your anchor — and when you didn't. Naming the moments of drift builds the awareness that eventually prevents them.
+      </p>
+      <div class="session-rows" id="sessions-week2"></div>
+    </div>
+
+    <!-- Week 3 -->
+    <div class="week-panel" id="week3">
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">
+        <strong style="color:var(--text);">Week 3 focus:</strong> The compound effect. Most athletes notice cleaner decision-making here — not from trying harder, but from the attention habit becoming automatic.
+      </p>
+      <div class="session-rows" id="sessions-week3"></div>
+    </div>
+
+    <div class="insight-box" style="margin-top:20px;">
+      <p><strong>Grading guide:</strong> 5 = Held the contract all session. 4 = Returned to it within 1–2 plays of drift. 3 = Noticed drift mid-session, corrected some. 2 = Mostly outcome-focused, some return. 1 = Lost the contract early — didn't return. <strong>You don't need a 5 to compound. You need to keep logging.</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- PART 5: WEEK 2 CALIBRATION -->
+<div class="section" id="part-cal2">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <div>
+      <div class="section-title">Week 2 Calibration</div>
+      <div class="section-desc">Complete after your 7th session — before starting Week 2</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="calibration-prompt">
+      <h4>1. What moments triggered outcome-monitoring most?</h4>
+      <p>Name the specific situations — down by 2, coach watching, missed assignment. The more precise, the more useful.</p>
+      <textarea placeholder="e.g. After I turned it over with 3 minutes left, I started thinking about what the coach would think..."></textarea>
+    </div>
+    <div class="calibration-prompt">
+      <h4>2. How specific is your process behavior?</h4>
+      <p>If it's broad ("play hard"), narrow it. What exact moment, exact movement, exact decision does it target?</p>
+      <textarea placeholder="e.g. 'First step defense' is better than 'play better defense.' What's the specific action?"></textarea>
+    </div>
+    <div class="calibration-prompt">
+      <h4>3. Did your anchor phrase actually work?</h4>
+      <p>If yes — when? If no — what would be more natural to say to yourself in that moment?</p>
+      <textarea placeholder="e.g. 'Back to my thing' felt forced. Something shorter like 'My job' worked better in a fast game..."></textarea>
+    </div>
+    <div class="calibration-prompt">
+      <h4>Rate: How often did you return to the contract when pressure spiked?</h4>
+      <p>Your honest read on Week 1 adherence.</p>
+      <div class="scale-row">
+        <div class="scale-opt" onclick="selectScale(this,'cal2-4')"><span class="num">1</span><span class="lbl">Rarely</span></div>
+        <div class="scale-opt" onclick="selectScale(this,'cal2-4')"><span class="num">2</span><span class="lbl">Sometimes</span></div>
+        <div class="scale-opt" onclick="selectScale(this,'cal2-4')"><span class="num">3</span><span class="lbl">Often</span></div>
+        <div class="scale-opt" onclick="selectScale(this,'cal2-4')"><span class="num">4</span><span class="lbl">Most times</span></div>
+        <div class="scale-opt" onclick="selectScale(this,'cal2-4')"><span class="num">5</span><span class="lbl">Every time</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PART 6: WEEK 4 CALIBRATION -->
+<div class="section" id="part-cal4">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <div>
+      <div class="section-title">Week 3 Calibration</div>
+      <div class="section-desc">Complete after your final session of the 3-week cycle</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="calibration-prompt">
+      <h4>1. Did the quality of your execution change?</h4>
+      <p>Not the result — the quality of your decisions and movement under pressure. Describe what you noticed.</p>
+      <textarea placeholder="e.g. My footwork in transition felt more automatic in Week 3 — less thinking, more playing..."></textarea>
+    </div>
+    <div class="calibration-prompt">
+      <h4>2. What specific moment felt most different than 3 weeks ago?</h4>
+      <p>One game or practice moment where you handled pressure differently. Be specific.</p>
+      <textarea placeholder="e.g. Down 4 with 2 minutes left, I caught myself starting to spiral — but I came back to my thing faster than I would have before..."></textarea>
+    </div>
+    <div class="calibration-prompt">
+      <h4>3. What's your process behavior for the next 3-week cycle?</h4>
+      <p>Build on what you learned. Keep the same behavior if it needs more depth, or layer in a second one.</p>
+      <textarea placeholder="e.g. I'm keeping the defensive footwork and adding: communication on every dead ball. One verbal cue per stoppage..."></textarea>
+    </div>
+    <div class="calibration-prompt">
+      <h4>Rate: Overall process quality across the 3 weeks (1–5)</h4>
+      <p>Not outcome quality — execution quality when it mattered.</p>
+      <div class="scale-row">
+        <div class="scale-opt" onclick="selectScale(this,'cal4-4')"><span class="num">1</span><span class="lbl">Broke down</span></div>
+        <div class="scale-opt" onclick="selectScale(this,'cal4-4')"><span class="num">2</span><span class="lbl">Inconsistent</span></div>
+        <div class="scale-opt" onclick="selectScale(this,'cal4-4')"><span class="num">3</span><span class="lbl">Improving</span></div>
+        <div class="scale-opt" onclick="selectScale(this,'cal4-4')"><span class="num">4</span><span class="lbl">Reliable</span></div>
+        <div class="scale-opt" onclick="selectScale(this,'cal4-4')"><span class="num">5</span><span class="lbl">Automatic</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SAVE / RESET -->
+<div class="btn-row">
+  <button class="btn primary" onclick="saveData()">💾 Save Progress</button>
+  <button class="btn" onclick="exportText()">📋 Export as Text</button>
+  <button class="btn" onclick="clearData()" style="border-color:#444;color:var(--text-muted);">Reset</button>
+</div>
+<p style="font-size:12px;color:var(--text-muted);margin-top:10px;">Data saves to your browser. Use Export to copy a text version you can paste into notes.</p>
+
+<div class="footer">
+  <p>The Quiet Edge — Stage 4: Competition</p>
+  <p>Ep. 3: Letting Go of Results &nbsp;·&nbsp; The Process Contract</p>
+  <p style="margin-top:8px;"><a href="https://tinyurl.com/54tzjeku">📚 Athlete Listening Guide</a></p>
+</div>
+
+<script>
+  const SPORT_BEHAVIORS = {
+    basketball: [
+      'First step on defense — full drop-step, every possession',
+      'Active hands in passing lanes — anticipate, not react',
+      'Talk on every screen — verbal call before contact',
+      'Box out on every shot attempt, not just close ones',
+      'Dribble decision in 2 touches — read and commit',
+      'Eyes up on the break — see the floor before the rim',
+      'Closeout: low base, contest without fouling',
+    ],
+    soccer: [
+      'First touch direction — open up to the field, always',
+      'Check shoulders before receiving every ball',
+      'Defensive shape: press trigger at ball-to-feet only',
+      'Communication on every set piece — before and during',
+      'Transition: sprint to defensive position, not walk',
+      'Head up every third touch to scan the field',
+      'Press recovery: angle, not straight-line chasing',
+    ],
+    football: [
+      'Pre-snap read: identify the Mike linebacker first, always',
+      'Release technique — controlled hands, not lunging',
+      'Eyes on assignment for full 3 seconds after the snap',
+      'Route precision: hit the exact landmark, every rep',
+      'Pad level on contact — low wins, every play',
+      'Film-speed decision: trust what I see at the line',
+      'Communication: call out alignments before every play',
+    ],
+    baseball: [
+      'See the ball out of the hand — track from release point',
+      'Routine before every pitch: same sequence, every time',
+      'Approach angle on ground balls — field through the ball',
+      'Footwork on throws — step to the target, not away',
+      'Plate discipline: know my zone before entering the box',
+      'Defensive read: first move on contact, not hesitate',
+    ],
+    swimming: [
+      'Turn quality — tight rotation, walls every time',
+      'Stroke count per length — maintain, not drift',
+      'Breakout distance: full underwater before surfacing',
+      'Breathing pattern: hold the schedule, not urgency',
+      'Start position: same setup, same activation, every time',
+      'Catch mechanics — high elbow, feel the water',
+    ],
+    track: [
+      'Arm drive mechanics — compact, not wide, every stride',
+      'Heel contact: land under my hips, not in front',
+      'Breathing rhythm — controlled, not reactive',
+      'First 30 meters: acceleration form, not top speed',
+      'Race position: run my lane, not theirs',
+      'Cadence maintenance in the final 100 — drive, don\'t reach',
+    ],
+    volleyball: [
+      'Platform angle before the ball arrives — preset, not react',
+      'Serve receive: move feet first, then platform',
+      'Communication: call "mine" before every ball in range',
+      'Attack approach: three steps, planted, same every time',
+      'Block positioning: read the setter\'s hips before jumping',
+      'Transition: return to position, don\'t watch the play',
+    ],
+    tennis: [
+      'Recovery to center after every shot',
+      'Toss placement: same release point, same height',
+      'Split step timing: land as opponent contacts the ball',
+      'Kick serve mechanics: toss further back, same every time',
+      'Backswing early — start before the ball bounces',
+      'Point reset routine: same 3-second process, every time',
+    ],
+    lacrosse: [
+      'Check hands before receiving every pass',
+      'Lead the receiver on passes — ahead of their path',
+      'Defensive body position: angle off, not straight-up',
+      'Cradle mechanics under pressure: keep it tight and high',
+      'Ground ball: first step low, scoop through it',
+      'Communication on slides: call the slide, every time',
+    ],
+    other: [
+      'Execution cue: the one movement I control every rep',
+      'Breathing: controlled reset before every attempt',
+      'Routine: same pre-performance sequence, every time',
+      'Technical focus: the specific mechanic I\'m building',
+      'Communication: verbal confirmation with team/coach',
+      'Transition: immediate return to position after each play',
+    ],
+  };
+
+  const SESSIONS_PER_WEEK = 7;
+  const TOTAL_WEEKS = 3;
+  let selectedSport = null;
+  let data = {};
+
+  function loadData() {
+    try {
+      const saved = localStorage.getItem('process-contract-ep3');
+      if (saved) data = JSON.parse(saved);
+    } catch(e) { data = {}; }
+  }
+
+  function saveData() {
+    // Collect all textarea/input values
+    data.contractBehavior = document.getElementById('contractBehavior').value;
+    data.anchorPhrase = document.getElementById('anchorPhrase').value;
+    data.sport = selectedSport;
+
+    // Sessions
+    data.sessions = {};
+    for (let w = 1; w <= 3; w++) {
+      data.sessions[`week${w}`] = [];
+      document.querySelectorAll(`#sessions-week${w} .session-row`).forEach((row, i) => {
+        data.sessions[`week${w}`].push({
+          type: row.querySelector('.session-type-input').value,
+          grade: row.querySelector('.grade-select').value,
+          contract: row.querySelectorAll('textarea')[0].value,
+          review: row.querySelectorAll('textarea')[1].value,
+        });
+      });
+    }
+
+    // Calibration textareas
+    data.cal2 = [...document.querySelectorAll('#part-cal2 textarea')].map(t => t.value);
+    data.cal4 = [...document.querySelectorAll('#part-cal4 textarea')].map(t => t.value);
+
+    localStorage.setItem('process-contract-ep3', JSON.stringify(data));
+    const btn = document.querySelector('.btn.primary');
+    btn.textContent = '✓ Saved';
+    setTimeout(() => { btn.textContent = '💾 Save Progress'; }, 1500);
+  }
+
+  function restoreData() {
+    if (data.sport) selectSport(data.sport, document.querySelector(`[onclick*="'${data.sport}'"]`)?.innerText?.trim() || data.sport);
+    if (data.contractBehavior) document.getElementById('contractBehavior').value = data.contractBehavior;
+    if (data.anchorPhrase) document.getElementById('anchorPhrase').value = data.anchorPhrase;
+
+    if (data.sessions) {
+      for (let w = 1; w <= 3; w++) {
+        const weekData = data.sessions[`week${w}`] || [];
+        document.querySelectorAll(`#sessions-week${w} .session-row`).forEach((row, i) => {
+          if (!weekData[i]) return;
+          row.querySelector('.session-type-input').value = weekData[i].type || '';
+          const sel = row.querySelector('.grade-select');
+          sel.value = weekData[i].grade || '';
+          updateGradeColor(sel);
+          row.querySelectorAll('textarea')[0].value = weekData[i].contract || '';
+          row.querySelectorAll('textarea')[1].value = weekData[i].review || '';
+        });
+      }
+    }
+
+    if (data.cal2) {
+      document.querySelectorAll('#part-cal2 textarea').forEach((t, i) => { if (data.cal2[i]) t.value = data.cal2[i]; });
+    }
+    if (data.cal4) {
+      document.querySelectorAll('#part-cal4 textarea').forEach((t, i) => { if (data.cal4[i]) t.value = data.cal4[i]; });
+    }
+
+    updateProgress();
+  }
+
+  function clearData() {
+    if (!confirm('Reset all progress? This cannot be undone.')) return;
+    localStorage.removeItem('process-contract-ep3');
+    location.reload();
+  }
+
+  function selectSport(key, name) {
+    selectedSport = key;
+    document.querySelectorAll('.sport-btn').forEach(b => b.classList.remove('active'));
+    event?.currentTarget?.classList?.add('active');
+    // Find and activate the button
+    document.querySelectorAll('.sport-btn').forEach(b => {
+      if (b.getAttribute('onclick')?.includes(`'${key}'`)) b.classList.add('active');
+    });
+
+    const behaviors = SPORT_BEHAVIORS[key] || SPORT_BEHAVIORS.other;
+    const bank = document.getElementById('behaviorBank');
+    const chips = document.getElementById('behaviorChips');
+    document.getElementById('bankTitle').textContent = `Process behaviors — ${name || key}`;
+    chips.innerHTML = behaviors.map(b =>
+      `<div class="chip" onclick="useBehavior(this,'${b.replace(/'/g, "\\'")}')">
+        ${b}
+      </div>`
+    ).join('');
+    bank.style.display = 'block';
+  }
+
+  function useBehavior(el, text) {
+    document.getElementById('contractBehavior').value = text;
+    document.querySelectorAll('#behaviorChips .chip').forEach(c => c.classList.remove('used'));
+    el.classList.add('used');
+    document.getElementById('contractBehavior').focus();
+  }
+
+  function selectAnchor(el, text) {
+    document.getElementById('anchorPhrase').value = text;
+    document.querySelectorAll('#anchorSuggestions .chip').forEach(c => c.classList.remove('used'));
+    el.classList.add('used');
+  }
+
+  function selectScale(el, group) {
+    const parent = el.parentElement;
+    parent.querySelectorAll('.scale-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function updateGradeColor(sel) {
+    sel.className = 'grade-select';
+    const v = sel.value;
+    if (v) sel.classList.add(`g${v}`);
+  }
+
+  function buildSessions() {
+    const dayLabels = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
+    for (let w = 1; w <= 3; w++) {
+      const container = document.getElementById(`sessions-week${w}`);
+      container.innerHTML = '';
+      for (let d = 0; d < SESSIONS_PER_WEEK; d++) {
+        const row = document.createElement('div');
+        row.className = 'session-row';
+        row.innerHTML = `
+          <div class="session-header">
+            <span class="session-day">${dayLabels[d]}</span>
+            <input type="text" class="session-type-input" placeholder="Practice / Game / Scrimmage..." oninput="updateProgress()">
+            <label style="font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);margin-right:4px;flex-shrink:0;">Grade</label>
+            <select class="grade-select" onchange="updateGradeColor(this);updateProgress();">
+              <option value="">–</option>
+              <option value="5">5</option>
+              <option value="4">4</option>
+              <option value="3">3</option>
+              <option value="2">2</option>
+              <option value="1">1</option>
+            </select>
+          </div>
+          <div class="session-fields">
+            <div class="session-field">
+              <label>My process contract for this session</label>
+              <textarea placeholder="One process behavior I committed to..."></textarea>
+            </div>
+            <div class="session-field">
+              <label>Post-session process review</label>
+              <textarea placeholder="When did I hold it / drift? What I noticed..."></textarea>
+            </div>
+          </div>`;
+        container.appendChild(row);
+      }
+    }
+  }
+
+  function updateProgress() {
+    let count = 0;
+    document.querySelectorAll('.session-type-input').forEach(i => { if (i.value.trim()) count++; });
+    const total = SESSIONS_PER_WEEK * TOTAL_WEEKS;
+    document.getElementById('progressCount').textContent = `${count} / ${total}`;
+    document.getElementById('progressFill').style.width = `${(count / total) * 100}%`;
+  }
+
+  function switchWeek(n, tab) {
+    document.querySelectorAll('.week-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.week-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(`week${n}`).classList.add('active');
+  }
+
+  function exportText() {
+    const behavior = document.getElementById('contractBehavior').value || '(not set)';
+    const anchor = document.getElementById('anchorPhrase').value || '(not set)';
+    let text = `THE PROCESS CONTRACT — The Quiet Edge EP3\n${'='.repeat(46)}\n\n`;
+    text += `SPORT: ${selectedSport || '(not selected)'}\n\n`;
+    text += `PROCESS BEHAVIOR:\n${behavior}\n\n`;
+    text += `ANCHOR PHRASE:\n${anchor}\n\n`;
+    text += `SESSION LOG:\n${'-'.repeat(40)}\n`;
+
+    for (let w = 1; w <= 3; w++) {
+      text += `\nWEEK ${w}\n`;
+      const days = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
+      document.querySelectorAll(`#sessions-week${w} .session-row`).forEach((row, i) => {
+        const type = row.querySelector('.session-type-input').value;
+        const grade = row.querySelector('.grade-select').value;
+        const contract = row.querySelectorAll('textarea')[0].value;
+        const review = row.querySelectorAll('textarea')[1].value;
+        if (type || grade || contract || review) {
+          text += `\n  ${days[i]} — ${type || '(session type)'} | Grade: ${grade || '–'}\n`;
+          if (contract) text += `  Contract: ${contract}\n`;
+          if (review) text += `  Review: ${review}\n`;
+        }
+      });
+    }
+
+    const blob = new Blob([text], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'process-contract-ep3.txt';
+    a.click();
+  }
+
+  // Init
+  buildSessions();
+  loadData();
+  restoreData();
+</script>
+</body>
+</html>
