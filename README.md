@@ -12,6 +12,7 @@ Companion tools for the Stage 2 mental skills video series. All tools are self-c
 |---------|------|-----------|
 | S4 EP1 | Pressure Signal Log | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep1/ |
 | S4 EP2 | Arousal Calibration Log | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep2/ |
+| S4 EP3 | The Process Contract — 3-Week Attention Tracker | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep3/ |
 
 ## Stage 4: Performance Environments — Parent Edition
 
