@@ -14,6 +14,7 @@ Companion tools for the Stage 2 mental skills video series. All tools are self-c
 | S4 EP2 | Arousal Calibration Log | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep2/ |
 | S4 EP3 | Zone Profile Builder | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep3/ |
 | S4 EP5 | The Meaning Switch | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep5/ |
+| S4 EP6 | The Next-Play Reset | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep6/ |
 
 ## Stage 4: Performance Environments — Parent Edition
 
