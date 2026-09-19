@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Already-In Check | The Quiet Edge</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --bg-card: #161616;
+      --bg-card2: #1e1e1e;
+      --border: #2c2c2c;
+      --accent: #f4830a;
+      --accent-dim: #c96a06;
+      --text: #e2e2e2;
+      --text-muted: #888;
+      --text-dim: #aaa;
+      --great: #34d17a;
+      --good: #4ca8e8;
+      --ok: #f0b429;
+      --poor: #e05252;
+      --radius: 8px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      padding: 24px 20px 48px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .header .subtitle { color: var(--text-muted); font-size: 14px; }
+    .badges { display: flex; gap: 8px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
+    .badge {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .badge.stage { border-color: var(--accent); color: var(--accent); }
+
+    .how-to-use {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .how-to-use summary {
+      padding: 14px 20px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .how-to-use summary::-webkit-details-marker { display: none; }
+    .how-to-use summary::after { content: '▸'; font-size: 12px; }
+    .how-to-use[open] summary::after { transform: rotate(90deg); }
+    .how-to-use .content { padding: 0 20px 18px; font-size: 14px; color: var(--text-dim); }
+    .how-to-use .content p { margin-bottom: 10px; }
+    .how-to-use .content ol { padding-left: 20px; }
+    .how-to-use .content li { margin-bottom: 6px; }
+    .step-label { color: var(--accent); font-weight: 600; }
+    .cite { font-size: 12px; color: var(--text-muted); font-style: italic; margin-top: 10px; }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    .cues { display: grid; gap: 8px; margin: 10px 0 16px; }
+    .cue {
+      text-align: left;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      background: var(--bg-card2);
+      color: var(--text);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      font-family: inherit;
+    }
+    .cue:hover { border-color: #555; }
+    .cue.on {
+      border-color: var(--accent);
+      background: rgba(244, 131, 10, 0.07);
+      color: #fff;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    input[type="text"], textarea, select {
+      width: 100%;
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 14px;
+      padding: 9px 12px;
+      outline: none;
+      font-family: inherit;
+    }
+    input[type="text"]:focus, textarea:focus, select:focus { border-color: var(--accent); }
+    textarea { min-height: 72px; resize: vertical; }
+    select option { background: #1e1e1e; }
+
+    .locked {
+      margin-top: 14px;
+      background: rgba(244,131,10,0.05);
+      border: 1px solid rgba(244,131,10,0.2);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      color: var(--text-dim);
+      display: none;
+    }
+    .locked strong { color: var(--accent); }
+
+    .log-table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    td { padding: 10px 8px; border-bottom: 1px solid #1e1e1e; vertical-align: top; }
+    td input, td select { min-width: 110px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .form-actions { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+    .warn { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
+    .foot { text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 28px; }
+
+    @media (max-width: 640px) {
+      .header h1 { font-size: 22px; }
+      td input, td select { min-width: 90px; }
+    }
+
+    @media print {
+      body { background: white; color: #111; padding: 20px; font-size: 12px; }
+      .no-print { display: none !important; }
+      .header h1 { color: #111; }
+      .brand, .badges { display: none; }
+      .how-to-use { display: none; }
+      .card { background: white; border: 1px solid #ccc; page-break-inside: avoid; }
+      .card-title { color: #c96a06; }
+      input, textarea, select { border: 1px solid #ccc; color: #111; background: white; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="brand">The Quiet Edge</div>
+    <h1>The Already-In Check</h1>
+    <p class="subtitle">Name one trained thing. Under stress, run that. Do not invent a tenth thing.</p>
+    <div class="badges">
+      <span class="badge stage">Stage 4</span>
+      <span class="badge">Athlete Edition</span>
+      <span class="badge">Ep. 10: Trusting Training Under Stress</span>
+    </div>
+  </header>
+
+  <details class="how-to-use">
+    <summary>How to Use This Tool</summary>
+    <div class="content">
+      <p>This is <strong>Step 1 only</strong>. One trained thing, written before the event. Three events. Loud-minute log.</p>
+      <ol>
+        <li><span class="step-label">This week:</span> Before the event, write one thing you already trained that this contest will ask for. One. Not a list.</li>
+        <li><span class="step-label">When it gets loud:</span> Run that thing. Do not invent a new shot.</li>
+        <li><span class="step-label">After:</span> Ran it, searched for a new one, or froze. That is the data.</li>
+        <li><span class="step-label">Week three:</span> Look at the pattern. Keep the trained thing you actually ran.</li>
+      </ol>
+      <p class="cite">Knowing "trust your training" is not owning which trained thing you will run.</p>
+      <p style="margin-top:10px;">Entries stay in this browser. Nothing is sent to a server. Use Print / PDF to keep a copy.</p>
+    </div>
+  </details>
+
+  <div class="card">
+    <div class="card-title">1. The thing already in</div>
+    <p style="color:var(--text-dim); margin-bottom:12px;">Try one of these, or write yours.</p>
+    <div class="cues">
+      <button type="button" class="cue" data-cue="The look I already take.">The look I already take.</button>
+      <button type="button" class="cue" data-cue="The footwork I already own.">The footwork I already own.</button>
+      <button type="button" class="cue" data-cue="The breath I already use.">The breath I already use.</button>
+    </div>
+    <label for="mine">Or write yours</label>
+    <input id="mine" type="text" maxlength="80" placeholder="One trained thing. True before the loud minute.">
+    <div id="locked" class="locked"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2. Three events</div>
+    <p style="color:var(--text-dim); margin-bottom:12px;">Ran it / searched / froze is about the loud minute, not the score.</p>
+    <div class="log-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Event</th>
+            <th>What the body did</th>
+            <th>Trained thing</th>
+            <th>The loud minute</th>
+          </tr>
+        </thead>
+        <tbody id="log"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">3. After week three</div>
+    <label for="pattern">What did you notice?</label>
+    <textarea id="pattern" placeholder="Whether you ran the trained thing. What the loud minute did. What you will keep."></textarea>
+    <div class="form-actions">
+      <button type="button" class="btn btn-primary" id="save">Save on this device</button>
+      <button type="button" class="btn btn-ghost no-print" id="print">Print / PDF</button>
+      <button type="button" class="btn btn-ghost no-print" id="reset">Reset</button>
+    </div>
+    <p class="warn">Nothing is sent to a server. This lives in your browser until you print it or clear the site data.</p>
+  </div>
+
+  <p class="foot">The Quiet Edge · Train the mind. Trust the process. Win from within. · Parent companion is a separate cut</p>
+
+  <script>
+    const KEY = "qe-s4e10-already-in-v1";
+    const cues = document.querySelectorAll(".cue");
+    const mine = document.getElementById("mine");
+    const locked = document.getElementById("locked");
+    const log = document.getElementById("log");
+    const pattern = document.getElementById("pattern");
+
+    function state() {
+      try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch { return {}; }
+    }
+    function persist(s) { localStorage.setItem(KEY, JSON.stringify(s)); }
+
+    function sentence() {
+      const s = state();
+      return (mine.value || s.sentence || "").trim();
+    }
+    function paintSentence() {
+      const t = sentence();
+      locked.style.display = t ? "block" : "none";
+      locked.innerHTML = t ? ("<strong>Your cue:</strong> " + t) : "";
+      cues.forEach(b => b.classList.toggle("on", b.dataset.cue === t));
+    }
+    cues.forEach(b => b.addEventListener("click", () => {
+      mine.value = b.dataset.cue;
+      const s = state(); s.sentence = b.dataset.cue; persist(s); paintSentence();
+    }));
+    mine.addEventListener("input", () => {
+      const s = state(); s.sentence = mine.value; persist(s); paintSentence();
+    });
+
+    function row(i, data) {
+      const tr = document.createElement("tr");
+      tr.innerHTML =
+        "<td>" + (i + 1) + "</td>" +
+        "<td><input data-k=\"event\" data-i=\"" + i + "\" type=\"text\" placeholder=\"showcase, game, tryout\"></td>" +
+        "<td><input data-k=\"body\" data-i=\"" + i + "\" type=\"text\" placeholder=\"ran the trained thing, or went hunting\"></td>" +
+        "<td><input data-k=\"used\" data-i=\"" + i + "\" type=\"text\"></td>" +
+        "<td><select data-k=\"rep\" data-i=\"" + i + "\">" +
+          "<option value=\"\"></option>" +
+          "<option>clean</option>" +
+          "<option>rushed</option>" +
+          "<option>still in the last play</option>" +
+        "</select></td>";
+      log.appendChild(tr);
+      ["event","body","used","rep"].forEach(k => {
+        const el = tr.querySelector("[data-k=\"" + k + "\"]");
+        if (data[k]) el.value = data[k];
+        el.addEventListener("change", saveRows);
+        el.addEventListener("input", saveRows);
+      });
+    }
+    function saveRows() {
+      const s = state();
+      s.rows = [...log.querySelectorAll("tr")].map(tr => {
+        const o = {};
+        tr.querySelectorAll("[data-k]").forEach(el => o[el.dataset.k] = el.value);
+        return o;
+      });
+      s.pattern = pattern.value;
+      s.sentence = sentence();
+      persist(s);
+    }
+    function boot() {
+      const s = state();
+      mine.value = s.sentence || "";
+      pattern.value = s.pattern || "";
+      paintSentence();
+      const rows = s.rows && s.rows.length === 3 ? s.rows : [{},{},{}];
+      rows.forEach((r,i) => row(i, r));
+    }
+    pattern.addEventListener("input", saveRows);
+    document.getElementById("save").addEventListener("click", () => { saveRows(); alert("Saved on this device."); });
+    document.getElementById("print").addEventListener("click", () => window.print());
+    document.getElementById("reset").addEventListener("click", () => {
+      if (!confirm("Clear the trained thing and all three events on this device?")) return;
+      localStorage.removeItem(KEY);
+      location.reload();
+    });
+    boot();
+  </script>
+</body>
+</html>

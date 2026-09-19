@@ -15,6 +15,10 @@ Companion tools for the Stage 2 mental skills video series. All tools are self-c
 | S4 EP3 | Zone Profile Builder | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep3/ |
 | S4 EP5 | The Meaning Switch | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep5/ |
 | S4 EP6 | The Next-Play Reset | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep6/ |
+| S4 EP7 | The Trust Cue | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep7/ |
+| S4 EP8 | The Game Switch | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep8/ |
+| S4 EP9 | The Same Cue | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep9/ |
+| S4 EP10 | The Already-In Check | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep10/ |
 
 ## Stage 4: Performance Environments — Parent Edition
 
