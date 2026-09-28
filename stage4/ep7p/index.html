@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Rule Hold | The Quiet Edge — Parent Edition</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal: #5fb3ac;
+      --teal-dark: #3d8f88;
+      --teal-light: #d4f0ee;
+      --teal-faint: #eef8f7;
+      --amber: #e8a83a;
+      --text: #1a1a2e;
+      --text-muted: #5c5c7a;
+      --bg: #fafafa;
+      --white: #ffffff;
+      --border: #dde8e7;
+      --radius: 10px;
+    }
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      font-size: 15px;
+    }
+    .site-header {
+      background: linear-gradient(135deg, #3d8f88 0%, #5fb3ac 60%, #7ecbc5 100%);
+      color: var(--white);
+      text-align: center;
+      padding: 2.5rem 1.5rem 2rem;
+    }
+    .site-header .stage-label {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.82;
+      margin-bottom: 0.5rem;
+    }
+    .site-header h1 { font-size: 1.8rem; line-height: 1.25; font-weight: normal; margin-bottom: 0.5rem; }
+    .site-header .subtitle { font-family: Arial, sans-serif; font-size: 13px; opacity: 0.85; }
+    .container { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+    section { margin-bottom: 2.2rem; }
+    h2 {
+      font-size: 1.15rem;
+      color: var(--teal-dark);
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 2px solid var(--teal-light);
+    }
+    p { margin-bottom: 0.75rem; }
+    .intro-box {
+      background: var(--teal-faint);
+      border-left: 4px solid var(--teal);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.4rem;
+      margin-bottom: 1.5rem;
+    }
+    .intro-box p:last-child { margin-bottom: 0; }
+    .cite { font-size: 12px; color: var(--text-muted); font-style: italic; }
+    .bank {
+      display: grid;
+      gap: 8px;
+      margin: 10px 0 16px;
+    }
+    .line {
+      text-align: left;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      background: var(--white);
+      color: var(--text);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      font-family: inherit;
+    }
+    .line:hover { border-color: var(--teal); }
+    .line.on {
+      border-color: var(--teal-dark);
+      background: var(--teal-faint);
+    }
+    .line.kill { border-color: #e8c4c0; background: #fdf6f5; cursor: default; }
+    label {
+      display: block;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    input[type="text"], textarea, select {
+      width: 100%;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 14px;
+      padding: 9px 12px;
+      outline: none;
+      font-family: inherit;
+    }
+    input[type="text"]:focus, textarea:focus, select:focus { border-color: var(--teal); }
+    textarea { min-height: 72px; resize: vertical; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: Arial, sans-serif;
+    }
+    .btn-primary { background: var(--teal-dark); color: #fff; }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .form-actions { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+    .warn { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
+    .foot { text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 28px; }
+    .locked {
+      margin-top: 12px;
+      background: var(--teal-faint);
+      border: 1px solid var(--teal);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      display: none;
+    }
+    .locked strong { color: var(--teal-dark); }
+    .q-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      font-size: 16px;
+    }
+    @media print {
+      body { background: white; color: #111; }
+      .no-print { display: none !important; }
+      .site-header { background: #3d8f88; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="stage-label">Stage 4 · Ep. 7 · Parent Companion</div>
+    <h1>The Rule Hold</h1>
+    <p class="subtitle">The motion is already running. Your sentence does not get to climb inside it.</p>
+  </header>
+
+  <div class="container">
+    <div class="intro-box">
+      <p>This is Step 1 only. The Trust Cue belongs to your athlete. This tool is the hold around it.</p>
+      <p>When the motion starts and a technique sentence forms, you do not finish it. Nothing, or one line that hands the rep straight back.</p>
+      <p class="cite">Masters, R. (University of York). Explicit rules put back into a skilled motion under pressure make the putt worse. The cue that survives has to come from inside the athlete.</p>
+    </div>
+
+    <section>
+      <h2>1. What not to say</h2>
+      <p>All five sound like help. All five are a second lecturer, arriving while the motion is already committed.</p>
+      <div class="bank">
+        <div class="line kill">Keep your hands back!</div>
+        <div class="line kill">Follow through!</div>
+        <div class="line kill">Don't drop your shoulder!</div>
+        <div class="line kill">See the ball!</div>
+        <div class="line kill">Loose! Go! (their cue, from the rail)</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. What you say instead</h2>
+      <p>Try one of these. You do not need all three. Or say nothing at all.</p>
+      <div class="bank">
+        <button type="button" class="line" data-line="Nothing. Watch.">Nothing. Watch.</button>
+        <button type="button" class="line" data-line="Theirs.">Theirs.</button>
+        <button type="button" class="line" data-line="Let it run.">Let it run.</button>
+      </div>
+      <label for="mine">Or write yours</label>
+      <input id="mine" type="text" maxlength="90" placeholder="One line. Hands the rep back. Or leave this blank.">
+      <div id="locked" class="locked"></div>
+    </section>
+
+    <section>
+      <h2>3. Sit with this one</h2>
+      <p>You do not need to answer it out loud right now.</p>
+      <div class="q-box">Next time you catch that sentence forming, who, if anyone besides you, is going to hold you to actually letting it die in your mouth?</div>
+      <label for="who" style="margin-top:14px;">If you want to name it</label>
+      <input id="who" type="text" maxlength="90" placeholder="Partner. Coach. Yourself. Nobody. Leave it blank if you are still sitting with it.">
+    </section>
+
+    <section>
+      <h2>4. If it is worth talking through</h2>
+      <p>If there is a partner or a spouse helping raise this athlete, that is a real conversation: what each of you does in that live second. You will not always hold it the same way.</p>
+      <p>Or take it to the coach. They are watching that fence line too.</p>
+      <label for="note">What you might take there</label>
+      <textarea id="note" placeholder="The sentence that formed. Whether it died. What you want to say to them."></textarea>
+      <div class="form-actions">
+        <button type="button" class="btn btn-primary" id="save">Save on this device</button>
+        <button type="button" class="btn btn-ghost no-print" id="print">Print / PDF</button>
+        <button type="button" class="btn btn-ghost no-print" id="reset">Reset</button>
+      </div>
+      <p class="warn">Nothing is sent to a server. This lives in your browser until you print it or clear the site data. This is not a three-week log.</p>
+    </section>
+
+    <p class="foot">The Quiet Edge · Trust the process. Help your athlete win from within.</p>
+  </div>
+
+  <script>
+    const KEY = "qe-s4e7p-rule-hold-v1";
+    const cues = document.querySelectorAll(".line[data-line]");
+    const mine = document.getElementById("mine");
+    const locked = document.getElementById("locked");
+    const who = document.getElementById("who");
+    const note = document.getElementById("note");
+
+    function state() {
+      try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch { return {}; }
+    }
+    function persist(s) { localStorage.setItem(KEY, JSON.stringify(s)); }
+    function sentence() {
+      const s = state();
+      return (mine.value || s.sentence || "").trim();
+    }
+    function paint() {
+      const t = sentence();
+      locked.style.display = t ? "block" : "none";
+      locked.innerHTML = t ? ("<strong>Your hold:</strong> " + t) : "";
+      cues.forEach(b => b.classList.toggle("on", b.dataset.line === t));
+    }
+    function saveAll() {
+      const s = state();
+      s.sentence = sentence();
+      s.who = who.value;
+      s.note = note.value;
+      persist(s);
+    }
+    cues.forEach(b => b.addEventListener("click", () => {
+      mine.value = b.dataset.line;
+      saveAll(); paint();
+    }));
+    mine.addEventListener("input", () => { saveAll(); paint(); });
+    who.addEventListener("input", saveAll);
+    note.addEventListener("input", saveAll);
+    document.getElementById("save").addEventListener("click", () => { saveAll(); alert("Saved on this device."); });
+    document.getElementById("print").addEventListener("click", () => window.print());
+    document.getElementById("reset").addEventListener("click", () => {
+      if (!confirm("Clear the hold, the name, and the note on this device?")) return;
+      localStorage.removeItem(KEY);
+      location.reload();
+    });
+    (function boot() {
+      const s = state();
+      mine.value = s.sentence || "";
+      who.value = s.who || "";
+      note.value = s.note || "";
+      paint();
+    })();
+  </script>
+</body>
+</html>
