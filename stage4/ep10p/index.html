@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Return | The Quiet Edge, Parent Edition</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal: #5fb3ac; --teal-dark: #3d8f88; --teal-light: #d4f0ee; --teal-faint: #eef8f7;
+      --text: #1a1a2e; --text-muted: #5c5c7a; --bg: #fafafa; --white: #ffffff;
+      --border: #dde8e7; --radius: 10px;
+    }
+    body { font-family: Georgia, 'Times New Roman', serif; background: var(--bg); color: var(--text); line-height: 1.75; font-size: 15px; }
+    .site-header { background: linear-gradient(135deg, #3d8f88 0%, #5fb3ac 60%, #7ecbc5 100%); color: var(--white); text-align: center; padding: 2.5rem 1.5rem 2rem; }
+    .stage-label { font-family: Arial, sans-serif; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.82; margin-bottom: 0.5rem; }
+    h1 { font-size: 1.8rem; line-height: 1.25; font-weight: normal; margin-bottom: 0.5rem; }
+    .subtitle { font-family: Arial, sans-serif; font-size: 13px; opacity: 0.85; }
+    .container { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+    section { margin-bottom: 2.2rem; }
+    h2 { font-size: 1.15rem; color: var(--teal-dark); margin-bottom: 0.75rem; padding-bottom: 0.35rem; border-bottom: 2px solid var(--teal-light); }
+    p { margin-bottom: 0.75rem; }
+    .intro-box { background: var(--teal-faint); border-left: 4px solid var(--teal); border-radius: var(--radius); padding: 1.25rem 1.4rem; margin-bottom: 1.5rem; }
+    label { display: block; font-family: Arial, sans-serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin: 12px 0 6px; }
+    input[type="text"], textarea, select { width: 100%; background: var(--white); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 14px; padding: 9px 12px; outline: none; font-family: inherit; }
+    input:focus, textarea:focus, select:focus { border-color: var(--teal); }
+    textarea { min-height: 72px; resize: vertical; }
+    .check { font-family: Arial, sans-serif; font-size: 14px; text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--text); display: flex; gap: 8px; align-items: flex-start; margin: 12px 0; }
+    .check input { width: auto; margin-top: 4px; }
+    .links { font-family: Arial, sans-serif; font-size: 13px; margin-top: 10px; }
+    .links a { color: var(--teal-dark); margin-right: 14px; }
+    .btn { display: inline-flex; padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; font-family: Arial, sans-serif; margin-right: 8px; margin-top: 8px; }
+    .btn-primary { background: var(--teal-dark); color: #fff; }
+    .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+    .warn, .foot { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
+    .foot { text-align: center; }
+    .q-box { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.25rem; font-size: 16px; }
+    @media print { body { background: white; color: #111; } .no-print { display: none !important; } .site-header { background: #3d8f88; -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="stage-label">Stage 4 · Ep. 10 · Parent Companion</div>
+    <h1>The Return</h1>
+    <p class="subtitle">Name one episode that fits now. Decide if this pass includes the page.</p>
+  </header>
+  <div class="container">
+    <div class="intro-box">
+      <p>Step 1 only. People rewatch things all the time. Almost nobody names, on purpose, which one episode fits where they are, and whether this pass includes doing the page instead of only watching.</p>
+      <p>A return is not a guarantee. It is a second look at something you only sort of caught the first time. Not a new stack of strategies.</p>
+    </div>
+
+    <section>
+      <h2>1. The one episode</h2>
+      <p>Before the next loud week. This stage, or an earlier one. Think about your athlete, the moment they are in, and what is coming up.</p>
+      <label for="pick">Stage 4</label>
+      <select id="pick">
+        <option value="">Choose one, or leave this and write an earlier episode below.</option>
+        <option value="a1" data-watch="https://www.youtube.com/watch?v=LwpTu9gx_Ok" data-page="../ep1/">Athlete Ep. 1: Nerves mean you care</option>
+        <option value="a2" data-watch="https://www.youtube.com/watch?v=n9q3Rvk2hho" data-page="../ep2/">Athlete Ep. 2: Controlling arousal</option>
+        <option value="a3" data-watch="https://www.youtube.com/watch?v=OIL_0BIjaNw" data-page="../ep3/">Athlete Ep. 3: Your zone is a system</option>
+        <option value="a4" data-watch="https://www.youtube.com/watch?v=EF3R2r5pfQM" data-page="../ep4/">Athlete Ep. 4: Letting go of results</option>
+        <option value="a5" data-watch="https://www.youtube.com/watch?v=bWSEB8YIYZs" data-page="../ep5/">Athlete Ep. 5: Turning nerves into energy</option>
+        <option value="a6" data-watch="https://www.youtube.com/watch?v=rioCtSxd5GA" data-page="../ep6/">Athlete Ep. 6: Staying locked in after errors</option>
+        <option value="a7" data-watch="https://www.youtube.com/watch?v=TC8tytV7JGk" data-page="../ep7/">Athlete Ep. 7: Competing without overthinking</option>
+        <option value="a8" data-watch="https://www.youtube.com/watch?v=pQplRIhEVV0" data-page="../ep8/">Athlete Ep. 8: Switching into game mode</option>
+        <option value="a9" data-watch="https://www.youtube.com/watch?v=R9_3LxZfXaE" data-page="../ep9/">Athlete Ep. 9: The same cue</option>
+        <option value="a10" data-watch="https://www.youtube.com/watch?v=R0oRjOFsTuk" data-page="../ep10/">Athlete Ep. 10: Already in</option>
+        <option value="p1" data-watch="https://www.youtube.com/watch?v=bu5TAhjGJWo" data-page="../ep1p/">Parent Ep. 1: What you say before the game</option>
+        <option value="p2" data-watch="https://www.youtube.com/watch?v=aR4EdhgPK5c" data-page="../ep2p/">Parent Ep. 2: Reading their energy</option>
+        <option value="p3" data-watch="https://www.youtube.com/watch?v=XlXKmoylBos" data-page="../ep3p/">Parent Ep. 3: The sideline habit</option>
+        <option value="p4" data-watch="https://www.youtube.com/watch?v=eYfOmTbqpGU" data-page="../ep4p/">Parent Ep. 4: The post-game delay</option>
+        <option value="p5" data-watch="https://www.youtube.com/watch?v=32bXI6NaJO4" data-page="../ep5p/">Parent Ep. 5: Protecting the sentence</option>
+        <option value="p6" data-watch="https://www.youtube.com/watch?v=0yQRseFE-lU" data-page="../ep6p/">Parent Ep. 6: The second error</option>
+        <option value="p7" data-watch="https://www.youtube.com/watch?v=yzML4hriiDo" data-page="../ep7p/">Parent Ep. 7: The extra instruction</option>
+        <option value="p8" data-watch="https://www.youtube.com/watch?v=X0JT85aRxSY" data-page="../ep8p/">Parent Ep. 8: The door hold</option>
+        <option value="p9" data-watch="https://www.youtube.com/watch?v=EUA0BBEmDbA" data-page="../ep9p/">Parent Ep. 9: Held face</option>
+        <option value="p10" data-watch="https://www.youtube.com/watch?v=IAE4u6JHIQc" data-page="">Parent Ep. 10: The Return. This page.</option>
+      </select>
+      <label for="earlier">Earlier episode, if that is the one that fits</label>
+      <input id="earlier" type="text" maxlength="80" placeholder="Stage and episode. Leave blank if Stage 4 is the fit.">
+      <label class="check"><input id="page" type="checkbox"> This pass includes the page, not only the watch.</label>
+      <div id="links" class="links"></div>
+    </section>
+
+    <section>
+      <h2>2. Ask before you say yours</h2>
+      <p>If another adult is in this with you, ask what they would rewatch before you name yours.</p>
+      <label for="theirs">What they named</label>
+      <input id="theirs" type="text" maxlength="80" placeholder="Leave blank if you have not asked yet.">
+    </section>
+
+    <section>
+      <h2>3. Sit with this one</h2>
+      <div class="q-box">What would you actually see, in the small daily stuff, if this stage had really done something? Not a score. Not a three-week log.</div>
+      <label for="diff">If you want to write it</label>
+      <textarea id="diff" placeholder="What would be different. Or leave it blank and sit with it."></textarea>
+      <button type="button" class="btn btn-primary" id="save">Save on this device</button>
+      <button type="button" class="btn btn-ghost no-print" id="print">Print / PDF</button>
+      <button type="button" class="btn btn-ghost no-print" id="reset">Reset</button>
+      <p class="warn">Nothing is sent to a server. This is not a three-week log.</p>
+    </section>
+    <p class="foot">The Quiet Edge · Trust the process. Help your athlete and your family win from within.</p>
+  </div>
+  <script>
+    const KEY = "qe-s4e10p-the-return-v1";
+    const pick = document.getElementById("pick");
+    const earlier = document.getElementById("earlier");
+    const page = document.getElementById("page");
+    const links = document.getElementById("links");
+    const theirs = document.getElementById("theirs");
+    const diff = document.getElementById("diff");
+    function state() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch { return {}; } }
+    function persist(s) { localStorage.setItem(KEY, JSON.stringify(s)); }
+    function paint() {
+      const opt = pick.selectedOptions[0];
+      const watch = opt && opt.dataset.watch;
+      const pg = opt && opt.dataset.page;
+      if (!watch) { links.innerHTML = ""; return; }
+      let html = '<a href="' + watch + '" target="_blank" rel="noopener">Watch</a>';
+      if (pg && page.checked) html += '<a href="' + pg + '">Do the page</a>';
+      links.innerHTML = html;
+    }
+    function saveAll() {
+      persist({
+        pick: pick.value,
+        earlier: earlier.value,
+        page: page.checked,
+        theirs: theirs.value,
+        diff: diff.value
+      });
+      paint();
+    }
+    [pick, earlier, page, theirs, diff].forEach(el => el.addEventListener("input", saveAll));
+    pick.addEventListener("change", saveAll);
+    page.addEventListener("change", saveAll);
+    document.getElementById("save").addEventListener("click", () => { saveAll(); alert("Saved on this device."); });
+    document.getElementById("print").addEventListener("click", () => window.print());
+    document.getElementById("reset").addEventListener("click", () => {
+      if (!confirm("Clear this return on this device?")) return;
+      localStorage.removeItem(KEY);
+      location.reload();
+    });
+    (function boot() {
+      const s = state();
+      pick.value = s.pick || "";
+      earlier.value = s.earlier || "";
+      page.checked = !!s.page;
+      theirs.value = s.theirs || "";
+      diff.value = s.diff || "";
+      paint();
+    })();
+  </script>
+</body>
+</html>

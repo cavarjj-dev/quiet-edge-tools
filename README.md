@@ -13,6 +13,7 @@ Companion tools for the Stage 2 mental skills video series. All tools are self-c
 | S4 EP1 | Pressure Signal Log | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep1/ |
 | S4 EP2 | Arousal Calibration Log | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep2/ |
 | S4 EP3 | Zone Profile Builder | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep3/ |
+| S4 EP4 | The Process Contract | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep4/ |
 | S4 EP5 | The Meaning Switch | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep5/ |
 | S4 EP6 | The Next-Play Reset | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep6/ |
 | S4 EP7 | The Trust Cue | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep7/ |
@@ -26,10 +27,14 @@ Companion tools for the Stage 2 mental skills video series. All tools are self-c
 |---------|------|-----------|
 | S4 EP1p | What Does Your Pre-Game Language Signal? — Parent Language Audit | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep1p/ |
 | S4 EP2p | Know Your Athlete's Zone — Performance State Profile | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep2p/ |
+| S4 EP3p | The Zone Witness Protocol | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep3p/ |
+| S4 EP4p | The Post-Game Delay | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep4p/ |
 | S4 EP5p | The Meaning Guard | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep5p/ |
 | S4 EP6p | The Error Seat | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep6p/ |
 | S4 EP7p | The Rule Hold | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep7p/ |
 | S4 EP8p | The Door Hold | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep8p/ |
+| S4 EP9p | Held Face | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep9p/ |
+| S4 EP10p | The Return | https://cavarjj-dev.github.io/quiet-edge-tools/stage4/ep10p/ |
 
 ## Stage 3: Skill Acquisition — Athlete Edition
 

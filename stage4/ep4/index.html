@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Process Contract | The Quiet Edge</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0d0d;
+      --bg-card: #161616;
+      --border: #2c2c2c;
+      --accent: #f4830a;
+      --text: #e2e2e2;
+      --text-muted: #888;
+      --text-dim: #aaa;
+      --radius: 8px;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      padding: 24px 20px 48px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .brand {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .subtitle { color: var(--text-muted); font-size: 14px; text-align: center; margin-bottom: 8px; }
+    .badges { display: flex; gap: 8px; justify-content: center; margin: 12px 0 28px; flex-wrap: wrap; }
+    .badge {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+    .intro, section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 18px 16px;
+      margin-bottom: 16px;
+    }
+    h2 { font-size: 16px; color: #fff; margin-bottom: 8px; }
+    p { margin-bottom: 10px; }
+    .cite { font-size: 12px; color: var(--text-muted); }
+    .bank { display: grid; gap: 8px; margin: 10px 0 14px; }
+    .line {
+      text-align: left;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      background: #1e1e1e;
+      color: var(--text);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      font-family: inherit;
+    }
+    .line.on { border-color: var(--accent); color: #fff; }
+    .line.kill { border-color: #5a3030; color: #c9a0a0; cursor: default; }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin: 12px 0 6px;
+    }
+    input[type="text"], input[type="date"], textarea, select {
+      width: 100%;
+      background: #1e1e1e;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 14px;
+      padding: 9px 12px;
+      outline: none;
+      font-family: inherit;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+    textarea { min-height: 72px; resize: vertical; }
+    .locked {
+      margin-top: 12px;
+      background: rgba(244,131,10,0.08);
+      border: 1px solid rgba(244,131,10,0.35);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      display: none;
+    }
+    .locked strong { color: var(--accent); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+    th {
+      text-align: left;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 8px 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    td { padding: 8px 6px; border-bottom: 1px solid #1e1e1e; vertical-align: top; }
+    .btn {
+      display: inline-flex;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      margin-right: 8px;
+      margin-top: 8px;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+    .warn, .foot { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
+    .foot { text-align: center; }
+    @media print {
+      body { background: white; color: #111; }
+      .no-print { display: none !important; }
+      .intro, section { border: 1px solid #ccc; background: white; }
+      h1, h2 { color: #111; }
+    }
+  </style>
+</head>
+<body>
+  <div class="brand">The Quiet Edge</div>
+  <h1>The Process Contract</h1>
+  <p class="subtitle">One behavior you control. Written before the session. Returned to when results pull.</p>
+  <div class="badges"><span class="badge">Stage 4 · Ep. 4 · Athlete</span></div>
+
+  <div class="intro">
+    <p>Process focus is not positive thinking. It is not telling yourself to stop worrying about the result. It is one execution cue you can actually control, chosen before the pressure arrives.</p>
+    <p class="cite">Sian Beilock, University of Chicago. Evaluative pressure makes athletes over-monitor skills that were already automatic. That is the interruption. Not a loss of skill.</p>
+  </div>
+
+  <section>
+    <h2>1. The contract</h2>
+    <p>Before the next practice or game, name one behavior. Not a result. Not a stat. One thing you can do while the ball is live.</p>
+    <div class="bank">
+      <div class="line kill">I need to make this.</div>
+      <div class="line kill">Don't blow it.</div>
+      <div class="line kill">What does he think of my game right now?</div>
+    </div>
+    <div class="bank">
+      <button type="button" class="line" data-line="Defensive footwork on drives.">Defensive footwork on drives.</button>
+      <button type="button" class="line" data-line="My approach under pressure.">My approach under pressure.</button>
+      <button type="button" class="line" data-line="Communication in transition.">Communication in transition.</button>
+    </div>
+    <label for="mine">Or write yours</label>
+    <input id="mine" type="text" maxlength="90" placeholder="One behavior. Not the scoreboard. Not the scout.">
+    <div id="locked" class="locked"></div>
+  </section>
+
+  <section>
+    <h2>2. When results pull</h2>
+    <p>They will. You already decided where attention goes. You do not make that decision in the moment. Return to the one behavior.</p>
+    <p>After the session, review the behavior. Not the outcome. If the line you wrote was a result, rewrite it before the next session. That is the calibration.</p>
+  </section>
+
+  <section>
+    <h2>3. Three weeks</h2>
+    <p>Run step 1 before every session. Week 1 will not feel like a shift. Week 3 is where a default starts. If a showcase is coming, build this before it, not during it.</p>
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Contract</th><th>After</th></tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <button type="button" class="btn btn-ghost no-print" id="add">Add a session</button>
+    <div>
+      <button type="button" class="btn btn-primary" id="save">Save on this device</button>
+      <button type="button" class="btn btn-ghost no-print" id="print">Print / PDF</button>
+      <button type="button" class="btn btn-ghost no-print" id="reset">Reset</button>
+    </div>
+    <p class="warn">Nothing is sent to a server. This lives in your browser until you print it or clear the site data.</p>
+  </section>
+
+  <p class="foot">The Quiet Edge · Train the mind. Trust the process. Win from within.</p>
+
+  <script>
+    const KEY = "qe-s4e4-process-contract-v1";
+    const cues = document.querySelectorAll(".line[data-line]");
+    const mine = document.getElementById("mine");
+    const locked = document.getElementById("locked");
+    const rows = document.getElementById("rows");
+
+    function state() {
+      try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch { return {}; }
+    }
+    function persist(s) { localStorage.setItem(KEY, JSON.stringify(s)); }
+    function sentence() { return (mine.value || "").trim(); }
+    function paint() {
+      const t = sentence();
+      locked.style.display = t ? "block" : "none";
+      locked.innerHTML = t ? "<strong>Your contract:</strong> " + t : "";
+      cues.forEach(b => b.classList.toggle("on", b.dataset.line === t));
+    }
+    function rowHtml(r) {
+      const tr = document.createElement("tr");
+      tr.innerHTML =
+        '<td><input type="date" class="d" value="' + (r.date || "") + '"></td>' +
+        '<td><input type="text" class="c" maxlength="90" value="' + (r.contract || "").replace(/"/g, "&quot;") + '"></td>' +
+        '<td><select class="a">' +
+          '<option value="">Not yet</option>' +
+          '<option value="returned">Returned to it</option>' +
+          '<option value="pulled">Pulled to the result</option>' +
+          '<option value="rewrote">Rewrote it. It was a result.</option>' +
+        '</select></td>';
+      tr.querySelector(".a").value = r.after || "";
+      return tr;
+    }
+    function readRows() {
+      return Array.from(rows.querySelectorAll("tr")).map(tr => ({
+        date: tr.querySelector(".d").value,
+        contract: tr.querySelector(".c").value,
+        after: tr.querySelector(".a").value
+      }));
+    }
+    function saveAll() {
+      persist({ sentence: sentence(), rows: readRows() });
+    }
+    function bootRows(list) {
+      rows.innerHTML = "";
+      (list && list.length ? list : [{}, {}, {}]).forEach(r => rows.appendChild(rowHtml(r)));
+    }
+    cues.forEach(b => b.addEventListener("click", () => {
+      mine.value = b.dataset.line;
+      saveAll(); paint();
+    }));
+    mine.addEventListener("input", () => { saveAll(); paint(); });
+    rows.addEventListener("input", saveAll);
+    rows.addEventListener("change", saveAll);
+    document.getElementById("add").addEventListener("click", () => {
+      rows.appendChild(rowHtml({}));
+      saveAll();
+    });
+    document.getElementById("save").addEventListener("click", () => { saveAll(); alert("Saved on this device."); });
+    document.getElementById("print").addEventListener("click", () => window.print());
+    document.getElementById("reset").addEventListener("click", () => {
+      if (!confirm("Clear the contract and the three-week log on this device?")) return;
+      localStorage.removeItem(KEY);
+      location.reload();
+    });
+    (function boot() {
+      const s = state();
+      mine.value = s.sentence || "";
+      bootRows(s.rows);
+      paint();
+    })();
+  </script>
+</body>
+</html>

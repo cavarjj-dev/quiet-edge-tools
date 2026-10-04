@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Post-Game Delay | The Quiet Edge, Parent Edition</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal: #5fb3ac; --teal-dark: #3d8f88; --teal-light: #d4f0ee; --teal-faint: #eef8f7;
+      --text: #1a1a2e; --text-muted: #5c5c7a; --bg: #fafafa; --white: #ffffff;
+      --border: #dde8e7; --radius: 10px;
+    }
+    body { font-family: Georgia, 'Times New Roman', serif; background: var(--bg); color: var(--text); line-height: 1.75; font-size: 15px; }
+    .site-header { background: linear-gradient(135deg, #3d8f88 0%, #5fb3ac 60%, #7ecbc5 100%); color: var(--white); text-align: center; padding: 2.5rem 1.5rem 2rem; }
+    .stage-label { font-family: Arial, sans-serif; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.82; margin-bottom: 0.5rem; }
+    h1 { font-size: 1.8rem; line-height: 1.25; font-weight: normal; margin-bottom: 0.5rem; }
+    .subtitle { font-family: Arial, sans-serif; font-size: 13px; opacity: 0.85; }
+    .container { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+    section { margin-bottom: 2.2rem; }
+    h2 { font-size: 1.15rem; color: var(--teal-dark); margin-bottom: 0.75rem; padding-bottom: 0.35rem; border-bottom: 2px solid var(--teal-light); }
+    p { margin-bottom: 0.75rem; }
+    .intro-box { background: var(--teal-faint); border-left: 4px solid var(--teal); border-radius: var(--radius); padding: 1.25rem 1.4rem; margin-bottom: 1.5rem; }
+    .cite { font-size: 12px; color: var(--text-muted); font-style: italic; }
+    .bank { display: grid; gap: 8px; margin: 10px 0 16px; }
+    .line { text-align: left; padding: 12px 14px; border: 1px solid var(--border); background: var(--white); color: var(--text); border-radius: 6px; cursor: pointer; font-size: 15px; font-family: inherit; }
+    .line.on { border-color: var(--teal-dark); background: var(--teal-faint); }
+    .line.kill { border-color: #e8c4c0; background: #fdf6f5; cursor: default; }
+    label { display: block; font-family: Arial, sans-serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px; }
+    input[type="text"], textarea, select { width: 100%; background: var(--white); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 14px; padding: 9px 12px; outline: none; font-family: inherit; }
+    input:focus, textarea:focus, select:focus { border-color: var(--teal); }
+    textarea { min-height: 72px; resize: vertical; }
+    .btn { display: inline-flex; padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; font-family: Arial, sans-serif; margin-right: 8px; margin-top: 8px; }
+    .btn-primary { background: var(--teal-dark); color: #fff; }
+    .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+    .warn, .foot { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
+    .foot { text-align: center; }
+    .locked { margin-top: 12px; background: var(--teal-faint); border: 1px solid var(--teal); border-radius: var(--radius); padding: 12px 14px; display: none; }
+    .locked strong { color: var(--teal-dark); }
+    @media print { body { background: white; color: #111; } .no-print { display: none !important; } .site-header { background: #3d8f88; -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="stage-label">Stage 4 · Ep. 4 · Parent Companion</div>
+    <h1>The Post-Game Delay</h1>
+    <p class="subtitle">The ride home is a decompression container. Not a debrief.</p>
+  </header>
+  <div class="container">
+    <div class="intro-box">
+      <p>The conversation has value. The question is when it lands. In the first 45 to 60 minutes, the same note gets attached to the feeling, not the adjustment.</p>
+      <p class="cite">Joan Duda, University of Birmingham. Parent-initiated performance evaluation right after competition raises anxiety and cuts motivation, even when the tone is supportive.</p>
+    </div>
+
+    <section>
+      <h2>1. The ride home rule</h2>
+      <p>For the next three weeks, the car is free of performance analysis. Win or lose. You can connect as a parent. That is not the same as reviewing the game.</p>
+      <div class="bank">
+        <div class="line kill">You look distracted out there.</div>
+        <div class="line kill">What was going through your head in the third quarter?</div>
+        <div class="line kill">When you go quiet like that, you lose your energy.</div>
+        <div class="line kill">What went wrong?</div>
+      </div>
+      <p>Try one of these. Then nothing.</p>
+      <div class="bank">
+        <button type="button" class="line" data-line="I liked watching you compete today.">I liked watching you compete today.</button>
+        <button type="button" class="line" data-line="Music. No review.">Music. No review.</button>
+        <button type="button" class="line" data-line="Silence. No review.">Silence. No review.</button>
+      </div>
+      <label for="mine">Or write the one connect line</label>
+      <input id="mine" type="text" maxlength="90" placeholder="One line that is not a review. Or leave this blank.">
+      <div id="locked" class="locked"></div>
+    </section>
+
+    <section>
+      <h2>2. Put the analysis somewhere else</h2>
+      <p>Write what you noticed before you say it. That is so it does not surface on the drive home.</p>
+      <label for="note">Private note. Not for the car.</label>
+      <textarea id="note" placeholder="What you saw. The adjustment, if there is one. Not what you almost said in the parking lot."></textarea>
+    </section>
+
+    <section>
+      <h2>3. When the window opens</h2>
+      <p>Not in the car. Not in the first hour. If the note is still worth having the next day, that is when the same feedback can land. Frame it as what you observed. Not as a verdict on their energy, their quiet, or the result.</p>
+      <p>Week 1 will feel incomplete. Week 3 is when the car starts to feel like a safe zone instead of a review room.</p>
+      <button type="button" class="btn btn-primary" id="save">Save on this device</button>
+      <button type="button" class="btn btn-ghost no-print" id="print">Print / PDF</button>
+      <button type="button" class="btn btn-ghost no-print" id="reset">Reset</button>
+      <p class="warn">Nothing is sent to a server. This lives in your browser until you print it or clear the site data.</p>
+    </section>
+    <p class="foot">The Quiet Edge · Trust the process. Help your athlete win from within.</p>
+  </div>
+  <script>
+    const KEY = "qe-s4e4p-post-game-delay-v1";
+    const cues = document.querySelectorAll(".line[data-line]");
+    const mine = document.getElementById("mine");
+    const locked = document.getElementById("locked");
+    const note = document.getElementById("note");
+    function state() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch { return {}; } }
+    function persist(s) { localStorage.setItem(KEY, JSON.stringify(s)); }
+    function sentence() { return (mine.value || "").trim(); }
+    function paint() {
+      const t = sentence();
+      locked.style.display = t ? "block" : "none";
+      locked.innerHTML = t ? "<strong>Ride home:</strong> " + t : "";
+      cues.forEach(b => b.classList.toggle("on", b.dataset.line === t));
+    }
+    function saveAll() { persist({ sentence: sentence(), note: note.value }); }
+    cues.forEach(b => b.addEventListener("click", () => { mine.value = b.dataset.line; saveAll(); paint(); }));
+    mine.addEventListener("input", () => { saveAll(); paint(); });
+    note.addEventListener("input", saveAll);
+    document.getElementById("save").addEventListener("click", () => { saveAll(); alert("Saved on this device."); });
+    document.getElementById("print").addEventListener("click", () => window.print());
+    document.getElementById("reset").addEventListener("click", () => {
+      if (!confirm("Clear the ride-home line and the private note on this device?")) return;
+      localStorage.removeItem(KEY);
+      location.reload();
+    });
+    (function boot() {
+      const s = state();
+      mine.value = s.sentence || "";
+      note.value = s.note || "";
+      paint();
+    })();
+  </script>
+</body>
+</html>
