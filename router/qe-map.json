@@ -1,0 +1,785 @@
+{
+  "stages": [
+    {
+      "stage": 1,
+      "label": "Foundation",
+      "playlist": {
+        "athlete": "https://www.youtube.com/playlist?list=PLhj0UiZpacExGZHNtWx5bsAvRXyi1TNHJ",
+        "parent": "https://www.youtube.com/playlist?list=PLhj0UiZpacEwedHxPI4NoZt5BdT0F1lxl"
+      },
+      "episodes": [
+        {
+          "episode": 0,
+          "label": "Before you start",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": null,
+          "parent": {
+            "title": "Ep. 0: A Message to Parents Before We Begin",
+            "videoId": "WjlrlgZ10zE",
+            "more": [],
+            "toolUrl": null
+          }
+        },
+        {
+          "episode": 1,
+          "label": "Episode 1",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 1: Why Loving the Game Comes Before Winning | The Quiet Edge",
+            "videoId": "4v25apZT6PM",
+            "more": [],
+            "toolUrl": null
+          },
+          "parent": {
+            "title": "Ep. 1: Why Loving the Game Matters More Than Winning",
+            "videoId": "-bCyimIW8hk",
+            "more": [],
+            "toolUrl": null
+          }
+        },
+        {
+          "episode": 2,
+          "label": "Episode 2",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 2: Why Elite Athletes Don't Start Elite | You're Not Behind — You're Building",
+            "videoId": "xmRwVzFU7Cs",
+            "more": [],
+            "toolUrl": null
+          },
+          "parent": {
+            "title": "Ep. 2: Why Elite Athletes Don't Start Elite",
+            "videoId": "QMolaoiMH0I",
+            "more": [],
+            "toolUrl": null
+          }
+        },
+        {
+          "episode": 3,
+          "label": "Episode 3",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 3: Confidence Is Built, Not Given (Part 1)",
+            "videoId": "FTOfwN2I7ew",
+            "more": [
+              {
+                "id": "yTxcjWRgml8",
+                "title": "Ep. 3: Confidence Is Built, Not Given (Part 2)"
+              }
+            ],
+            "toolUrl": null
+          },
+          "parent": {
+            "title": "Ep. 3: Confidence Is Built, Not Given (Part 1)",
+            "videoId": "EcCxnTLoErw",
+            "more": [
+              {
+                "id": "de7g_3kx9NA",
+                "title": "Ep. 3: Confidence Is Built, Not Given (Part 2)"
+              }
+            ],
+            "toolUrl": null
+          }
+        },
+        {
+          "episode": 4,
+          "label": "Episode 4",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 4: The Hidden Power of Playing Multiple Sports",
+            "videoId": "FAJ1p-_31ro",
+            "more": [],
+            "toolUrl": null
+          },
+          "parent": {
+            "title": "Ep. 4: The Hidden Power of Playing Multiple Sports",
+            "videoId": "fbps2IbnNc0",
+            "more": [],
+            "toolUrl": null
+          }
+        },
+        {
+          "episode": 5,
+          "label": "Episode 5",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 5: Why Fun Is a Performance Strategy (Part 1)",
+            "videoId": "I5j-WaIid_0",
+            "more": [
+              {
+                "id": "jsFvb-A5hf4",
+                "title": "Ep. 5: Why Fun Is a Performance Strategy (Part 2)"
+              }
+            ],
+            "toolUrl": null
+          },
+          "parent": {
+            "title": "Ep. 5: Why Fun Is a Performance Strategy (Part 1)",
+            "videoId": "I6-zZqU2HkM",
+            "more": [
+              {
+                "id": "JOZPBy5n2oE",
+                "title": "Ep. 5: Why Fun Is a Performance Strategy (Part 2)"
+              }
+            ],
+            "toolUrl": null
+          }
+        },
+        {
+          "episode": 6,
+          "label": "Episode 6",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 6: How Identity Forms in Young Athletes (Part 1)",
+            "videoId": "A9Nn7Xh1zLQ",
+            "more": [
+              {
+                "id": "Jy6ioxFR51E",
+                "title": "Ep. 6: How Identity Forms in Young Athletes (Part 2)"
+              }
+            ],
+            "toolUrl": null
+          },
+          "parent": {
+            "title": "Ep. 6: Identity Beyond Sport—Building a Table with Multiple Legs (Part 1)",
+            "videoId": "venGAHutQW4",
+            "more": [
+              {
+                "id": "Lvi5C3oDtjA",
+                "title": "Ep. 6: Identity Beyond Sport—Building a Table with Multiple Legs (Part 2)"
+              }
+            ],
+            "toolUrl": null
+          }
+        },
+        {
+          "episode": 7,
+          "label": "Episode 7",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 7: The Parent's Role – Supporting Without Smothering (Part 1)",
+            "videoId": "xsgx0gF_0Rw",
+            "more": [
+              {
+                "id": "0tMWRvgbZW4",
+                "title": "Ep. 7: The Parent's Role – Supporting Without Smothering (Part 2)"
+              }
+            ],
+            "toolUrl": null
+          },
+          "parent": {
+            "title": "Ep. 7: The Parent's Role – Supporting Without Smothering (Part 1)",
+            "videoId": "DwnNtKx_5aQ",
+            "more": [
+              {
+                "id": "6Gqq76rQT-w",
+                "title": "Ep. 7: The Parent's Role – Supporting Without Smothering (Part 2)"
+              }
+            ],
+            "toolUrl": null
+          }
+        },
+        {
+          "episode": 8,
+          "label": "Episode 8",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 8: Mistakes as Data – The Foundation of Growth (Part 1)",
+            "videoId": "6O2fodsWQpQ",
+            "more": [
+              {
+                "id": "EnkhXzz_6-8",
+                "title": "Ep. 8: Mistakes as Data – The Foundation of Growth (Part 2)"
+              }
+            ],
+            "toolUrl": null
+          },
+          "parent": {
+            "title": "Ep. 8: Mistakes Are Data, Not Failure (Part 1)",
+            "videoId": "q-b2hC1tOlo",
+            "more": [
+              {
+                "id": "erja_ovu39o",
+                "title": "Ep. 8: Mistakes Are Data, Not Failure (Part 2)"
+              }
+            ],
+            "toolUrl": null
+          }
+        },
+        {
+          "episode": 9,
+          "label": "Episode 9",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 9: Building Trust With Coaches & Teammates (Part 1)",
+            "videoId": "ioRrulrm4gs",
+            "more": [
+              {
+                "id": "FEj3xRX7IQg",
+                "title": "Ep. 9: Building Trust With Coaches & Teammates (Part 2)"
+              }
+            ],
+            "toolUrl": null
+          },
+          "parent": null
+        }
+      ]
+    },
+    {
+      "stage": 2,
+      "label": "Self-Awareness",
+      "playlist": {
+        "athlete": "https://www.youtube.com/playlist?list=PLhj0UiZpacEwBkurYE58B5g4s_QIifwOh",
+        "parent": "https://www.youtube.com/playlist?list=PLhj0UiZpacEzvI2PC9z5EVHO3rfvzKC7K"
+      },
+      "episodes": [
+        {
+          "episode": 1,
+          "label": "Episode 1",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 1: How Emotions Affect Performance",
+            "videoId": "VQthdcgGhV8",
+            "more": [],
+            "toolUrl": "https://tinyurl.com/4pthebyz",
+            "toolTitle": "Emotional Pattern Tracker"
+          },
+          "parent": {
+            "title": "Ep.1: What You Say in the Car Home Changes Everything",
+            "videoId": "82pPlHokUKE",
+            "more": [],
+            "toolUrl": "../ep1p/",
+            "toolTitle": "What's Your Post-Game Script?"
+          }
+        },
+        {
+          "episode": 2,
+          "label": "Episode 2",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 2: The Voice in Your Head Matters",
+            "videoId": "djmn74cy_L4",
+            "more": [],
+            "toolUrl": "https://tinyurl.com/2h474vab",
+            "toolTitle": "Self-Talk Pattern and Replacement Script"
+          },
+          "parent": {
+            "title": "Ep. 2: The Voice in Their Head? You Shaped It.",
+            "videoId": "GAmBOcuR-Do",
+            "more": [],
+            "toolUrl": "../ep2p/",
+            "toolTitle": "The Voice in Their Head"
+          }
+        },
+        {
+          "episode": 3,
+          "label": "Episode 3",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 3: Controlling What You Can Control",
+            "videoId": "Nc18DCOiXXc",
+            "more": [],
+            "toolUrl": "../ep3/",
+            "toolTitle": "Control Circle Mapping"
+          },
+          "parent": {
+            "title": "Ep. 3: Responsibility Builds Confidence. Pressure Builds Anxiety. Here's the Difference.",
+            "videoId": "HFYQsfakEgE",
+            "more": [],
+            "toolUrl": "../ep3p/",
+            "toolTitle": "Ownership Builds Confidence"
+          }
+        },
+        {
+          "episode": 4,
+          "label": "Episode 4",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 4: Why Confidence Comes From Small Wins",
+            "videoId": "hdyWRzedpUo",
+            "more": []
+          },
+          "parent": {
+            "title": "Ep. 4: What 'Great Job' Actually Does to Your Kid",
+            "videoId": "NakJimPVGiM",
+            "more": [],
+            "toolUrl": "../ep4p/",
+            "toolTitle": "Progress Recognition Toolkit"
+          }
+        },
+        {
+          "episode": 5,
+          "label": "Episode 5",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 5: How You Handle Failure Changes Everything",
+            "videoId": "s1hHxmNC4LA",
+            "more": [],
+            "toolUrl": "https://tinyurl.com/yujrvh36",
+            "toolTitle": "Result-Reason-Response"
+          },
+          "parent": {
+            "title": "Ep. 5: Stop Fixing It. Do This When They Fail",
+            "videoId": "3_VweA6gkG8",
+            "more": [],
+            "toolUrl": "../ep5p/",
+            "toolTitle": "Failure Response Pattern"
+          }
+        },
+        {
+          "episode": 6,
+          "label": "Episode 6",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 6: Your Mind Leaves Before You Do",
+            "videoId": "ziFe1Ikz9BM",
+            "more": [],
+            "toolUrl": "https://tinyurl.com/4wccpwmx",
+            "toolTitle": "Anchor Phrase"
+          },
+          "parent": {
+            "title": "Ep. 6: What 'Calm Down' Is Teaching Your Kid",
+            "videoId": "jOyV3M9Pzp0",
+            "more": [],
+            "toolUrl": "../ep6p/",
+            "toolTitle": "Multi-Child Family Navigator"
+          }
+        },
+        {
+          "episode": 7,
+          "label": "Episode 7",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 7: Why Goals Should Guide, Not Pressure",
+            "videoId": "88jyZJjK2aY",
+            "more": [],
+            "toolUrl": "https://tinyurl.com/56btkhh4",
+            "toolTitle": "GPS Framework"
+          },
+          "parent": {
+            "title": "Ep. 7: The Goal Mistake Sports Parents Make",
+            "videoId": "wwseqPfy2Xw",
+            "more": [],
+            "toolUrl": "../ep7p/",
+            "toolTitle": "GPS Goal-Builder, Parent Edition"
+          }
+        },
+        {
+          "episode": 8,
+          "label": "Episode 8",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 8:  The Difference Between Effort and Outcome",
+            "videoId": "4sFUgi9uKkw",
+            "more": []
+          },
+          "parent": {
+            "title": "Ep. 8: What Your Kid Actually Learns From Your Mood",
+            "videoId": "GOS9plTjDxY",
+            "more": [],
+            "toolUrl": "../ep8p/",
+            "toolTitle": "Am I Effort-First?"
+          }
+        },
+        {
+          "episode": 9,
+          "label": "Episode 9",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 9: Learning to Reset After Mistakes",
+            "videoId": "jdVPS1whLYg",
+            "more": [],
+            "toolUrl": "../ep9/",
+            "toolTitle": "ACR Practice Log"
+          },
+          "parent": {
+            "title": "Ep. 9p: What They See When They Look At You",
+            "videoId": "XkRAP6aWoyM",
+            "more": [],
+            "toolUrl": "../ep9p/",
+            "toolTitle": "Sideline Reset Audit"
+          }
+        },
+        {
+          "episode": 10,
+          "label": "Episode 10",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 10: Building an Inner Scoreboard",
+            "videoId": "Z9kKSis9HWA",
+            "more": [],
+            "toolUrl": "../ep10/",
+            "toolTitle": "5 Questions Self-Evaluation"
+          },
+          "parent": {
+            "title": "Ep. 10: Stop Telling Your Kid How They Played",
+            "videoId": "quMTzT_59wI",
+            "more": [],
+            "toolUrl": "../ep10p/",
+            "toolTitle": "Post-Game Question Guide"
+          }
+        }
+      ]
+    },
+    {
+      "stage": 3,
+      "label": "Skill Acquisition",
+      "playlist": {
+        "athlete": "https://www.youtube.com/playlist?list=PLhj0UiZpacEwOOT_FhXaH0tuyPjIkmHKV",
+        "parent": "https://www.youtube.com/playlist?list=PLhj0UiZpacEzDEWPSV0jb3iuF4uh7X9V5"
+      },
+      "episodes": [
+        {
+          "episode": 1,
+          "label": "Episode 1",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 1: Why Your Practice Hours Aren't Making You Better",
+            "videoId": "GBiwVg0yyUg",
+            "more": [],
+            "toolUrl": "../stage3/ep1/"
+          },
+          "parent": {
+            "title": "Ep. 1: You're Measuring Practice Wrong",
+            "videoId": "7QV3M2S-dvs",
+            "more": [],
+            "toolUrl": "../stage3/ep1p/"
+          }
+        },
+        {
+          "episode": 2,
+          "label": "Episode 2",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 2: Why Short, Focused Training Beats More Training",
+            "videoId": "ac0x6wW8WE4",
+            "more": [],
+            "toolUrl": "../stage3/ep2/"
+          },
+          "parent": {
+            "title": "Ep. 2: More Training Is Actually Hurting Your Kid",
+            "videoId": "nIwIXafYt08",
+            "more": [],
+            "toolUrl": "../stage3/ep2p/"
+          }
+        },
+        {
+          "episode": 3,
+          "label": "Episode 3",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 3: Using Mental Cues to Perform Faster",
+            "videoId": "ZxqqmaX7lEA",
+            "more": [],
+            "toolUrl": "../stage3/ep3/"
+          },
+          "parent": {
+            "title": "Ep. 3: Stop Helping — Your Athlete Needs Your Silence",
+            "videoId": "xQUZv6bvKmc",
+            "more": [],
+            "toolUrl": "../stage3/ep3p/"
+          }
+        },
+        {
+          "episode": 4,
+          "label": "Episode 4",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 4: How to Refocus Mid-Game",
+            "videoId": "y0TnWVtTRT4",
+            "more": [],
+            "toolUrl": "../stage3/ep4/"
+          },
+          "parent": {
+            "title": "Ep. 4: Your Yelling Is Making Them Play Worse",
+            "videoId": "gvxScV9b6MY",
+            "more": [],
+            "toolUrl": "../stage3/ep4p/"
+          }
+        },
+        {
+          "episode": 5,
+          "label": "Episode 5",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 5: Process Goals vs Outcome Goals",
+            "videoId": "1ZHFwQMZK2I",
+            "more": [],
+            "toolUrl": "../stage3/ep5/"
+          },
+          "parent": {
+            "title": "Ep. 5: Your Pressure Is Blocking Their Progress",
+            "videoId": "pbPbE0CBDbY",
+            "more": [],
+            "toolUrl": "../stage3/ep5p/"
+          }
+        },
+        {
+          "episode": 6,
+          "label": "Episode 6",
+          "tip": "Write the countdown. Write the four components after you watch. Do not add a step the episode did not name.",
+          "athlete": {
+            "title": "Ep. 6: Building Pre-Game Routines",
+            "videoId": "jkMo89zBCYY",
+            "more": [],
+            "toolUrl": "../stage3/ep6/"
+          },
+          "parent": {
+            "title": "Ep. 6: Are You Disrupting Their Pre-Game Routine?",
+            "videoId": "zCRQXyfkOPg",
+            "more": [],
+            "toolUrl": "../stage3/ep6p/"
+          }
+        },
+        {
+          "episode": 7,
+          "label": "Episode 7",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 7: Visualization That Actually Works",
+            "videoId": "oqu9E4YGutY",
+            "more": [],
+            "toolUrl": "../stage3/ep7/"
+          },
+          "parent": {
+            "title": "Ep. 7: Why Visualization Works — And How Parents Can Help (Or Get Out of the Way)",
+            "videoId": "_DB7NEeMMWA",
+            "more": [],
+            "toolUrl": "../stage3/ep7p/"
+          }
+        },
+        {
+          "episode": 8,
+          "label": "Episode 8",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 8: Training Attention Under Fatigue",
+            "videoId": "2rdgE_eYNq8",
+            "more": [],
+            "toolUrl": "../stage3/ep8/"
+          },
+          "parent": {
+            "title": "Ep. 8: Why Your Athlete Falls Apart Late in Games",
+            "videoId": "52kg9m3NY0Q",
+            "more": [],
+            "toolUrl": "../stage3/ep8p/"
+          }
+        },
+        {
+          "episode": 9,
+          "label": "Episode 9",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 9: Why Systems Beat Motivation",
+            "videoId": "xR5uzfPvfmQ",
+            "more": [],
+            "toolUrl": "../stage3/ep9/"
+          },
+          "parent": {
+            "title": "Ep. 9: Stop Being Your Athlete's Motivator",
+            "videoId": "0z6ZBocz9Qs",
+            "more": [],
+            "toolUrl": "../stage3/ep9p/"
+          }
+        },
+        {
+          "episode": 10,
+          "label": "Episode 10",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 10: Why Your Practice Isn't Preparing You for Games",
+            "videoId": "i_ZzAkjE2zk",
+            "more": [],
+            "toolUrl": "../stage3/ep10/"
+          },
+          "parent": {
+            "title": "Ep. 10: Why Hard Practice Is Supposed to Feel That Way",
+            "videoId": "5smQ_nGjJ5g",
+            "more": [],
+            "toolUrl": "../stage3/ep10p/"
+          }
+        }
+      ]
+    },
+    {
+      "stage": 4,
+      "label": "Competition",
+      "playlist": {
+        "athlete": "https://www.youtube.com/playlist?list=PLhj0UiZpacEwqXfzYVHc5ZvtC7NFCi5ER",
+        "parent": "https://www.youtube.com/playlist?list=PLhj0UiZpacExo_ktsZHG_Po_YgJkQ4d7b"
+      },
+      "episodes": [
+        {
+          "episode": 1,
+          "label": "Episode 1",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 1: Nerves mean you care — not that you're weak.",
+            "videoId": "LwpTu9gx_Ok",
+            "more": [],
+            "toolUrl": "../stage4/ep1/"
+          },
+          "parent": {
+            "title": "Ep. 1: What You Say Before the Game Is Hurting Your Kid",
+            "videoId": "bu5TAhjGJWo",
+            "more": [],
+            "toolUrl": "../stage4/ep1p/"
+          }
+        },
+        {
+          "episode": 2,
+          "label": "Episode 2",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 2: Controlling Arousal Levels",
+            "videoId": "n9q3Rvk2hho",
+            "more": [],
+            "toolUrl": "../stage4/ep2/"
+          },
+          "parent": {
+            "title": "Ep. 2: You're Reading Your Athlete's Energy Wrong",
+            "videoId": "aR4EdhgPK5c",
+            "more": [],
+            "toolUrl": "../stage4/ep2p/"
+          }
+        },
+        {
+          "episode": 3,
+          "label": "Episode 3",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 3: Your Zone Isn't Luck. It's a System.",
+            "videoId": "OIL_0BIjaNw",
+            "more": [],
+            "toolUrl": "../stage4/ep3/"
+          },
+          "parent": {
+            "title": "Ep. 3: Why Your Sideline Habit Is Hurting Their Zone",
+            "videoId": "XlXKmoylBos",
+            "more": [],
+            "toolUrl": "../stage4/ep3p/"
+          }
+        },
+        {
+          "episode": 4,
+          "label": "Episode 4",
+          "tip": "One behavior before the session. Return to it. Review the behavior, not the result.",
+          "athlete": {
+            "title": "Ep. 4: Letting Go of Results",
+            "videoId": "EF3R2r5pfQM",
+            "more": [],
+            "toolUrl": "../stage4/ep4/"
+          },
+          "parent": {
+            "title": "Ep. 4: Why Post-Game Analysis Needs a Delay",
+            "videoId": "eYfOmTbqpGU",
+            "more": [],
+            "toolUrl": "../stage4/ep4p/"
+          }
+        },
+        {
+          "episode": 5,
+          "label": "Episode 5",
+          "tip": "Same feeling. Different meaning. Parents hold the sentence.",
+          "athlete": {
+            "title": "Ep. 5: Turning Nerves Into Energy",
+            "videoId": "bWSEB8YIYZs",
+            "more": [],
+            "toolUrl": "../stage4/ep5/"
+          },
+          "parent": {
+            "title": "Ep. 5: Protecting the Sentence",
+            "videoId": "32bXI6NaJO4",
+            "more": [],
+            "toolUrl": "../stage4/ep5p/"
+          }
+        },
+        {
+          "episode": 6,
+          "label": "Episode 6",
+          "tip": "After a miss, cue, next rep. Parents stay down. One line, or nothing.",
+          "athlete": {
+            "title": "Ep. 6: Staying Locked In After Errors",
+            "videoId": "rioCtSxd5GA",
+            "more": [],
+            "toolUrl": "../stage4/ep6/"
+          },
+          "parent": {
+            "title": "Ep. 6: The Second Error",
+            "videoId": "0yQRseFE-lU",
+            "more": [],
+            "toolUrl": "../stage4/ep6p/"
+          }
+        },
+        {
+          "episode": 7,
+          "label": "Episode 7",
+          "tip": "One cue. Let the skill run. Parents catch the extra sentence.",
+          "athlete": {
+            "title": "Ep. 7: Competing Without Overthinking",
+            "videoId": "TC8tytV7JGk",
+            "more": [],
+            "toolUrl": "../stage4/ep7/"
+          },
+          "parent": {
+            "title": "Ep. 7: The Extra Instruction",
+            "videoId": "yzML4hriiDo",
+            "more": [],
+            "toolUrl": "../stage4/ep7p/"
+          }
+        },
+        {
+          "episode": 8,
+          "label": "Episode 8",
+          "tip": "Marker. Prep ends. First real rep. Parents catch the extra prep.",
+          "athlete": {
+            "title": "Ep. 8: Switching Into Game Mode",
+            "videoId": "pQplRIhEVV0",
+            "more": [],
+            "toolUrl": "../stage4/ep8/"
+          },
+          "parent": {
+            "title": "Ep. 8: The Door Hold",
+            "videoId": "X0JT85aRxSY",
+            "more": [],
+            "toolUrl": "../stage4/ep8p/"
+          }
+        },
+        {
+          "episode": 9,
+          "label": "Episode 9",
+          "tip": "Same words in the quiet minute and the loud minute. Parents keep the face still.",
+          "athlete": {
+            "title": "Ep. 9: The Same Cue",
+            "videoId": "R9_3LxZfXaE",
+            "more": [],
+            "toolUrl": "../stage4/ep9/"
+          },
+          "parent": {
+            "title": "Ep. 9: Held Face",
+            "videoId": "EUA0BBEmDbA",
+            "more": [],
+            "toolUrl": "../stage4/ep9p/"
+          }
+        },
+        {
+          "episode": 10,
+          "label": "Episode 10",
+          "tip": "Name one trained thing. Run it. Do not invent. Parents pick one episode that fits now.",
+          "athlete": {
+            "title": "Ep. 10: Already In",
+            "videoId": "R0oRjOFsTuk",
+            "more": [],
+            "toolUrl": "../stage4/ep10/"
+          },
+          "parent": {
+            "title": "Ep. 10: The Return",
+            "videoId": "IAE4u6JHIQc",
+            "more": [],
+            "toolUrl": "../stage4/ep10p/"
+          }
+        }
+      ]
+    }
+  ]
+}

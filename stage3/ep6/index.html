@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Pre-Game Routine | The Quiet Edge</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0d0d;
+      --bg-card: #161616;
+      --border: #2c2c2c;
+      --accent: #f4830a;
+      --text: #e2e2e2;
+      --text-muted: #888;
+      --radius: 8px;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      padding: 24px 20px 48px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .brand {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    h1 { font-size: 28px; font-weight: 700; color: #fff; text-align: center; margin-bottom: 8px; }
+    .sub { text-align: center; color: var(--text-muted); margin-bottom: 22px; }
+    a { color: var(--accent); }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+    input, textarea {
+      width: 100%;
+      background: #101010;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px;
+      font: inherit;
+      margin-bottom: 12px;
+    }
+    textarea { min-height: 88px; resize: vertical; }
+    button, .linkbtn {
+      background: var(--accent);
+      color: #111;
+      border: 0;
+      border-radius: var(--radius);
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .saved { color: var(--accent); font-size: 13px; margin-left: 10px; }
+    .row { display: grid; grid-template-columns: 72px 1fr; gap: 8px; align-items: start; }
+    .mark { color: var(--accent); font-weight: 700; padding-top: 10px; }
+  </style>
+</head>
+<body>
+  <p class="brand">The Quiet Edge · Stage 3 · Episode 6</p>
+  <h1>My Pre-Game Routine</h1>
+  <p class="sub">The episode uses a 60, 30, 15, and 5 minute countdown. Write what you do in each window. Watch first, then write the four components. Do not add a step the episode did not name.</p>
+  <p class="sub"><a href="https://www.youtube.com/watch?v=jkMo89zBCYY">Watch the episode</a> · <a href="../../index.html">Back to the library</a></p>
+
+  <form id="routine" class="card">
+    <div class="row"><div class="mark">60</div><div><label for="m60">What you do at 60 minutes</label><input id="m60" name="m60" autocomplete="off"></div></div>
+    <div class="row"><div class="mark">30</div><div><label for="m30">What you do at 30 minutes</label><input id="m30" name="m30" autocomplete="off"></div></div>
+    <div class="row"><div class="mark">15</div><div><label for="m15">What you do at 15 minutes</label><input id="m15" name="m15" autocomplete="off"></div></div>
+    <div class="row"><div class="mark">5</div><div><label for="m5">What you do at 5 minutes</label><input id="m5" name="m5" autocomplete="off"></div></div>
+    <label for="parts">The four components, in your words, after you watch</label>
+    <textarea id="parts" name="parts"></textarea>
+    <label for="leave">What you will not add on game day</label>
+    <input id="leave" name="leave" autocomplete="off">
+    <button type="submit">Save on this device</button>
+    <span id="saved" class="saved" hidden>Saved on this device.</span>
+  </form>
+  <script>
+    const KEY = "qe-s3-ep6-routine";
+    const form = document.getElementById("routine");
+    const saved = document.getElementById("saved");
+    try {
+      const prior = JSON.parse(localStorage.getItem(KEY) || "{}");
+      for (const el of form.elements) {
+        if (el.name && prior[el.name]) el.value = prior[el.name];
+      }
+    } catch (err) {}
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const data = {};
+      for (const el of form.elements) {
+        if (el.name) data[el.name] = el.value;
+      }
+      localStorage.setItem(KEY, JSON.stringify(data));
+      saved.hidden = false;
+    });
+  </script>
+</body>
+</html>

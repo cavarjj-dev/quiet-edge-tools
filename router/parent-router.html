@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parent Router | The Quiet Edge</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f1117;
+    --card: #1e2435;
+    --athlete: #f97316;
+    --parent: #5fb3ac;
+    --text: #e8eaf0;
+    --muted: #8b92a5;
+    --border: rgba(255,255,255,0.08);
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.55;
+    padding: 28px 18px 64px;
+  }
+  main { max-width: 820px; margin: 0 auto; }
+  .brand {
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); margin-bottom: 8px; }
+  .lede { color: var(--muted); max-width: 62ch; margin-bottom: 22px; }
+  a { color: var(--parent); }
+  .q { margin: 22px 0 8px; font-size: 0.95rem; }
+  .choices { display: flex; flex-wrap: wrap; gap: 8px; }
+  button.choice, a.btn {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+  }
+  button.choice.on { border-color: var(--parent); color: var(--parent); }
+  .result { margin-top: 28px; display: grid; gap: 14px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .card h2 { font-size: 1rem; margin-bottom: 6px; }
+  .card.parent h2 { color: var(--parent); }
+  .card.athlete h2 { color: var(--athlete); }
+  .card p, .card li { color: var(--muted); font-size: 0.92rem; }
+  iframe { width: 100%; aspect-ratio: 16/9; border: 0; border-radius: 8px; margin-top: 10px; background: #000; }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .note { color: var(--muted); font-size: 0.85rem; margin-top: 18px; }
+</style>
+</head>
+<body>
+<main>
+  <p class="brand">The Quiet Edge</p>
+  <h1>Parent router</h1>
+  <p class="lede">Two questions. Then the parent video, the athlete video, the tool, and one tip. This is a starting pair, not a diagnosis. Stages 5 through 8 are not in this router.</p>
+  <p class="q">Where is the athlete right now?</p>
+  <div id="stages" class="choices"></div>
+  <div id="ep-wrap" hidden>
+    <p class="q">Which episode fits this week?</p>
+    <div id="episodes" class="choices"></div>
+  </div>
+  <div id="result" class="result"></div>
+  <p class="note">The longer match is the $29 guide. This page is the free start. <a href="../index.html">Back to the library</a>.</p>
+</main>
+<script>
+const ACADEMY = "https://cavarjj-dev.github.io/quiet-edge-academy/";
+
+function esc(s) {
+  return String(s || "").replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+function watchUrl(id) {
+  return "https://www.youtube.com/watch?v=" + id;
+}
+
+function absUrl(url) {
+  if (!url) return "";
+  if (/^https?:/i.test(url)) return url;
+  return new URL(url, location.href).href;
+}
+
+let map = null;
+let stagePick = null;
+let epPick = null;
+
+function stageByNumber(n) {
+  return (map.stages || []).find((s) => s.stage === n);
+}
+
+function renderStages() {
+  const box = document.getElementById("stages");
+  box.innerHTML = map.stages.map((s) =>
+    `<button class="choice" type="button" data-stage="${s.stage}">${esc(s.label)}</button>`
+  ).join("");
+  box.querySelectorAll("button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      stagePick = Number(btn.dataset.stage);
+      epPick = null;
+      box.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b === btn));
+      renderEpisodes();
+    });
+  });
+}
+
+function renderEpisodes() {
+  const stage = stageByNumber(stagePick);
+  const wrap = document.getElementById("ep-wrap");
+  const box = document.getElementById("episodes");
+  wrap.hidden = false;
+  box.innerHTML = stage.episodes.map((ep, i) =>
+    `<button class="choice" type="button" data-i="${i}">${esc(ep.label)}</button>`
+  ).join("");
+  document.getElementById("result").innerHTML = "";
+  box.querySelectorAll("button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      epPick = Number(btn.dataset.i);
+      box.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b === btn));
+      renderResult();
+    });
+  });
+}
+
+function sideCard(kind, side) {
+  if (!side) return "";
+  const title = side.title || "Video";
+  const tool = side.toolUrl
+    ? `<a class="btn" href="${esc(side.toolUrl)}">Open the ${kind} tool</a>`
+    : `<p>No tool for this episode yet.</p>`;
+  const extra = (side.more || []).map((v) =>
+    `<a class="btn" href="${esc(watchUrl(v.id))}">${esc(v.title)}</a>`
+  ).join("");
+  const frame = side.videoId
+    ? `<iframe src="https://www.youtube-nocookie.com/embed/${esc(side.videoId)}" title="${esc(title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+    : "";
+  return `<article class="card ${kind}">
+    <h2>${kind === "parent" ? "Parent" : "Athlete"}</h2>
+    <p>${esc(title)}</p>
+    ${frame}
+    <div class="actions">${tool}${extra}</div>
+  </article>`;
+}
+
+function renderResult() {
+  const stage = stageByNumber(stagePick);
+  const ep = stage.episodes[epPick];
+  const parentUrl = ep.parent && ep.parent.videoId ? watchUrl(ep.parent.videoId) : "";
+  const athleteUrl = ep.athlete && ep.athlete.videoId ? watchUrl(ep.athlete.videoId) : "";
+  const body = [
+    stage.label,
+    ep.label,
+    ep.tip || "",
+    parentUrl ? "Parent video: " + parentUrl : "",
+    athleteUrl ? "Athlete video: " + athleteUrl : "",
+    ep.parent && ep.parent.toolUrl ? "Parent tool: " + absUrl(ep.parent.toolUrl) : "",
+    ep.athlete && ep.athlete.toolUrl ? "Athlete tool: " + absUrl(ep.athlete.toolUrl) : ""
+  ].filter(Boolean).join("\n");
+  const mail = "mailto:?subject=" + encodeURIComponent("Quiet Edge plan") + "&body=" + encodeURIComponent(body);
+  document.getElementById("result").innerHTML = `
+    ${sideCard("parent", ep.parent)}
+    ${sideCard("athlete", ep.athlete)}
+    <article class="card">
+      <h2>Tip</h2>
+      <p>${esc(ep.tip || "Watch the pair. Use the tool on the page.")}</p>
+      <div class="actions">
+        <a class="btn" href="${mail}">Email me this plan</a>
+        <a class="btn" href="${ACADEMY}">The $29 guide</a>
+      </div>
+    </article>`;
+}
+
+fetch("qe-map.json")
+  .then((r) => {
+    if (!r.ok) throw new Error("map");
+    return r.json();
+  })
+  .then((data) => {
+    map = data;
+    renderStages();
+  })
+  .catch(() => {
+    document.getElementById("result").innerHTML = "<article class='card'><p>The pair map did not load. Refresh the page.</p></article>";
+  });
+</script>
+</body>
+</html>

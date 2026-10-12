@@ -4,6 +4,8 @@ Companion tools for the Stage 2 mental skills video series. All tools are self-c
 
 **Live URL:** https://cavarjj-dev.github.io/quiet-edge-tools/
 
+**Parent start:** [router/parent-router.html](router/parent-router.html)
+
 ---
 
 ## Stage 4: Performance Environments — Athlete Edition
@@ -45,7 +47,9 @@ Companion tools for the Stage 2 mental skills video series. All tools are self-c
 | EP13 (S3 EP3) | Mental Cue Playbook Builder | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep3/ |
 | EP14 (S3 EP4) | Mid-Game Refocus Card Builder | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep4/ |
 | EP15 (S3 EP5) | Competition Process Planner | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep5/ |
+| EP16 (S3 EP6) | My Pre-Game Routine | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep6/ |
 | EP17 (S3 EP7) | Mental Rep Builder — Visualization Script Generator | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep7/ |
+| EP18 (S3 EP8) | Fatigue Training Protocol Builder | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep8/ |
 | EP19 (S3 EP9) | 4-Step System Builder + Weekly Habit Tracker | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep9/ |
 | EP20 (S3 EP10) | Competition Conditions Audit | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep10/ |
 
@@ -53,7 +57,7 @@ Companion tools for the Stage 2 mental skills video series. All tools are self-c
 
 | Episode | Tool | Live Link |
 |---------|------|-----------|
-| S3 EP1p | Training Load Audit — Parent Edition | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep1p/ |
+| S3 EP1p | Practice Quality Checker | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep1p/ |
 | S3 EP2p | Training Load Audit — Parent Edition | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep2p/ |
 | S3 EP3p | Sideline Self-Check — Parent Edition | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep3p/ |
 | S3 EP4p | Game Day Protocol Card — Parent Edition | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep4p/ |
@@ -62,6 +66,7 @@ Companion tools for the Stage 2 mental skills video series. All tools are self-c
 | S3 EP7p | Parent Visualization Support Checklist | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep7p/ |
 | S3 EP8p | Fatigue or Character? — Post-Game Observation Reframe Tool | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep8p/ |
 | S3 EP9p | Am I the Motivator or the System Supporter? — Parent Self-Assessment | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep9p/ |
+| S3 EP10p | Practice Pressure Support Audit | https://cavarjj-dev.github.io/quiet-edge-tools/stage3/ep10p/ |
 
 ## Stage 2: Self Awareness — Athlete Edition
 
