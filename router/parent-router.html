@@ -58,7 +58,26 @@
   .card.parent h2 { color: var(--parent); }
   .card.athlete h2 { color: var(--athlete); }
   .card p, .card li { color: var(--muted); font-size: 0.92rem; }
-  iframe { width: 100%; aspect-ratio: 16/9; border: 0; border-radius: 8px; margin-top: 10px; background: #000; }
+  .frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    margin-top: 10px;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .frame iframe, .player { width: 100%; height: 100%; border: 0; }
+  .embed-miss {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    text-align: center;
+    background: #000;
+  }
+  .embed-miss[hidden] { display: none; }
   .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
   .note { color: var(--muted); font-size: 0.85rem; margin-top: 18px; }
 </style>
@@ -99,6 +118,55 @@ function absUrl(url) {
 let map = null;
 let stagePick = null;
 let epPick = null;
+let players = [];
+let ytReady = null;
+
+function ensureYT() {
+  if (window.YT && window.YT.Player) return Promise.resolve();
+  if (ytReady) return ytReady;
+  ytReady = new Promise((resolve) => {
+    const prior = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = function () {
+      if (typeof prior === "function") prior();
+      resolve();
+    };
+    const s = document.createElement("script");
+    s.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(s);
+  });
+  return ytReady;
+}
+
+function clearPlayers() {
+  players.forEach((p) => {
+    try { p.destroy(); } catch (e) {}
+  });
+  players = [];
+}
+
+function mountPlayers() {
+  ensureYT().then(() => {
+    document.querySelectorAll(".player[data-video]").forEach((el) => {
+      if (el.dataset.mounted) return;
+      el.dataset.mounted = "1";
+      const card = el.closest(".card");
+      const player = new YT.Player(el, {
+        videoId: el.dataset.video,
+        host: "https://www.youtube-nocookie.com",
+        playerVars: { rel: 0, modestbranding: 1 },
+        events: {
+          onError(ev) {
+            if (ev.data !== 101 && ev.data !== 150 && ev.data !== 100) return;
+            const miss = card && card.querySelector(".embed-miss");
+            if (miss) miss.hidden = false;
+            try { player.destroy(); } catch (e) {}
+          }
+        }
+      });
+      players.push(player);
+    });
+  }).catch(() => {});
+}
 
 function stageByNumber(n) {
   return (map.stages || []).find((s) => s.stage === n);
@@ -147,13 +215,19 @@ function sideCard(kind, side) {
     `<a class="btn" href="${esc(watchUrl(v.id))}">${esc(v.title)}</a>`
   ).join("");
   const frame = side.videoId
-    ? `<iframe src="https://www.youtube-nocookie.com/embed/${esc(side.videoId)}" title="${esc(title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+    ? `<div class="frame">
+        <div class="player" data-video="${esc(side.videoId)}"></div>
+        <p class="embed-miss" hidden>This video will not play inside the page. Open it on YouTube.</p>
+      </div>`
+    : "";
+  const watch = side.videoId
+    ? `<a class="btn" href="${esc(watchUrl(side.videoId))}">Watch on YouTube</a>`
     : "";
   return `<article class="card ${kind}">
     <h2>${kind === "parent" ? "Parent" : "Athlete"}</h2>
     <p>${esc(title)}</p>
     ${frame}
-    <div class="actions">${tool}${extra}</div>
+    <div class="actions">${watch}${tool}${extra}</div>
   </article>`;
 }
 
@@ -172,6 +246,7 @@ function renderResult() {
     ep.athlete && ep.athlete.toolUrl ? "Athlete tool: " + absUrl(ep.athlete.toolUrl) : ""
   ].filter(Boolean).join("\n");
   const mail = "mailto:?subject=" + encodeURIComponent("Quiet Edge plan") + "&body=" + encodeURIComponent(body);
+  clearPlayers();
   document.getElementById("result").innerHTML = `
     ${sideCard("parent", ep.parent)}
     ${sideCard("athlete", ep.athlete)}
@@ -183,6 +258,7 @@ function renderResult() {
         <a class="btn" href="${ACADEMY}">The $29 guide</a>
       </div>
     </article>`;
+  mountPlayers();
 }
 
 fetch("qe-map.json")
