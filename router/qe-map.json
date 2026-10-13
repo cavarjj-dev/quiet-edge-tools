@@ -221,7 +221,44 @@
             ],
             "toolUrl": null
           },
-          "parent": null
+          "parent": {
+            "title": "Ep. 9: Building Trust With Coaches & Teammates (Part 1)",
+            "videoId": "mpXfkgv0Uvs",
+            "more": [
+              {
+                "id": "WFJUWgbM9aQ",
+                "title": "Ep. 9: Building Trust With Coaches & Teammates (Part 2)"
+              }
+            ],
+            "toolUrl": null
+          }
+        },
+        {
+          "episode": 10,
+          "label": "Episode 10",
+          "tip": "Watch the pair. Use the tool on the page. This is a starting pair, not a diagnosis.",
+          "athlete": {
+            "title": "Ep. 10: What Winning Really Means at this Stage (Part 1)",
+            "videoId": "XNMieINyvYc",
+            "more": [
+              {
+                "id": "c_Ovlz6pbdc",
+                "title": "Ep. 10: What Winning Really Means at this Stage (Part 2)"
+              }
+            ],
+            "toolUrl": null
+          },
+          "parent": {
+            "title": "Ep. 10: What “Winning” Really Means at This Age (Part 1)",
+            "videoId": "dqTIxVqI5uk",
+            "more": [
+              {
+                "id": "CyxFwvzlvUY",
+                "title": "Ep. 10: What “Winning” Really Means at This Age (Part 2)"
+              }
+            ],
+            "toolUrl": null
+          }
         }
       ]
     },
