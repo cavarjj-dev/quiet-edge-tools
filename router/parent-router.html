@@ -101,7 +101,7 @@ const ACADEMY = "https://cavarjj-dev.github.io/quiet-edge-academy/";
 
 function esc(s) {
   return String(s || "").replace(/[&<>"']/g, (c) => ({
-    "&": "&", "<": "<", ">": ">", '"': """, "'": "&#39;"
+    "&": "&"+"amp;", "<": "&"+"lt;", ">": "&"+"gt;", '"': "&"+"quot;", "'": "&"+"#39;"
   }[c]));
 }
 
