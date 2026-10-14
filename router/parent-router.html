@@ -94,14 +94,14 @@
     <div id="episodes" class="choices"></div>
   </div>
   <div id="result" class="result"></div>
-  <p class="note">The longer match is the $29 guide. This page is the free start. <a href="../index.html">Back to the library</a>.</p>
+  <p class="note">Want the full program? The <a href="https://payhip.com/b/pqTgX">Complete Series workbooks</a> go deeper. This page is the free start. <a href="../index.html">Back to the library</a>.</p>
 </main>
 <script>
 const ACADEMY = "https://cavarjj-dev.github.io/quiet-edge-academy/";
 
 function esc(s) {
   return String(s || "").replace(/[&<>"']/g, (c) => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    "&": "&", "<": "<", ">": ">", '"': """, "'": "&#39;"
   }[c]));
 }
 
@@ -255,7 +255,7 @@ function renderResult() {
       <p>${esc(ep.tip || "Watch the pair. Use the tool on the page.")}</p>
       <div class="actions">
         <a class="btn" href="${mail}">Email me this plan</a>
-        <a class="btn" href="${ACADEMY}">The $29 guide</a>
+        <a class="btn" href="https://payhip.com/b/pqTgX">Get the workbooks</a>
       </div>
     </article>`;
   mountPlayers();
