@@ -79,6 +79,12 @@
   }
   .embed-miss[hidden] { display: none; }
   .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .part2 { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.08); }
+  .part2 h3 { font-size: 0.9rem; margin-bottom: 6px; }
+  .thumb { position: relative; display: block; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; background: #000; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.9; }
+  .thumb span { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 64px; height: 44px; border-radius: 12px; background: rgba(0,0,0,0.7); }
+  .thumb span::after { content: ""; position: absolute; left: 26px; top: 13px; border-style: solid; border-width: 9px 0 9px 15px; border-color: transparent transparent transparent #fff; }
   .note { color: var(--muted); font-size: 0.85rem; margin-top: 18px; }
 </style>
 </head>
@@ -98,6 +104,9 @@
 </main>
 <script>
 const ACADEMY = "https://cavarjj-dev.github.io/quiet-edge-academy/";
+// Part 2 videos with "Allow embedding" off in YouTube Studio. Shown as a thumbnail card that opens YouTube.
+// Remove an ID here once embedding is turned on and it will play inside the page.
+const NO_EMBED = new Set(["de7g_3kx9NA", "yTxcjWRgml8", "JOZPBy5n2oE", "jsFvb-A5hf4", "Lvi5C3oDtjA", "Jy6ioxFR51E", "6Gqq76rQT-w", "0tMWRvgbZW4", "erja_ovu39o", "EnkhXzz_6-8"]);
 
 function esc(s) {
   return String(s || "").replace(/[&<>"']/g, (c) => ({
@@ -149,7 +158,7 @@ function mountPlayers() {
     document.querySelectorAll(".player[data-video]").forEach((el) => {
       if (el.dataset.mounted) return;
       el.dataset.mounted = "1";
-      const card = el.closest(".card");
+      const card = el.closest(".frame") || el.closest(".card");
       const player = new YT.Player(el, {
         videoId: el.dataset.video,
         host: "https://www.youtube-nocookie.com",
@@ -211,9 +220,24 @@ function sideCard(kind, side) {
   const tool = side.toolUrl
     ? `<a class="btn" href="${esc(side.toolUrl)}">Open the ${kind} tool</a>`
     : `<p>No tool for this episode yet.</p>`;
-  const extra = (side.more || []).map((v) =>
-    `<a class="btn" href="${esc(watchUrl(v.id))}">${esc(v.title)}</a>`
-  ).join("");
+  const extra = (side.more || []).map((v, i) => {
+    const label = (side.more.length > 1 ? "Part " + (i + 2) : "Part 2");
+    const url = esc(watchUrl(v.id));
+    const media = NO_EMBED.has(v.id)
+      ? `<a class="thumb" href="${url}" target="_blank" rel="noopener" aria-label="Watch ${label} on YouTube">
+          <img src="https://i.ytimg.com/vi/${esc(v.id)}/hqdefault.jpg" alt="${esc(v.title)}" loading="lazy"><span></span>
+        </a>`
+      : `<div class="frame">
+          <div class="player" data-video="${esc(v.id)}"></div>
+          <p class="embed-miss" hidden>This video will not play inside the page. Open it on YouTube.</p>
+        </div>`;
+    return `<div class="part2">
+      <h3>${label}</h3>
+      <p>${esc(v.title)}</p>
+      ${media}
+      <div class="actions"><a class="btn" href="${url}" target="_blank" rel="noopener">Watch ${label} on YouTube</a></div>
+    </div>`;
+  }).join("");
   const frame = side.videoId
     ? `<div class="frame">
         <div class="player" data-video="${esc(side.videoId)}"></div>
@@ -221,13 +245,14 @@ function sideCard(kind, side) {
       </div>`
     : "";
   const watch = side.videoId
-    ? `<a class="btn" href="${esc(watchUrl(side.videoId))}">Watch on YouTube</a>`
+    ? `<a class="btn" href="${esc(watchUrl(side.videoId))}" target="_blank" rel="noopener">Watch${side.more && side.more.length ? " Part 1" : ""} on YouTube</a>`
     : "";
   return `<article class="card ${kind}">
     <h2>${kind === "parent" ? "Parent" : "Athlete"}</h2>
     <p>${esc(title)}</p>
     ${frame}
-    <div class="actions">${watch}${tool}${extra}</div>
+    <div class="actions">${watch}${tool}</div>
+    ${extra}
   </article>`;
 }
 
@@ -242,6 +267,8 @@ function renderResult() {
     ep.tip || "",
     parentUrl ? "Parent video: " + parentUrl : "",
     athleteUrl ? "Athlete video: " + athleteUrl : "",
+    ...((ep.parent && ep.parent.more) || []).map((v) => "Parent Part 2: " + watchUrl(v.id)),
+    ...((ep.athlete && ep.athlete.more) || []).map((v) => "Athlete Part 2: " + watchUrl(v.id)),
     ep.parent && ep.parent.toolUrl ? "Parent tool: " + absUrl(ep.parent.toolUrl) : "",
     ep.athlete && ep.athlete.toolUrl ? "Athlete tool: " + absUrl(ep.athlete.toolUrl) : ""
   ].filter(Boolean).join("\n");
